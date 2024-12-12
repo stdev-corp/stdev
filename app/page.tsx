@@ -26,7 +26,7 @@ const menuData = {
       { title: '교육연수사업', href: '#' },
     ],
   },
-  KEFA소식: {
+  소식: {
     items: [
       { title: '공지사항', href: '#' },
       { title: '입찰공고', href: '#' },
@@ -44,7 +44,7 @@ export default function Component() {
       <header className="bg-[#1a4a8f] text-white relative">
         <div className="container mx-auto px-4 py-2 flex justify-between items-center">
           <div className="flex items-center space-x-8">
-            <h1 className="text-2xl font-bold">KEFA</h1>
+            <h1 className="text-2xl font-bold">STDev</h1>
             <nav className="hidden md:flex space-x-6">
               {Object.keys(menuData).map((menuTitle) => (
                 <button
@@ -61,8 +61,11 @@ export default function Component() {
           </div>
           <div className="flex items-center space-x-4">
             <Button variant="ghost" size="sm" className="hidden md:flex">
-              <Globe className="h-4 w-4 mr-2" />
-              KR | ENG
+              <span className="text-white">로그인</span>
+            </Button>
+            <Button variant="ghost" size="sm" className="hidden md:flex">
+              <Globe className="h-4 w-4 mr-2" color="white" />
+              <span className="text-white">KO | EN</span>
             </Button>
           </div>
         </div>
@@ -101,9 +104,9 @@ export default function Component() {
       <main className="flex-grow">
         <section className="bg-[#f0f0f0] py-12">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-4">한국교육시설안전원</h2>
+            <h2 className="text-3xl font-bold mb-4">STDev</h2>
             <p className="text-lg mb-6">
-              안전하고 쾌적한 교육환경 조성을 위해 노력합니다
+              소프트웨어 개발 분야 학생과 청년들의 활동을 지원합니다.
             </p>
             <Button>
               자세히 보기 <ChevronRight className="ml-2 h-4 w-4" />
@@ -142,8 +145,10 @@ export default function Component() {
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-between">
             <div className="w-full md:w-1/3 mb-6 md:mb-0">
-              <h3 className="text-lg font-bold mb-2">한국교육시설안전원</h3>
-              <p className="text-sm">주소: 서울특별시 어딘가</p>
+              <h3 className="text-lg font-bold mb-2">STDev</h3>
+              <p className="text-sm">
+                주소: 대전광역시 서구 월평로 65, 802호 (월평동, 용원빌딩)
+              </p>
               <p className="text-sm">전화: 02-1234-5678</p>
             </div>
             <div className="w-full md:w-1/3 mb-6 md:mb-0">
@@ -179,7 +184,7 @@ export default function Component() {
             </div>
           </div>
           <div className="mt-8 text-center text-sm">
-            © 2023 한국교육시설안전원. All rights reserved.
+            © 2024 STDev Nonprofit Corporation. All rights reserved.
           </div>
         </div>
       </footer>
