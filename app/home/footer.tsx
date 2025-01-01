@@ -1,5 +1,6 @@
-import { Button } from '@nextui-org/button'
 import dayjs from 'dayjs'
+import Logo from './logo'
+import { Links } from '@/utils/links'
 
 export default async function Footer() {
   return (
@@ -33,16 +34,10 @@ export default async function Footer() {
               </li>
             </ul>
           </div>
-          <div className="w-full md:w-1/3">
-            <h3 className="text-lg font-bold mb-2">뉴스레터 구독</h3>
-            <form className="flex">
-              <input
-                type="email"
-                placeholder="이메일 주소"
-                className="mr-2 px-3 py-2 border rounded"
-              />
-              <Button>구독</Button>
-            </form>
+          <div className="w-full md:w-1/3 flex flex-col gap-4">
+            <Logo src="/images/gov/msit-logo.png" url={Links.msit} />
+            <Logo src="/images/gov/nts-logo.png" url={Links.nts} />
+            <Logo src="/images/gov/acrc-logo.png" url={Links.acrc} />
           </div>
         </div>
         <div className="mt-8 text-center text-sm">

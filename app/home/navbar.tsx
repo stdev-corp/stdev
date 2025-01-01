@@ -24,7 +24,7 @@ type Props = {
 
 export default function Navigation(props: Props) {
   return (
-    <Navbar>
+    <Navbar isBordered>
       <NavbarBrand>
         <NavbarItem as={Link} href={Links.home}>
           <p className="font-bold text-inherit">사단법인 STDev</p>
