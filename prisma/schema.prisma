@@ -60,3 +60,15 @@ model VerificationToken {
 
   @@id([identifier, token])
 }
+
+model Product {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  price       Int
+  image       String?
+  stock       Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

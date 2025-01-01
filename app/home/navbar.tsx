@@ -12,13 +12,23 @@ import {
   DropdownItem,
 } from '@nextui-org/dropdown'
 import { Button } from '@nextui-org/button'
+import { signIn, signOut } from 'next-auth/react'
+import { User } from 'next-auth'
+import { Avatar } from '@nextui-org/avatar'
+import { Links } from '@/utils/links'
 import Link from 'next/link'
 
-export default function Navigation() {
+type Props = {
+  user?: User
+}
+
+export default function Navigation(props: Props) {
   return (
     <Navbar>
       <NavbarBrand>
-        <p className="font-bold text-inherit">사단법인 STDev</p>
+        <NavbarItem as={Link} href={Links.home}>
+          <p className="font-bold text-inherit">사단법인 STDev</p>
+        </NavbarItem>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <Dropdown>
@@ -78,9 +88,36 @@ export default function Navigation() {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
-            로그인
-          </Button>
+          {props.user ? (
+            <Dropdown>
+              <DropdownTrigger>
+                <Avatar
+                  isBordered
+                  src={props.user.image ?? undefined}
+                  name={props.user.name ?? undefined}
+                />
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Static Actions">
+                <DropdownItem key="profile" href={Links.my}>
+                  내 정보
+                </DropdownItem>
+                <DropdownItem key="name">{props.user.name}</DropdownItem>
+                <DropdownItem key="email">{props.user.email}</DropdownItem>
+                <DropdownItem
+                  key="delete"
+                  className="text-danger"
+                  color="danger"
+                  onPress={() => signOut()}
+                >
+                  로그아웃
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          ) : (
+            <Button color="primary" variant="flat" onPress={() => signIn()}>
+              로그인
+            </Button>
+          )}
         </NavbarItem>
       </NavbarContent>
     </Navbar>
