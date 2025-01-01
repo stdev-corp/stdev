@@ -4,6 +4,7 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
+  NavbarMenuItem,
 } from '@nextui-org/navbar'
 import {
   Dropdown,
@@ -18,6 +19,49 @@ import { Avatar } from '@nextui-org/avatar'
 import { Links } from '@/utils/links'
 import Link from 'next/link'
 
+type MenuDropdownProps = {
+  menus: {
+    label: string
+    href: string
+    subMenus: {
+      label: string
+      href: string
+    }[]
+  }[]
+}
+
+function MenuDropdown(props: MenuDropdownProps) {
+  return (
+    <ul className="w-full flex">
+      <li className="group relative dropdown px-4 cursor-pointer flex flex-row gap-8">
+        {props.menus.map((menu) => (
+          <NavbarMenuItem
+            key={menu.label}
+            as={Link}
+            href={menu.href}
+            className="z-10"
+          >
+            {menu.label}
+          </NavbarMenuItem>
+        ))}
+        <div className="group-hover:block dropdown-menu absolute hidden h-auto">
+          <div className="top-0 bg-white shadow px-6 py-12 flex flex-row">
+            {props.menus.map((menu) => (
+              <div key={menu.label} className="flex flex-col gap-4 w-28">
+                {menu.subMenus.map((subMenu) => (
+                  <Link key={subMenu.label} href={subMenu.href}>
+                    {subMenu.label}
+                  </Link>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </li>
+    </ul>
+  )
+}
+
 type Props = {
   user?: User
 }
@@ -30,61 +74,39 @@ export default function Navigation(props: Props) {
           <p className="font-bold text-inherit">사단법인 STDev</p>
         </NavbarItem>
       </NavbarBrand>
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <Dropdown>
-          <NavbarItem>
-            <DropdownTrigger>
-              <Button
-                disableRipple
-                className="p-0 bg-transparent data-[hover=true]:bg-transparent"
-                radius="sm"
-                variant="light"
-              >
-                Features
-              </Button>
-            </DropdownTrigger>
-          </NavbarItem>
-          <DropdownMenu
-            aria-label="ACME features"
-            className="w-[340px]"
-            itemClasses={{
-              base: 'gap-4',
-            }}
-          >
-            <DropdownItem
-              key="autoscaling"
-              description="ACME scales apps to meet user demand, automagically, based on load."
-            >
-              Autoscaling
-            </DropdownItem>
-            <DropdownItem
-              key="usage_metrics"
-              description="Real-time metrics to debug issues. Slow query added? We’ll show you exactly where."
-            >
-              Usage Metrics
-            </DropdownItem>
-            <DropdownItem
-              key="production_ready"
-              description="ACME runs on ACME, join us and others serving requests at web scale."
-            >
-              Production Ready
-            </DropdownItem>
-            <DropdownItem
-              key="99_uptime"
-              description="Applications stay on the grid with high availability and high uptime guarantees."
-            >
-              +99% Uptime
-            </DropdownItem>
-            <DropdownItem
-              key="supreme_support"
-              description="Overcome any challenge with a supporting team ready to respond."
-            >
-              +Supreme Support
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-        <NavbarItem isActive>Customers</NavbarItem>
-        <NavbarItem>Integrations</NavbarItem>
+      <NavbarContent className="hidden sm:flex" justify="center">
+        <MenuDropdown
+          menus={[
+            {
+              label: '법인소개',
+              href: Links.intro,
+              subMenus: [
+                { label: '연혁', href: Links.introHistory },
+                { label: '조직도', href: Links.introChart },
+                { label: '이사회', href: Links.introDirectors },
+                { label: '정관', href: Links.introArticles },
+              ],
+            },
+            {
+              label: '행사&프로그램',
+              href: Links.business,
+              subMenus: [
+                { label: '해커톤', href: Links.businessHackathon },
+                { label: '컨퍼런스', href: Links.businessConference },
+                { label: '보도자료', href: Links.businessPress },
+                { label: '참여후기', href: Links.businessReview },
+              ],
+            },
+            {
+              label: '공지사항',
+              href: Links.notices,
+              subMenus: [
+                { label: '재정보고', href: Links.noticesDonation },
+                { label: '회의록', href: Links.noticesMinutes },
+              ],
+            },
+          ]}
+        />
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem>

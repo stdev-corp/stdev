@@ -16,20 +16,15 @@ export default async function Footer() {
           </div>
           <div className="w-full md:w-1/3 mb-6 md:mb-0">
             <h3 className="text-lg font-bold mb-2">빠른 링크</h3>
-            <ul className="text-sm">
+            <ul className="text-sm flex flex-col gap-2">
               <li>
-                <a href="#" className="hover:underline">
+                <a href={Links.infoPrivacy} className="hover:underline">
                   개인정보처리방침
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:underline">
+                <a href={Links.infoTerms} className="hover:underline">
                   이용약관
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:underline">
-                  사이트맵
                 </a>
               </li>
             </ul>
