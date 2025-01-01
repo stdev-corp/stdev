@@ -7,5 +7,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [Google],
   trustHost: true,
-  basePath: '/auth',
 })
