@@ -80,32 +80,39 @@ export default function Navigation(props: Props) {
         <MenuDropdown menus={Menus} />
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem>
+        <NavbarItem className="flex gap-4">
           {props.user ? (
-            <Dropdown>
-              <DropdownTrigger>
-                <Avatar
-                  isBordered
-                  src={props.user.image ?? undefined}
-                  name={props.user.name ?? undefined}
-                />
-              </DropdownTrigger>
-              <DropdownMenu aria-label="Static Actions">
-                <DropdownItem key="profile" href={Links.my}>
-                  내 정보
-                </DropdownItem>
-                <DropdownItem key="name">{props.user.name}</DropdownItem>
-                <DropdownItem key="email">{props.user.email}</DropdownItem>
-                <DropdownItem
-                  key="delete"
-                  className="text-danger"
-                  color="danger"
-                  onPress={() => signOut()}
-                >
-                  로그아웃
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+            <>
+              {props.user.email?.endsWith('@stdev.kr') && (
+                <Button as={Link} href={Links.admin}>
+                  Admin
+                </Button>
+              )}
+              <Dropdown>
+                <DropdownTrigger>
+                  <Avatar
+                    isBordered
+                    src={props.user.image ?? undefined}
+                    name={props.user.name ?? undefined}
+                  />
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Static Actions">
+                  <DropdownItem key="profile" href={Links.my}>
+                    내 정보
+                  </DropdownItem>
+                  <DropdownItem key="name">{props.user.name}</DropdownItem>
+                  <DropdownItem key="email">{props.user.email}</DropdownItem>
+                  <DropdownItem
+                    key="delete"
+                    className="text-danger"
+                    color="danger"
+                    onPress={() => signOut()}
+                  >
+                    로그아웃
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </>
           ) : (
             <Button color="primary" variant="flat" onPress={() => signIn()}>
               로그인

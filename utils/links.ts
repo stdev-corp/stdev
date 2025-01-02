@@ -31,4 +31,10 @@ export class Links {
   static msit = 'https://www.msit.go.kr'
   static nts = 'https://www.nts.go.kr'
   static acrc = 'https://www.acrc.go.kr'
+
+  static admin = '/admin'
+  static adminUser = '/admin/user'
+  static adminMarkdown = '/admin/markdown'
+  static adminMarkdownCreate = '/admin/markdown/create'
+  static adminProduct = '/admin/product'
 }
