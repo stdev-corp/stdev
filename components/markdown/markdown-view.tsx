@@ -16,7 +16,7 @@ export default async function MarkdownView(props: Props) {
         remarkPlugins={[[remarkGfm]]}
         components={{
           h1: (props) => (
-            <h1 className="text-4xl font-bold mt-4 mb-2" {...props} />
+            <h1 className="text-4xl font-bold mt-4 mb-8" {...props} />
           ),
           h2: (props) => (
             <h2 className="text-3xl font-bold mt-4 mb-2" {...props} />
@@ -27,6 +27,8 @@ export default async function MarkdownView(props: Props) {
           h4: (props) => <h4 className="text-xl font-bold" {...props} />,
           h5: (props) => <h5 className="text-lg font-bold" {...props} />,
           a: (props) => <a target="_blank" {...props} />,
+          li: (props) => <li className="list-disc ml-4" {...props} />,
+          ul: (props) => <ul className="list-disc ml-4" {...props} />,
         }}
       >
         {data?.content}
