@@ -10,9 +10,16 @@ export default async function Footer() {
           <div className="w-full md:w-1/3 mb-6 md:mb-0">
             <h3 className="text-lg font-bold mb-2">STDev</h3>
             <p className="text-sm">
+              상호명: 사단법인 에스티데브 (STDev Nonprofit Corporation)
+              <br />
+              사업자등록번호: 169-82-00606
+              <br />
+              대표자: 한우영
+              <br />
               주소: 대전광역시 서구 월평로 65, 802호 (월평동, 용원빌딩)
+              <br />
+              전화: 010-2922-9392
             </p>
-            <p className="text-sm">전화: 02-1234-5678</p>
           </div>
           <div className="w-full md:w-1/3 mb-6 md:mb-0">
             <h3 className="text-lg font-bold mb-2">빠른 링크</h3>
