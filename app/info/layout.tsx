@@ -1,7 +1,9 @@
 import { ReactNode } from 'react'
-import Navigation from '@/components/navbar'
-import Footer from '@/components/footer'
+import Navigation from '@/components/layout/navbar'
+import Footer from '@/components/layout/footer'
 import { auth } from '@/utils/auth'
+
+export const dynamic = 'force-dynamic'
 
 type Props = {
   children: ReactNode

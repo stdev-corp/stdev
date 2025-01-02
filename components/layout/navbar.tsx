@@ -18,6 +18,8 @@ import { User } from 'next-auth'
 import { Avatar } from '@nextui-org/avatar'
 import { Links } from '@/utils/links'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import Menus from '@/utils/menus'
 
 type MenuDropdownProps = {
   menus: {
@@ -31,21 +33,21 @@ type MenuDropdownProps = {
 }
 
 function MenuDropdown(props: MenuDropdownProps) {
+  const router = useRouter()
+
   return (
-    <ul className="w-full flex">
-      <li className="group relative dropdown px-4 cursor-pointer flex flex-row gap-8">
+    <div className="w-full flex">
+      <div className="group relative dropdown px-4 cursor-pointer flex flex-row gap-8">
         {props.menus.map((menu) => (
           <NavbarMenuItem
             key={menu.label}
-            as={Link}
-            href={menu.href}
-            className="z-10"
+            onClick={() => router.push(menu.href)}
           >
             {menu.label}
           </NavbarMenuItem>
         ))}
         <div className="group-hover:block dropdown-menu absolute hidden h-auto">
-          <div className="top-0 bg-white shadow px-6 py-12 flex flex-row">
+          <div className="top-0 mt-12 bg-white shadow px-6 py-12 flex flex-row">
             {props.menus.map((menu) => (
               <div key={menu.label} className="flex flex-col gap-4 w-28">
                 {menu.subMenus.map((subMenu) => (
@@ -57,8 +59,8 @@ function MenuDropdown(props: MenuDropdownProps) {
             ))}
           </div>
         </div>
-      </li>
-    </ul>
+      </div>
+    </div>
   )
 }
 
@@ -75,38 +77,7 @@ export default function Navigation(props: Props) {
         </NavbarItem>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex" justify="center">
-        <MenuDropdown
-          menus={[
-            {
-              label: '법인소개',
-              href: Links.intro,
-              subMenus: [
-                { label: '연혁', href: Links.introHistory },
-                { label: '조직도', href: Links.introChart },
-                { label: '이사회', href: Links.introDirectors },
-                { label: '정관', href: Links.introArticles },
-              ],
-            },
-            {
-              label: '행사&프로그램',
-              href: Links.business,
-              subMenus: [
-                { label: '해커톤', href: Links.businessHackathon },
-                { label: '컨퍼런스', href: Links.businessConference },
-                { label: '보도자료', href: Links.businessPress },
-                { label: '참여후기', href: Links.businessReview },
-              ],
-            },
-            {
-              label: '공지사항',
-              href: Links.notices,
-              subMenus: [
-                { label: '재정보고', href: Links.noticesDonation },
-                { label: '회의록', href: Links.noticesMinutes },
-              ],
-            },
-          ]}
-        />
+        <MenuDropdown menus={Menus} />
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem>

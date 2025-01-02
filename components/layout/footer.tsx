@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import Logo from './logo'
+import Logo from '@/components/layout/logo'
 import { Links } from '@/utils/links'
 
 export default async function Footer() {
@@ -22,7 +22,7 @@ export default async function Footer() {
             </p>
           </div>
           <div className="w-full md:w-1/3 mb-6 md:mb-0">
-            <h3 className="text-lg font-bold mb-2">빠른 링크</h3>
+            <h3 className="text-lg font-bold mb-2">안내 및 공시</h3>
             <ul className="text-sm flex flex-col gap-2">
               <li>
                 <a href={Links.infoPrivacy} className="hover:underline">
@@ -32,6 +32,11 @@ export default async function Footer() {
               <li>
                 <a href={Links.infoTerms} className="hover:underline">
                   이용약관
+                </a>
+              </li>
+              <li>
+                <a href={Links.noticesDonation} className="hover:underline">
+                  연간 기부금 모금액 및 활용실적
                 </a>
               </li>
             </ul>

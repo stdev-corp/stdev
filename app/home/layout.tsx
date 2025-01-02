@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
-import Navigation from '@/components/navbar'
-import Footer from '@/components/footer'
+import Navigation from '@/components/layout/navbar'
+import Footer from '@/components/layout/footer'
 import { auth } from '@/utils/auth'
 
 type Props = {
