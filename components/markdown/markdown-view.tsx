@@ -11,7 +11,7 @@ export default async function MarkdownView(props: Props) {
   const data = await getMarkdownByTitle(props.title)
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4">
       <Markdown
         remarkPlugins={[[remarkGfm]]}
         components={{

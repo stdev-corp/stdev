@@ -15,7 +15,7 @@ export const IntroMenu: Menu = {
   subMenus: [
     { label: '연혁', href: Links.introHistory },
     { label: '조직도', href: Links.introChart },
-    { label: '이사회', href: Links.introDirectors },
+    { label: '리더십', href: Links.introDirectors },
     { label: '정관', href: Links.introArticles },
   ],
 }
