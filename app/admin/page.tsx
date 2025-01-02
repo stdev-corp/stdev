@@ -7,6 +7,8 @@ import Image from 'next/image'
 import { Links } from '@/utils/links'
 import { getUserCount } from '@/utils/server/user'
 
+export const dynamic = 'force-dynamic'
+
 type AdminCardProps = {
   title: string
   children: ReactNode

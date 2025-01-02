@@ -4,7 +4,7 @@ import { Input, Textarea } from '@nextui-org/input'
 import { Button } from '@nextui-org/button'
 import { redirect } from 'next/navigation'
 
-export default function CreateMarkdownPage() {
+export default async function CreateMarkdownPage() {
   const handleCreate = async (formData: FormData) => {
     'use server'
     const category = formData.get('category') as string

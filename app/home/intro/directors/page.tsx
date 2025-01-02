@@ -1,4 +1,4 @@
-export default function DirectorsPage() {
+export default async function DirectorsPage() {
   return (
     <div>
       <h1>Directors Page</h1>

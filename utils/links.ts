@@ -37,4 +37,6 @@ export class Links {
   static adminMarkdown = '/admin/markdown'
   static adminMarkdownCreate = '/admin/markdown/create'
   static adminProduct = '/admin/product'
+  static adminRedirect = '/admin/redirect'
+  static adminRedirectCreate = '/admin/redirect/create'
 }

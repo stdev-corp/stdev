@@ -27,7 +27,10 @@ export default function Layout(props: Props) {
             Admin
           </NavbarItem>
         </NavbarBrand>
-        <NavbarContent className="flex gap-8">
+        <NavbarContent className="flex gap-12">
+          <NavbarItem as={Link} href={Links.adminRedirect}>
+            단축 URL
+          </NavbarItem>
           <NavbarItem as={Link} href={Links.adminUser}>
             사용자
           </NavbarItem>
