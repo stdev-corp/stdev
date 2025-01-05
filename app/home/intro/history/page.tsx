@@ -1,7 +1,16 @@
+import Image from 'next/image'
+
 export default function HistoryPage() {
   return (
-    <div>
-      <h1>History Page</h1>
-    </div>
+    <>
+      <h1>연혁</h1>
+      <div className="h-8" />
+      <Image
+        src="/images/intro/history-picture.png"
+        alt="History of STDev Corp."
+        width={800}
+        height={600}
+      />
+    </>
   )
 }

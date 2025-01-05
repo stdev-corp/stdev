@@ -1,6 +1,8 @@
 import type { Config } from 'tailwindcss'
 import { nextui } from '@nextui-org/react'
 
+const colorPrimary = '#008080'
+
 const config: Config = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -10,16 +12,24 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      fontFamily: {
-        GothicA1: ['GothicA1-Light'],
-      },
       colors: {
         background: 'var(--background)',
         foreground: 'var(--foreground)',
+        primary: colorPrimary,
       },
     },
   },
   darkMode: 'class',
-  plugins: [nextui()],
+  plugins: [
+    nextui({
+      themes: {
+        light: {
+          colors: {
+            primary: colorPrimary,
+          },
+        },
+      },
+    }),
+  ],
 }
 export default config
