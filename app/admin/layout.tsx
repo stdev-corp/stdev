@@ -13,6 +13,8 @@ type Props = {
   children: ReactNode
 }
 
+export const dynamic = 'force-dynamic'
+
 export default function Layout(props: Props) {
   return (
     <>
