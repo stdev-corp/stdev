@@ -8,7 +8,7 @@ export default async function AdminUsersPage() {
 
   return (
     <>
-      <h1 className="text-xl mb-8">사용자</h1>
+      <h1>사용자</h1>
       <UsersTable users={data} />
     </>
   )

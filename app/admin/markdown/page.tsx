@@ -11,7 +11,7 @@ export default async function AdminMarkdownsPage() {
 
   return (
     <>
-      <h1 className="text-xl mb-8">마크다운</h1>
+      <h1>마크다운</h1>
       <Button as={Link} href={Links.adminMarkdownCreate}>
         새로 만들기
       </Button>

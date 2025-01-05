@@ -39,6 +39,8 @@ export class Links {
   static adminProduct = '/admin/product'
   static adminRedirect = '/admin/redirect'
   static adminRedirectCreate = '/admin/redirect/create'
+  static adminRecord = '/admin/record'
+  static adminRecordCreate = '/admin/record/create'
 
   static apiDelete = '/api/delete'
 }

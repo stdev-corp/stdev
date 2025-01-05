@@ -117,3 +117,23 @@ model UrlEvent {
 
   createdAt DateTime @default(now())
 }
+
+enum RecordType {
+  REGULAR_GENERAL_MEETING
+  EXTRAORDINARY_GENERAL_MEETING
+  INAUGURAL_GENERAL_MEETING
+  REGULAR_BOARD_MEETING
+  EXTRAORDINARY_BOARD_MEETING
+}
+
+model Record {
+  id String @id @default(cuid())
+
+  type   RecordType
+  title  String
+  date   DateTime
+  pdfUrl String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

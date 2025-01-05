@@ -40,6 +40,9 @@ export default function Layout(props: Props) {
           <NavbarItem as={Link} href={Links.adminProduct}>
             상품
           </NavbarItem>
+          <NavbarItem as={Link} href={Links.adminRecord}>
+            회의록
+          </NavbarItem>
         </NavbarContent>
       </Navbar>
       <main className="p-12">{props.children}</main>
