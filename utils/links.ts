@@ -18,7 +18,7 @@ export class Links {
 
   static notices = '/home/notices'
   static noticesDonation = '/home/notices/donation'
-  static noticesMinutes = '/home/notices/minutes'
+  static noticesRecords = '/home/notices/records'
 
   static infoPrivacy = '/info/privacy'
   static infoTerms = '/info/terms'
@@ -39,4 +39,6 @@ export class Links {
   static adminProduct = '/admin/product'
   static adminRedirect = '/admin/redirect'
   static adminRedirectCreate = '/admin/redirect/create'
+
+  static apiDelete = '/api/delete'
 }

@@ -3,8 +3,8 @@ import { Providers } from './providers'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'STdev Corp.',
-  description: '사단법인 STdev 홈페이지',
+  title: 'STDev Corp.',
+  description: '사단법인 STDev 홈페이지',
 }
 
 export default function RootLayout({

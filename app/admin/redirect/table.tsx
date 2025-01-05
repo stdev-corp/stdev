@@ -1,5 +1,7 @@
 'use client'
+import DeleteModal from '@/components/delete-modal'
 import { toDateTimeString } from '@/utils/datetime'
+import { Links } from '@/utils/links'
 import {
   Table,
   TableBody,
@@ -31,6 +33,7 @@ export default function RedirectTable(props: Props) {
         <TableColumn>수정일</TableColumn>
         <TableColumn>삭제일</TableColumn>
         <TableColumn>생성자</TableColumn>
+        <TableColumn>작업</TableColumn>
       </TableHeader>
       <TableBody>
         {props.redirects.map((redirect) => (
@@ -42,6 +45,16 @@ export default function RedirectTable(props: Props) {
             <TableCell>{toDateTimeString(redirect.deletedAt)}</TableCell>
             <TableCell>
               {redirect.user.name} ({redirect.user.email})
+            </TableCell>
+            <TableCell>
+              <DeleteModal
+                id={redirect.id}
+                model="redirect"
+                redirectPath={Links.adminRedirect}
+              >
+                <div>단축 URL: https://stdev.kr/{redirect.slug}</div>
+                <div>원본 URL: {redirect.url}</div>
+              </DeleteModal>
             </TableCell>
           </TableRow>
         ))}

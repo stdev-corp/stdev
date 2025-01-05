@@ -28,6 +28,7 @@ export async function getUrlBySlug(slug: string) {
 
 export async function listRedirectsWithUser() {
   return prisma.redirect.findMany({
+    orderBy: { createdAt: 'desc' },
     include: {
       user: {
         select: { name: true, email: true },

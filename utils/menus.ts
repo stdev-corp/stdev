@@ -36,7 +36,7 @@ export const NoticesMenu: Menu = {
   href: Links.notices,
   subMenus: [
     { label: '재정보고', href: Links.noticesDonation },
-    { label: '회의록', href: Links.noticesMinutes },
+    { label: '회의록', href: Links.noticesRecords },
   ],
 }
 
