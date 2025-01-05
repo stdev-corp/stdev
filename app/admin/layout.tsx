@@ -16,7 +16,7 @@ type Props = {
 export default function Layout(props: Props) {
   return (
     <>
-      <Navbar isBordered className="bg-gray-800 text-white">
+      <Navbar isBordered maxWidth="full" className="bg-gray-800 text-white">
         <NavbarBrand className="flex gap-8">
           <NavbarItem>
             <Button as={Link} href={Links.home}>
@@ -36,6 +36,9 @@ export default function Layout(props: Props) {
           </NavbarItem>
           <NavbarItem as={Link} href={Links.adminMarkdown}>
             마크다운
+          </NavbarItem>
+          <NavbarItem as={Link} href={Links.adminInstitution}>
+            기관
           </NavbarItem>
           <NavbarItem as={Link} href={Links.adminProduct}>
             상품

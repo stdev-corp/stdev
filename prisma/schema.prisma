@@ -137,3 +137,49 @@ model Record {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Event {
+  id String @id @default(cuid())
+
+  title     String
+  slug      String
+  startDate DateTime
+  endDate   DateTime
+  location  String
+
+  institutions EventInstitution[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Institution {
+  id String @id @default(cuid())
+
+  name     String
+  imageUrl String
+
+  events EventInstitution[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum EventInstitutionType {
+  HOST
+  ORGANIZER
+  PARTNER
+  SPONSOR
+}
+
+model EventInstitution {
+  id String @id @default(cuid())
+
+  type  EventInstitutionType
+  order Int
+
+  eventId       String
+  event         Event       @relation(fields: [eventId], references: [id])
+  institutionId String
+  institution   Institution @relation(fields: [institutionId], references: [id])
+}
