@@ -1,19 +1,30 @@
 'use client'
-import { Links } from '@/utils/links'
+import { HOST, Links } from '@/utils/links'
+import { Button } from '@nextui-org/react'
+import { Order, Product } from '@prisma/client'
 import {
   loadTossPayments,
   TossPaymentsWidgets,
 } from '@tosspayments/tosspayments-sdk'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 const clientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm'
 const customerKey = 'YYe0QwDuSsgqizlVuxxNA'
 
-export default function CheckoutPage() {
-  const [amount, setAmount] = useState({
-    currency: 'KRW',
-    value: 50_000,
-  })
+type TossWidgetProps = {
+  product: Pick<Product, 'name' | 'price'>
+  order: Pick<Order, 'id' | 'name' | 'email' | 'phone'>
+}
+
+export default function TossWidget(props: TossWidgetProps) {
+  const amount = useMemo(
+    () => ({
+      currency: 'KRW',
+      value: props.product.price,
+    }),
+    [props.product.price],
+  )
+
   const [ready, setReady] = useState(false)
   const [widgets, setWidgets] = useState<TossPaymentsWidgets>()
 
@@ -72,46 +83,25 @@ export default function CheckoutPage() {
         <div id="payment-method" />
         {/* 이용약관 UI */}
         <div id="agreement" />
-        {/* 쿠폰 체크박스 */}
-        <div>
-          <div>
-            <label htmlFor="coupon-box">
-              <input
-                id="coupon-box"
-                type="checkbox"
-                aria-checked="true"
-                disabled={!ready}
-                onChange={(event) => {
-                  // ------  주문서의 결제 금액이 변경되었을 경우 결제 금액 업데이트 ------
-                  setAmount(
-                    event.target.checked
-                      ? { value: 30_000, currency: 'KRW' }
-                      : { value: 50_000, currency: 'KRW' },
-                  )
-                }}
-              />
-              <span>협력 단체 회원입니다. (₩20,000원 할인)</span>
-            </label>
-          </div>
-        </div>
-
         {/* 결제하기 버튼 */}
-        <button
-          className="button"
+        <Button
+          className="button text-white ml-8"
+          color="primary"
+          size="lg"
           disabled={!ready}
-          onClick={async () => {
+          onPress={async () => {
             try {
               // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
               // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
               // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
               await widgets?.requestPayment({
-                orderId: 'sLCujz-_uibdgWxBdYr5W',
-                orderName: '토스 티셔츠 외 2건',
-                successUrl: Links.checkoutSuccess,
-                failUrl: Links.checkoutFail,
-                customerEmail: 'customer123@gmail.com',
-                customerName: '김토스',
-                customerMobilePhone: '01012341234',
+                orderId: props.order.id,
+                orderName: props.product.name,
+                successUrl: HOST + Links.checkoutSuccess,
+                failUrl: HOST + Links.checkoutFail,
+                customerEmail: props.order.email,
+                customerName: props.order.name,
+                customerMobilePhone: props.order.phone,
               })
             } catch (error) {
               // 에러 처리하기
@@ -120,7 +110,7 @@ export default function CheckoutPage() {
           }}
         >
           결제하기
-        </button>
+        </Button>
       </div>
     </div>
   )

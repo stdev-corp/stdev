@@ -205,10 +205,35 @@ model Product {
   id String @id @default(cuid())
 
   name        String
-  description String?
+  description String
   price       Int
-  image       String?
-  stock       Int
+  image       String
+
+  orders Order[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+enum OrderStatus {
+  INITIAL
+  SUCCESS
+  FAILED
+}
+
+model Order {
+  id String @id @default(cuid())
+
+  status      OrderStatus @default(INITIAL)
+  name        String
+  phone       String
+  email       String
+  paymentKey  String?
+  paymentInfo Json?
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

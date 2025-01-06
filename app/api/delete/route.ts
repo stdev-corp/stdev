@@ -1,10 +1,6 @@
+import { HOST } from '@/utils/links'
 import { Model, prisma } from '@/utils/prisma'
 import { NextRequest, NextResponse } from 'next/server'
-
-const HOST =
-  process.env.NODE_ENV === 'production'
-    ? 'https://stdev.kr'
-    : 'https://localhost:3000'
 
 export async function GET(request: NextRequest) {
   const searchParams = new URL(request.url).searchParams

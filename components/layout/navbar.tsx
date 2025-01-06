@@ -114,9 +114,14 @@ export default function Navigation(props: Props) {
               </Dropdown>
             </>
           ) : (
-            <Button color="primary" variant="flat" onPress={() => signIn()}>
-              로그인
-            </Button>
+            <>
+              <Button color="secondary" as={Link} href={Links.products}>
+                행사 참가 신청하기
+              </Button>
+              <Button color="primary" variant="flat" onPress={() => signIn()}>
+                로그인
+              </Button>
+            </>
           )}
         </NavbarItem>
       </NavbarContent>
