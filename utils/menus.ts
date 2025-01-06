@@ -44,7 +44,7 @@ export const NoticesMenu: Menu = {
 export const OrderMenu: Menu = {
   label: '행사 신청하기',
   href: Links.products,
-  subMenus: [],
+  subMenus: [{ label: '내 주문', href: Links.productsMyOrder }],
 }
 
 const Menus: Menu[] = [IntroMenu, BusinessMenu, NoticesMenu]

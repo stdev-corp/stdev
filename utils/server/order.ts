@@ -63,3 +63,14 @@ export async function confirmOrder(
   })
   return order
 }
+
+export async function queryMyOrders(
+  name: string,
+  email: string,
+  phone: string,
+) {
+  const orders = await prisma.order.findMany({
+    where: { name, email, phone },
+  })
+  return orders
+}

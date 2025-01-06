@@ -39,6 +39,8 @@ export class Links {
   static checkoutFailWithParams = (code: string, message: string) =>
     `/home/products/checkout/fail?code=${code}&message=${message}`
 
+  static productsMyOrder = '/home/products/my-order'
+
   static msit = 'https://www.msit.go.kr'
   static nts = 'https://www.nts.go.kr'
   static acrc = 'https://www.acrc.go.kr'
