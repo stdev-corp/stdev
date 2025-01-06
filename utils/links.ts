@@ -45,6 +45,8 @@ export class Links {
   static adminInstitutionCreate = '/admin/institution/create'
   static adminEvent = '/admin/event'
   static adminEventCreate = '/admin/event/create'
+  static adminWebpage = '/admin/webpage'
+  static adminWebpageCreate = '/admin/webpage/create'
 
   static apiDelete = '/api/delete'
 }

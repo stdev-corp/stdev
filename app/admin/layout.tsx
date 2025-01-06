@@ -39,8 +39,14 @@ export default function Layout(props: Props) {
           <NavbarItem as={Link} href={Links.adminMarkdown}>
             마크다운
           </NavbarItem>
+          <NavbarItem as={Link} href={Links.adminEvent}>
+            행사
+          </NavbarItem>
           <NavbarItem as={Link} href={Links.adminInstitution}>
             기관
+          </NavbarItem>
+          <NavbarItem as={Link} href={Links.adminWebpage}>
+            웹페이지
           </NavbarItem>
           <NavbarItem as={Link} href={Links.adminProduct}>
             상품

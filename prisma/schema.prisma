@@ -15,12 +15,13 @@ model User {
   email         String    @unique
   emailVerified DateTime?
   image         String?
-  accounts      Account[]
-  sessions      Session[]
 
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  Redirect  Redirect[]
+  accounts  Account[]
+  sessions  Session[]
+  redirects Redirect[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Account {
@@ -62,20 +63,9 @@ model VerificationToken {
   @@id([identifier, token])
 }
 
-model Product {
-  id          String  @id @default(cuid())
-  name        String
-  description String?
-  price       Int
-  image       String?
-  stock       Int
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model Markdown {
-  id       String  @id @default(cuid())
+  id String @id @default(cuid())
+
   category String
   title    String
   subtitle String?
@@ -88,7 +78,8 @@ model Markdown {
 }
 
 model Redirect {
-  id   String @id @default(cuid())
+  id String @id @default(cuid())
+
   slug String @unique
   url  String
 
@@ -142,12 +133,13 @@ model Event {
   id String @id @default(cuid())
 
   title     String
-  slug      String
+  slug      String   @unique
   startDate DateTime
   endDate   DateTime
   location  String
 
   institutions EventInstitution[]
+  webpages     Webpage[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -182,4 +174,42 @@ model EventInstitution {
   event         Event       @relation(fields: [eventId], references: [id])
   institutionId String
   institution   Institution @relation(fields: [institutionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum WebpageType {
+  PRESS_RELEASE
+  NEWS_ARTICLE
+  BLOG_POST
+}
+
+model Webpage {
+  id String @id @default(cuid())
+
+  url    String
+  title  String
+  author String
+  date   DateTime
+  type   WebpageType
+
+  eventId String?
+  event   Event?  @relation(fields: [eventId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id String @id @default(cuid())
+
+  name        String
+  description String?
+  price       Int
+  image       String?
+  stock       Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
