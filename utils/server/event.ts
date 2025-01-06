@@ -1,7 +1,11 @@
 import { prisma } from '../prisma'
 
 export async function queryEvents() {
-  const data = await prisma.event.findMany()
+  const data = await prisma.event.findMany({
+    orderBy: {
+      startDate: 'asc',
+    },
+  })
   return data
 }
 

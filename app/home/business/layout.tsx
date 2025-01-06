@@ -6,6 +6,8 @@ type Props = {
   children: ReactNode
 }
 
+export const dynamic = 'force-dynamic'
+
 export default function BusinessLayout(props: Props) {
   return <LeftMenuLayout menu={BusinessMenu}>{props.children}</LeftMenuLayout>
 }

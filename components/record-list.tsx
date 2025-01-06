@@ -3,6 +3,7 @@ import { Divider } from '@nextui-org/divider'
 import { Button } from '@nextui-org/button'
 import { Record } from '@prisma/client'
 import Link from 'next/link'
+import { toDateString } from '@/utils/datetime'
 
 type Props = {
   records: Record[]
@@ -28,9 +29,7 @@ export default function RecordList(props: Props) {
         <div key={record.id}>
           <div className="w-full h-12 flex flex-row items-center">
             <span className="flex-1">{record.title}</span>
-            <span className="">
-              {new Date(record.date).toLocaleDateString()}
-            </span>
+            <span className="">{toDateString(record.date)}</span>
             <div className="w-8" />
             <Button
               variant="bordered"

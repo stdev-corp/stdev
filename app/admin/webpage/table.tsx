@@ -12,8 +12,13 @@ import {
 import { Webpage } from '@prisma/client'
 import Link from 'next/link'
 
+type CustomeWithWebpage = Pick<
+  Webpage,
+  'id' | 'title' | 'author' | 'date' | 'url'
+>
+
 type Props = {
-  webpages: Webpage[]
+  webpages: CustomeWithWebpage[]
 }
 
 export default function WebpageTable(props: Props) {

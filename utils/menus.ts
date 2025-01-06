@@ -26,8 +26,8 @@ export const BusinessMenu: Menu = {
   subMenus: [
     { label: '해커톤', href: Links.businessHackathon },
     { label: '컨퍼런스', href: Links.businessConference },
-    { label: '보도자료', href: Links.businessPress },
-    { label: '참여후기', href: Links.businessReview },
+    { label: '뉴스 기사', href: Links.businessNews },
+    { label: '참여후기', href: Links.businessBlog },
   ],
 }
 
@@ -35,6 +35,7 @@ export const NoticesMenu: Menu = {
   label: '공지사항',
   href: Links.notices,
   subMenus: [
+    { label: '보도자료', href: Links.noticesPress },
     { label: '재정보고', href: Links.noticesDonation },
     { label: '회의록', href: Links.noticesRecords },
   ],

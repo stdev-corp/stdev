@@ -1,8 +1,27 @@
 import { WebpageType } from '@prisma/client'
 import { prisma } from '../prisma'
 
-export async function queryWebpages() {
-  const data = await prisma.webpage.findMany()
+export async function queryWebpages(type?: WebpageType) {
+  const data = await prisma.webpage.findMany({
+    where: type ? { type } : {},
+    orderBy: {
+      date: 'desc',
+    },
+    select: {
+      id: true,
+      title: true,
+      author: true,
+      url: true,
+      date: true,
+      type: true,
+      event: {
+        select: {
+          slug: true,
+          title: true,
+        },
+      },
+    },
+  })
   return data
 }
 

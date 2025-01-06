@@ -13,10 +13,11 @@ export class Links {
   static business = '/home/business'
   static businessHackathon = '/home/business/hackathon'
   static businessConference = '/home/business/conference'
-  static businessPress = '/home/business/press'
-  static businessReview = '/home/business/review'
+  static businessBlog = '/home/business/blog'
+  static businessNews = '/home/business/news'
 
   static notices = '/home/notices'
+  static noticesPress = '/home/notices/press'
   static noticesDonation = '/home/notices/donation'
   static noticesRecords = '/home/notices/records'
 

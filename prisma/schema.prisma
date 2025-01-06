@@ -194,8 +194,8 @@ model Webpage {
   date   DateTime
   type   WebpageType
 
-  eventId String?
-  event   Event?  @relation(fields: [eventId], references: [id])
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
