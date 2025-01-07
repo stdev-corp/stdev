@@ -53,3 +53,5 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }} # Don't push on PR
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+        env:
+          NEXT_PUBLIC_CHANNEL_PLUGIN_KEY: ${{ secrets.NEXT_PUBLIC_CHANNEL_PLUGIN_KEY }}
