@@ -1,6 +1,8 @@
 'use client'
 
 import { toDateTimeString } from '@/utils/datetime'
+import { Links } from '@/utils/links'
+import { Button } from '@nextui-org/button'
 import {
   Table,
   TableBody,
@@ -10,6 +12,7 @@ import {
   TableRow,
 } from '@nextui-org/table'
 import { Markdown } from '@prisma/client'
+import Link from 'next/link'
 
 type Props = {
   markdowns: Omit<Markdown, 'content'>[]
@@ -24,6 +27,7 @@ export default function MarkdownsTable(props: Props) {
         <TableColumn>부제목</TableColumn>
         <TableColumn>작성일</TableColumn>
         <TableColumn>수정일</TableColumn>
+        <TableColumn>작업</TableColumn>
       </TableHeader>
       <TableBody>
         {props.markdowns.map((markdown) => (
@@ -33,6 +37,15 @@ export default function MarkdownsTable(props: Props) {
             <TableCell>{markdown.subtitle}</TableCell>
             <TableCell>{toDateTimeString(markdown.createdAt)}</TableCell>
             <TableCell>{toDateTimeString(markdown.updatedAt)}</TableCell>
+            <TableCell>
+              <Button
+                as={Link}
+                size="sm"
+                href={Links.adminMarkdownEdit(markdown.id)}
+              >
+                수정
+              </Button>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

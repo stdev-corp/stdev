@@ -48,7 +48,9 @@ export class Links {
   static admin = '/admin'
   static adminUser = '/admin/user'
   static adminMarkdown = '/admin/markdown'
-  static adminMarkdownCreate = '/admin/markdown/create'
+  static adminMarkdownCreate = '/admin/markdown/create-edit'
+  static adminMarkdownEdit = (id: string) =>
+    `/admin/markdown/create-edit?id=${id}`
   static adminProduct = '/admin/product'
   static adminProductCreate = '/admin/product/create'
   static adminRedirect = '/admin/redirect'
