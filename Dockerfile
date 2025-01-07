@@ -1,7 +1,5 @@
 FROM node:22-alpine AS base
 
-ARG NEXT_PUBLIC_CHANNEL_PLUGIN_KEY=${NEXT_PUBLIC_CHANNEL_PLUGIN_KEY}
-
 # Stage 1: Install dependencies
 FROM base AS deps
 WORKDIR /app
