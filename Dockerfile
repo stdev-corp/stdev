@@ -16,8 +16,7 @@ COPY . .
 
 RUN npx prisma generate --schema ./prisma/schema.prisma
 
-RUN --mount=type=secret,id=AUTH_URL,env=AUTH_URL \
-  --mount=type=secret,id=NEXT_PUBLIC_CHANNEL_PLUGIN_KEY,env=NEXT_PUBLIC_CHANNEL_PLUGIN_KEY \
+RUN --mount=type=secret,id=NEXT_PUBLIC_CHANNEL_PLUGIN_KEY,env=NEXT_PUBLIC_CHANNEL_PLUGIN_KEY \
   npm run build
 
 # Stage 3: Production server

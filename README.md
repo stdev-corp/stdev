@@ -21,9 +21,8 @@ npm run dev
 
 ## How to deploy
 
-Github 레포지토리 설정에서 `Actions secrets and variables` 페이지로 이동한 후 `Repository secrets`에 아래 두 값을 입력합니다.
+Github 레포지토리 설정에서 `Actions secrets and variables` 페이지로 이동한 후 `Repository secrets`에 아래 값을 입력합니다.
 
-> AUTH_URL  
 > NEXT_PUBLIC_CHANNEL_PLUGIN_KEY
 
 서버에서 `Docker Compose` 환경을 설정한 후, `docker-compose.yml` 을 아래와 같이 작성합니다.
@@ -44,6 +43,7 @@ services:
       AUTH_SECRET: example
       AUTH_GOOGLE_ID: example
       AUTH_GOOGLE_SECRET: example
+      AUTH_URL: https://example.com/api/auth
 ```
 
 아래 명령을 실행합니다.
