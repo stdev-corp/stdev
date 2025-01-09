@@ -9,7 +9,7 @@ import {
 } from '@/utils/menus'
 import type { MetadataRoute } from 'next'
 
-function toSitemap(menu: Menu): MetadataRoute.Sitemap {
+function toSitemap(menu: Menu) {
   const menuSitemap = {
     url: HOST + menu.href,
     lastModified: new Date(),
@@ -35,5 +35,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...toSitemap(NoticesMenu),
     ...toSitemap(ProductsMenu),
     ...toSitemap(InfoMenu),
-  ]
+  ].map((item) => ({ ...item, changeFrequency: 'monthly' }))
 }
