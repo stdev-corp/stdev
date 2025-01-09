@@ -65,4 +65,8 @@ export class Links {
   static adminWebpageCreate = '/admin/webpage/create'
 
   static apiDelete = '/api/delete'
+
+  static googleMail = 'http://mail.stdev.kr'
+  static googleDrive = 'http://drive.stdev.kr'
+  static googleCalendar = 'http://calendar.stdev.kr'
 }
