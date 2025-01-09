@@ -1,5 +1,5 @@
 import LeftMenuLayout from '@/components/layout/left-menu-layout'
-import { OrderMenu } from '@/utils/menus'
+import { ProductsMenu } from '@/utils/menus'
 import { ReactNode } from 'react'
 
 type Props = {
@@ -7,5 +7,5 @@ type Props = {
 }
 
 export default function IntroLayout(props: Props) {
-  return <LeftMenuLayout menu={OrderMenu}>{props.children}</LeftMenuLayout>
+  return <LeftMenuLayout menu={ProductsMenu}>{props.children}</LeftMenuLayout>
 }

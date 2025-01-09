@@ -28,6 +28,7 @@ export class Links {
 
   static infoPrivacy = '/info/privacy'
   static infoTerms = '/info/terms'
+  static infoSitemap = '/info/sitemap'
 
   static products = '/home/products'
   static checkoutUserInfo = (productId: string) =>

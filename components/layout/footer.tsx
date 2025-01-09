@@ -41,6 +41,11 @@ export default async function Footer() {
                   연간 기부금 모금액 및 활용실적
                 </a>
               </li>
+              <li>
+                <a href={Links.infoSitemap} className="hover:underline">
+                  사이트맵
+                </a>
+              </li>
             </ul>
           </div>
           <div className="w-full md:w-1/3 flex flex-col gap-4">
