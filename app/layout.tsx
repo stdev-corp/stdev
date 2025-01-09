@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   description: '사단법인 STDev 홈페이지',
 }
 
+export const dynamic = 'force-dynamic'
+
 export default function RootLayout({
   children,
 }: Readonly<{

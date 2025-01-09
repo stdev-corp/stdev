@@ -2,6 +2,7 @@ import { getProduct } from '@/utils/server/product'
 import TossWidget from './toss-widget'
 import { getOrder } from '@/utils/server/order'
 import ProductCard from '@/components/product-card'
+import { notFound } from 'next/navigation'
 
 type Props = {
   searchParams: Promise<{ orderId: string }>
@@ -11,15 +12,11 @@ export default async function CheckoutPage(props: Props) {
   const orderId = (await props.searchParams).orderId
   const order = await getOrder(orderId)
 
-  if (!order) {
-    return <div>주문이 없습니다.</div>
-  }
+  if (!order) notFound()
 
   const product = await getProduct(order.productId)
 
-  if (!product) {
-    return <div>상품이 없습니다.</div>
-  }
+  if (!product) notFound()
 
   return (
     <>

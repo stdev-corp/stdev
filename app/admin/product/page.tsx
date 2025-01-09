@@ -4,8 +4,6 @@ import { queryProducts } from '@/utils/server/product'
 import Link from 'next/link'
 import { Links } from '@/utils/links'
 
-export const dynamic = 'force-dynamic'
-
 export default async function AdminProductsPage() {
   const products = await queryProducts()
 

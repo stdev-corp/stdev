@@ -8,14 +8,22 @@ import { Button } from '@nextui-org/button'
 import { ReactNode } from 'react'
 import Link from 'next/link'
 import { Links } from '@/utils/links'
+import { auth } from '@/utils/auth'
+import { forbidden, unauthorized } from 'next/navigation'
 
 type Props = {
   children: ReactNode
 }
 
-export const dynamic = 'force-dynamic'
+export default async function Layout(props: Props) {
+  const session = await auth()
 
-export default function Layout(props: Props) {
+  if (!session || !session.user) {
+    unauthorized()
+  } else if (!session.user.email?.endsWith('@stdev.kr')) {
+    forbidden()
+  }
+
   return (
     <>
       <Navbar isBordered maxWidth="full" className="bg-gray-800 text-white">

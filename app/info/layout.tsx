@@ -3,8 +3,6 @@ import Navigation from '@/components/layout/navbar'
 import Footer from '@/components/layout/footer'
 import { auth } from '@/utils/auth'
 
-export const dynamic = 'force-dynamic'
-
 type Props = {
   children: ReactNode
 }

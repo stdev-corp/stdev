@@ -4,8 +4,6 @@ import { Links } from '@/utils/links'
 import RedirectTable from './table'
 import { listRedirectsWithUser } from '@/utils/server/redirect'
 
-export const dynamic = 'force-dynamic'
-
 export default async function AdminMarkdownsPage() {
   const data = await listRedirectsWithUser()
 

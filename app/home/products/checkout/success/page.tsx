@@ -4,6 +4,7 @@ import { confirmOrder } from '@/utils/server/order'
 import { getProduct } from '@/utils/server/product'
 import { Button } from '@nextui-org/button'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 
 type Props = {
   searchParams: Promise<{ orderId: string; paymentKey: string; amount: string }>
@@ -15,9 +16,7 @@ export default async function CheckoutSuccessPage(props: Props) {
   const order = await confirmOrder(orderId, paymentKey, Number(amount))
   const product = await getProduct(order.productId)
 
-  if (!product) {
-    return <div>상품이 없습니다.</div>
-  }
+  if (!product) notFound()
 
   return (
     <>

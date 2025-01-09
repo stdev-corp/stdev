@@ -4,7 +4,7 @@ import { createOrder } from '@/utils/server/order'
 import { getProduct } from '@/utils/server/product'
 import { Button } from '@nextui-org/button'
 import { Input } from '@nextui-org/input'
-import { redirect } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 
 type Props = {
   searchParams: Promise<{ productId: string }>
@@ -34,9 +34,7 @@ export default async function CheckoutUserInfoPage(props: Props) {
     redirect(Links.checkoutPay(order.id))
   }
 
-  if (!product) {
-    return <div>상품이 없습니다.</div>
-  }
+  if (!product) notFound()
 
   return (
     <>

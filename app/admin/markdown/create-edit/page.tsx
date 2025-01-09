@@ -6,7 +6,7 @@ import {
 } from '@/utils/server/markdown'
 import { Input, Textarea } from '@nextui-org/input'
 import { Button } from '@nextui-org/button'
-import { redirect } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 
 type Props = {
   searchParams: Promise<{ id: string }>
@@ -21,7 +21,7 @@ export default async function CreateMarkdownPage(props: Props) {
   }
 
   if (id && !markdown) {
-    return <div>Markdown not found</div>
+    return notFound()
   }
 
   const handleCreate = async (formData: FormData) => {

@@ -1,9 +1,7 @@
 import { getUrlBySlug } from '@/utils/server/redirect'
 import { logUrlEvent } from '@/utils/server/url-event'
-import { redirect } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { after } from 'next/server'
-
-export const dynamic = 'force-dynamic'
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -17,7 +15,7 @@ export default async function RedirectPage(props: Props) {
   const url = await getUrlBySlug(slug)
 
   if (!url) {
-    return <div>존재하지 않는 URL입니다.</div>
+    notFound()
   }
 
   after(() => logUrlEvent(slug, JSON.parse(ua)))
