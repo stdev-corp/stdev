@@ -23,9 +23,9 @@ npm run dev
 
 Github 레포지토리 설정에서 `Actions secrets and variables` 페이지로 이동한 후 `Repository secrets`에 아래 값을 입력합니다.
 
-> NEXT_PUBLIC_CHANNEL_PLUGIN_KEY
-> NEXT_PUBLIC_GTM_ID
-> NEXT_PUBLIC_GA_ID
+- NEXT_PUBLIC_CHANNEL_PLUGIN_KEY
+- NEXT_PUBLIC_GTM_ID
+- NEXT_PUBLIC_GA_ID
 
 서버에서 `Docker Compose` 환경을 설정한 후, `docker-compose.yml` 을 아래와 같이 작성합니다.
 
