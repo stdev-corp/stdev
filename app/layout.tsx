@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Providers } from './providers'
-import { GoogleAnalytics } from '@next/third-parties/google'
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -15,12 +15,22 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const gtmId = process.env.NEXT_PUBLIC_GTM_ID
+  const gaId = process.env.NEXT_PUBLIC_GA_ID
+  if (!gtmId) {
+    throw new Error('NEXT_PUBLIC_GTM_ID is not defined')
+  }
+  if (!gaId) {
+    throw new Error('NEXT_PUBLIC_GA_ID is not defined')
+  }
+
   return (
     <html lang="ko">
       <body className="min-h-screen">
         <Providers>{children}</Providers>
       </body>
-      <GoogleAnalytics gaId="G-8S1XRBF33D" />
+      <GoogleTagManager gtmId={gtmId} />
+      <GoogleAnalytics gaId={gaId} />
     </html>
   )
 }
