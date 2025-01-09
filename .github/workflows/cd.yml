@@ -22,9 +22,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Write env file
-        run: echo "${{ secrets.ENV_FILE }}" > .env
-
       - name: Install cosign
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@v3
@@ -55,3 +52,5 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           secrets: |
             "NEXT_PUBLIC_CHANNEL_PLUGIN_KEY=${{ secrets.NEXT_PUBLIC_CHANNEL_PLUGIN_KEY }}"
+            "NEXT_PUBLIC_GTM_ID=${{ secrets.NEXT_PUBLIC_GTM_ID }}"
+            "NEXT_PUBLIC_GA_ID=${{ secrets.NEXT_PUBLIC_GA_ID }}"
