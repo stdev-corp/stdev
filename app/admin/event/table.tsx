@@ -7,7 +7,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from '@nextui-org/table'
+} from '@heroui/table'
 import { Event } from '@prisma/client'
 
 type Props = {

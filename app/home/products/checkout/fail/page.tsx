@@ -1,6 +1,6 @@
 import CenterScreen from '@/components/center-screen'
 import { Links } from '@/utils/links'
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 import Link from 'next/link'
 
 type Props = {

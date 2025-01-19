@@ -1,9 +1,9 @@
 import { Links } from '@/utils/links'
-import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/card'
-import { Button } from '@nextui-org/button'
+import { Card, CardBody, CardFooter, CardHeader } from '@heroui/card'
+import { Button } from '@heroui/button'
 import Link from 'next/link'
 import { ReactNode } from 'react'
-import { Divider } from '@nextui-org/divider'
+import { Divider } from '@heroui/divider'
 
 type Props = {
   title: string

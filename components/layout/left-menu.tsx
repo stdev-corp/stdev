@@ -1,6 +1,6 @@
 'use client'
 import { Menu } from '@/utils/menus'
-import { Listbox, ListboxItem, ListboxSection } from '@nextui-org/listbox'
+import { Listbox, ListboxItem, ListboxSection } from '@heroui/listbox'
 import Link from 'next/link'
 
 type LeftMenuProps = {

@@ -2,7 +2,7 @@ import ProductCard from '@/components/product-card'
 import { Links } from '@/utils/links'
 import { confirmOrder } from '@/utils/server/order'
 import { getProduct } from '@/utils/server/product'
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 

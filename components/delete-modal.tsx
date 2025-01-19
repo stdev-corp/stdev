@@ -6,8 +6,8 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
-} from '@nextui-org/modal'
-import { Button } from '@nextui-org/button'
+} from '@heroui/modal'
+import { Button } from '@heroui/button'
 import { ReactNode } from 'react'
 import { Links } from '@/utils/links'
 import Link from 'next/link'

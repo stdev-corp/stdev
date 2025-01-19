@@ -9,7 +9,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from '@nextui-org/table'
+} from '@heroui/table'
 import { Redirect, User } from '@prisma/client'
 
 type CustomRedirect = Pick<

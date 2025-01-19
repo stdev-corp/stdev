@@ -1,10 +1,5 @@
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-} from '@nextui-org/navbar'
-import { Button } from '@nextui-org/button'
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@heroui/navbar'
+import { Button } from '@heroui/button'
 import { ReactNode } from 'react'
 import Link from 'next/link'
 import { Links } from '@/utils/links'

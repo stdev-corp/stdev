@@ -2,7 +2,7 @@
 
 import { toDateTimeString } from '@/utils/datetime'
 import { Links } from '@/utils/links'
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 import {
   Table,
   TableBody,
@@ -10,7 +10,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from '@nextui-org/table'
+} from '@heroui/table'
 import { Markdown } from '@prisma/client'
 import Link from 'next/link'
 

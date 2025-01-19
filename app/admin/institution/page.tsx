@@ -1,6 +1,6 @@
 import { Links } from '@/utils/links'
 import { queryInstitutions } from '@/utils/server/institutions'
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 import Link from 'next/link'
 import InstitutionTable from './table'
 

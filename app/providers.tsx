@@ -1,6 +1,6 @@
 'use client'
 import * as ChannelService from '@channel.io/channel-web-sdk-loader'
-import { NextUIProvider } from '@nextui-org/system'
+import { HeroUIProvider } from '@heroui/react'
 import { ReactNode, useEffect } from 'react'
 
 if (!process.env.NEXT_PUBLIC_CHANNEL_PLUGIN_KEY) {
@@ -20,6 +20,6 @@ export function Providers({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <NextUIProvider style={{ minHeight: '100vh' }}>{children}</NextUIProvider>
+    <HeroUIProvider style={{ minHeight: '100vh' }}>{children}</HeroUIProvider>
   )
 }

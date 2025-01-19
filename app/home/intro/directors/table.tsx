@@ -7,7 +7,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from '@nextui-org/table'
+} from '@heroui/table'
 
 export default function DirectorsTable() {
   return (

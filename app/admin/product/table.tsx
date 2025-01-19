@@ -6,7 +6,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from '@nextui-org/table'
+} from '@heroui/table'
 import { Product } from '@prisma/client'
 import Link from 'next/link'
 

@@ -1,4 +1,4 @@
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 import ProductTable from './table'
 import { queryProducts } from '@/utils/server/product'
 import Link from 'next/link'

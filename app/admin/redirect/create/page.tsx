@@ -1,6 +1,6 @@
 import { Links } from '@/utils/links'
-import { Input } from '@nextui-org/input'
-import { Button } from '@nextui-org/button'
+import { Input } from '@heroui/input'
+import { Button } from '@heroui/button'
 import { redirect, unauthorized } from 'next/navigation'
 import { createRedirect } from '@/utils/server/redirect'
 import { auth } from '@/utils/auth'

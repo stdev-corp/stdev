@@ -8,7 +8,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from '@nextui-org/table'
+} from '@heroui/table'
 import { Webpage } from '@prisma/client'
 import Link from 'next/link'
 

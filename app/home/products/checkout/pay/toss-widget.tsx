@@ -1,6 +1,6 @@
 'use client'
 import { HOST, Links } from '@/utils/links'
-import { Button } from '@nextui-org/react'
+import { Button } from '@heroui/react'
 import { Order, Product } from '@prisma/client'
 import {
   loadTossPayments,

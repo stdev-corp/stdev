@@ -1,6 +1,6 @@
 'use client'
-import { Divider } from '@nextui-org/divider'
-import { Button } from '@nextui-org/button'
+import { Divider } from '@heroui/divider'
+import { Button } from '@heroui/button'
 import { Record } from '@prisma/client'
 import Link from 'next/link'
 import { toDateString } from '@/utils/datetime'

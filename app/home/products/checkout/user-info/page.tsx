@@ -2,8 +2,8 @@ import ProductCard from '@/components/product-card'
 import { Links } from '@/utils/links'
 import { createOrder } from '@/utils/server/order'
 import { getProduct } from '@/utils/server/product'
-import { Button } from '@nextui-org/button'
-import { Input } from '@nextui-org/input'
+import { Button } from '@heroui/button'
+import { Input } from '@heroui/input'
 import { notFound, redirect } from 'next/navigation'
 
 type Props = {

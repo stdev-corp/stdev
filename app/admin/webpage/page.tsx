@@ -1,5 +1,5 @@
 import { queryWebpages } from '@/utils/server/webpage'
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 import WebpageTable from './table'
 import Link from 'next/link'
 import { Links } from '@/utils/links'

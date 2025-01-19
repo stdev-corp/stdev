@@ -1,6 +1,6 @@
 import { Links } from '@/utils/links'
 import { queryEvents } from '@/utils/server/event'
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 import Link from 'next/link'
 import EventTable from './table'
 

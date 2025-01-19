@@ -1,8 +1,8 @@
-import { Card, CardBody, CardFooter, CardHeader } from '@nextui-org/card'
-import { Divider } from '@nextui-org/divider'
+import { Card, CardBody, CardFooter, CardHeader } from '@heroui/card'
+import { Divider } from '@heroui/divider'
 import Image from 'next/image'
 import { Product } from '@prisma/client'
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 import Link from 'next/link'
 import { Links } from '@/utils/links'
 

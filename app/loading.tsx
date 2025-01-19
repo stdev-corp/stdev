@@ -1,5 +1,5 @@
 'use client'
-import { CircularProgress } from '@nextui-org/progress'
+import { CircularProgress } from '@heroui/progress'
 
 export default function Loading() {
   return (

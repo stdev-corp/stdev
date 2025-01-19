@@ -1,5 +1,5 @@
-import { Input, Textarea } from '@nextui-org/input'
-import { Button } from '@nextui-org/button'
+import { Input, Textarea } from '@heroui/input'
+import { Button } from '@heroui/button'
 import { createProduct } from '@/utils/server/product'
 import { redirect } from 'next/navigation'
 import { Links } from '@/utils/links'

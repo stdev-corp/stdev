@@ -1,7 +1,7 @@
 'use client'
 
 import { toDateString } from '@/utils/datetime'
-import { Divider } from '@nextui-org/divider'
+import { Divider } from '@heroui/divider'
 import { Webpage } from '@prisma/client'
 import Link from 'next/link'
 

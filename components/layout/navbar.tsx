@@ -5,17 +5,17 @@ import {
   NavbarContent,
   NavbarItem,
   NavbarMenuItem,
-} from '@nextui-org/navbar'
+} from '@heroui/navbar'
 import {
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-} from '@nextui-org/dropdown'
-import { Button } from '@nextui-org/button'
+} from '@heroui/dropdown'
+import { Button } from '@heroui/button'
 import { signIn, signOut } from 'next-auth/react'
 import { User } from 'next-auth'
-import { Avatar } from '@nextui-org/avatar'
+import { Avatar } from '@heroui/avatar'
 import { Links } from '@/utils/links'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'

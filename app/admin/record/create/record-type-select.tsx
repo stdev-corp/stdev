@@ -1,6 +1,6 @@
 'use client'
 import { toRecordTypeString } from '@/utils/prisma'
-import { Select, SelectItem } from '@nextui-org/react'
+import { Select, SelectItem } from '@heroui/react'
 import { RecordType } from '@prisma/client'
 import { useState } from 'react'
 

@@ -1,6 +1,6 @@
 import { Links } from '@/utils/links'
 import { queryRecords } from '@/utils/server/records'
-import { Button } from '@nextui-org/button'
+import { Button } from '@heroui/button'
 import Link from 'next/link'
 import RecordTable from './table'
 

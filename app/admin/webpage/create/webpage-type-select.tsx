@@ -1,4 +1,4 @@
-import { Radio, RadioGroup } from '@nextui-org/radio'
+import { Radio, RadioGroup } from '@heroui/radio'
 import { WebpageType } from '@prisma/client'
 
 export default function WebpageTypeSelect() {
