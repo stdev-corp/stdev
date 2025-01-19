@@ -4,7 +4,9 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
+  NavbarMenu,
   NavbarMenuItem,
+  NavbarMenuToggle,
 } from '@heroui/navbar'
 import {
   Dropdown,
@@ -20,6 +22,7 @@ import { Links } from '@/utils/links'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Menus from '@/utils/menus'
+import { useState } from 'react'
 
 type MenuDropdownProps = {
   menus: {
@@ -69,16 +72,31 @@ type Props = {
 }
 
 export default function Navigation(props: Props) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
   return (
-    <Navbar isBordered>
+    <Navbar isBordered isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
       <NavbarBrand>
+        <NavbarMenuToggle
+          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+          className="sm:hidden"
+        />
         <NavbarItem as={Link} href={Links.home}>
-          <p className="font-bold text-inherit">사단법인 STDev</p>
+          <p className="font-bold text-inherit ml-4 sm:ml-0">사단법인 STDev</p>
         </NavbarItem>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex" justify="center">
         <MenuDropdown menus={Menus} />
       </NavbarContent>
+      <NavbarMenu>
+        {Menus.map((menu) => (
+          <Link key={menu.label} href={menu.href}>
+            <NavbarMenuItem onClick={() => setIsMenuOpen(false)}>
+              {menu.label}
+            </NavbarMenuItem>
+          </Link>
+        ))}
+      </NavbarMenu>
       <NavbarContent justify="end">
         <NavbarItem className="flex gap-4">
           {props.user ? (
@@ -115,8 +133,13 @@ export default function Navigation(props: Props) {
             </>
           ) : (
             <>
-              <Button color="secondary" as={Link} href={Links.products}>
-                행사 참가 신청하기
+              <Button
+                color="secondary"
+                as={Link}
+                href={Links.products}
+                className="hidden sm:flex"
+              >
+                행사 참가하기
               </Button>
               <Button color="primary" variant="flat" onPress={() => signIn()}>
                 로그인
