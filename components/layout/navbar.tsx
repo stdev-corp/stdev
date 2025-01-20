@@ -76,15 +76,18 @@ export default function Navigation(props: Props) {
 
   return (
     <Navbar isBordered isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
-      <NavbarBrand>
+      <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           className="sm:hidden"
         />
-        <NavbarItem as={Link} href={Links.home}>
-          <p className="font-bold text-inherit ml-4 sm:ml-0">사단법인 STDev</p>
-        </NavbarItem>
-      </NavbarBrand>
+        <NavbarBrand>
+          <NavbarItem as={Link} href={Links.home}>
+            <p className="font-bold text-inherit">사단법인 STDev</p>
+          </NavbarItem>
+        </NavbarBrand>
+      </NavbarContent>
+
       <NavbarContent className="hidden sm:flex" justify="center">
         <MenuDropdown menus={Menus} />
       </NavbarContent>
