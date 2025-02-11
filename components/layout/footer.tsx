@@ -1,11 +1,39 @@
 import dayjs from 'dayjs'
 import Logo from '@/components/layout/logo'
 import { Links } from '@/utils/links'
+import SnsLink, {
+  HomepageLogo,
+  InstagramLogo,
+  LinkedinLogo,
+  YoutubeLogo,
+} from '@/components/layout/sns-link'
 
 export default async function Footer() {
   return (
     <footer className="bg-gray-800 text-white py-8">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 flex flex-row gap-8 justify-center">
+        <SnsLink
+          logo={<HomepageLogo />}
+          handle="stdev.kr"
+          url="https://stdev.kr"
+        />
+        <SnsLink
+          logo={<InstagramLogo />}
+          handle="@stdev.kr"
+          url="https://instagram.com/stdev.kr"
+        />
+        <SnsLink
+          logo={<LinkedinLogo />}
+          handle="사단법인 STDev"
+          url="https://www.linkedin.com/company/stdev-corp"
+        />
+        <SnsLink
+          logo={<YoutubeLogo />}
+          handle="@stdev-kr"
+          url="https://www.youtube.com/@stdev-kr"
+        />
+      </div>
+      <div className="container mx-auto px-4 mt-8">
         <div className="flex flex-wrap justify-between">
           <div className="w-full md:w-1/3 mb-6 md:mb-0">
             <h3 className="text-lg font-bold mb-2">STDev</h3>
