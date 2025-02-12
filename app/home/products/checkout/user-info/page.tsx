@@ -1,4 +1,5 @@
 import ProductCard from '@/components/product-card'
+import { auth, signIn } from '@/utils/auth'
 import { Links } from '@/utils/links'
 import { createOrder } from '@/utils/server/order'
 import { getProduct } from '@/utils/server/product'
@@ -11,6 +12,14 @@ type Props = {
 }
 
 export default async function CheckoutUserInfoPage(props: Props) {
+  const session = await auth()
+  const userId = session?.user?.id
+
+  if (!userId) {
+    await signIn()
+    return
+  }
+
   const productId = (await props.searchParams).productId
   const product = await getProduct(productId)
 
@@ -42,8 +51,17 @@ export default async function CheckoutUserInfoPage(props: Props) {
       <div className="flex flex-row gap-12">
         <form className="flex flex-col w-96 gap-4">
           <h2>주문자 정보</h2>
-          <Input name="name" label="이름" />
-          <Input name="email" label="이메일" type="email" />
+          <Input
+            name="name"
+            label="이름"
+            defaultValue={session.user?.name ?? ''}
+          />
+          <Input
+            name="email"
+            label="이메일"
+            type="email"
+            defaultValue={session.user?.email ?? ''}
+          />
           <Input name="phone" label="전화번호" placeholder="01012345678" />
           <Button type="submit" formAction={handleSubmit}>
             다음

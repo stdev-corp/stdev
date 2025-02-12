@@ -8,10 +8,14 @@ import {
 } from '@tosspayments/tosspayments-sdk'
 import { useEffect, useMemo, useState } from 'react'
 
-const clientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm'
-const customerKey = 'YYe0QwDuSsgqizlVuxxNA'
+const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY
+
+if (clientKey === undefined) {
+  throw new Error('NEXT_PUBLIC_TOSS_CLIENT_KEY is not defined')
+}
 
 type TossWidgetProps = {
+  userId: string
   product: Pick<Product, 'name' | 'price'>
   order: Pick<Order, 'id' | 'name' | 'email' | 'phone'>
 }
@@ -30,16 +34,16 @@ export default function TossWidget(props: TossWidgetProps) {
 
   useEffect(() => {
     async function fetchPaymentWidgets() {
-      const tossPayments = await loadTossPayments(clientKey)
+      const tossPayments = await loadTossPayments(clientKey!)
       const widgets = tossPayments.widgets({
-        customerKey,
+        customerKey: props.userId,
       })
 
       setWidgets(widgets)
     }
 
     fetchPaymentWidgets()
-  }, [])
+  }, [props.userId])
 
   useEffect(() => {
     async function renderPaymentWidgets() {

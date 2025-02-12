@@ -102,6 +102,14 @@ export default function Navigation(props: Props) {
       </NavbarMenu>
       <NavbarContent justify="end">
         <NavbarItem className="flex gap-4">
+          <Button
+            color="secondary"
+            as={Link}
+            href={Links.products}
+            className="hidden sm:flex"
+          >
+            행사 참가하기
+          </Button>
           {props.user ? (
             <>
               {props.user.email?.endsWith('@stdev.kr') && (
@@ -135,19 +143,9 @@ export default function Navigation(props: Props) {
               </Dropdown>
             </>
           ) : (
-            <>
-              <Button
-                color="secondary"
-                as={Link}
-                href={Links.products}
-                className="hidden sm:flex"
-              >
-                행사 참가하기
-              </Button>
-              <Button color="primary" variant="flat" onPress={() => signIn()}>
-                로그인
-              </Button>
-            </>
+            <Button color="primary" variant="flat" onPress={() => signIn()}>
+              로그인
+            </Button>
           )}
         </NavbarItem>
       </NavbarContent>

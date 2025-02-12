@@ -9,6 +9,8 @@ export class Links {
   static home = '/home'
   static my = '/home/my'
 
+  static signin = '/api/auth/signin'
+
   static intro = '/home/intro'
   static introChart = '/home/intro/chart'
   static introArticles = '/home/intro/articles'
