@@ -23,7 +23,7 @@ export default async function CheckoutSuccessPage(props: Props) {
       <h1>결제 성공</h1>
       <h2>🎉 결제에 성공하였습니다.</h2>
       <div className="h-8" />
-      <Button as={Link} href={Links.productsMyOrder}>
+      <Button as={Link} href={Links.my}>
         내 주문 확인하기
       </Button>
       <div className="h-8" />

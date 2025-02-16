@@ -4,7 +4,7 @@ type Props = {
   children: ReactNode
 }
 
-export default function IntroLayout(props: Props) {
+export default function BasicLayout(props: Props) {
   return (
     <div className="relative max-w-5xl mx-auto px-8 py-12">
       {props.children}

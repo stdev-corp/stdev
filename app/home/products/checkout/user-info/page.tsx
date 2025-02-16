@@ -16,8 +16,7 @@ export default async function CheckoutUserInfoPage(props: Props) {
   const userId = session?.user?.id
 
   if (!userId) {
-    await signIn()
-    return
+    return await signIn()
   }
 
   const productId = (await props.searchParams).productId
@@ -28,12 +27,19 @@ export default async function CheckoutUserInfoPage(props: Props) {
     const name = formData.get('name') as string
     const email = formData.get('email') as string
     const phone = formData.get('phone') as string
+    const affiliation = formData.get('affiliation') as string
+    const position = formData.get('position') as string
+
+    if (!userId) return
 
     const order = await createOrder({
       productId,
+      userId,
       name,
       email,
       phone,
+      affiliation,
+      position,
     })
 
     if (!order) {
@@ -63,6 +69,8 @@ export default async function CheckoutUserInfoPage(props: Props) {
             defaultValue={session.user?.email ?? ''}
           />
           <Input name="phone" label="전화번호" placeholder="01012345678" />
+          <Input name="affiliation" label="소속" placeholder="KAIST" />
+          <Input name="position" label="직위" placeholder="전산학부 4학년" />
           <Button type="submit" formAction={handleSubmit}>
             다음
           </Button>

@@ -41,12 +41,6 @@ export const NoticesMenu: Menu = {
   ],
 }
 
-export const ProductsMenu: Menu = {
-  label: '행사 신청하기',
-  href: Links.products,
-  subMenus: [{ label: '내 주문', href: Links.productsMyOrder }],
-}
-
 export const InfoMenu: Menu = {
   label: '안내 및 공시',
   href: Links.root,
@@ -54,6 +48,15 @@ export const InfoMenu: Menu = {
     { label: '개인정보처리방침', href: Links.infoPrivacy },
     { label: '이용약관', href: Links.infoTerms },
     { label: '사이트맵', href: Links.infoSitemap },
+  ],
+}
+
+export const OtherMenu: Menu = {
+  label: '기타',
+  href: Links.root,
+  subMenus: [
+    { label: '내 정보', href: Links.my },
+    { label: '행사 참가하기', href: Links.products },
   ],
 }
 

@@ -127,10 +127,12 @@ export default function Navigation(props: Props) {
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Static Actions">
                   <DropdownItem key="profile" href={Links.my}>
-                    내 정보
+                    <p>내 정보</p>
+                    <div className="h-2" />
+                    <p>{props.user.name}</p>
+                    <div className="h-2" />
+                    <p>{props.user.email}</p>
                   </DropdownItem>
-                  <DropdownItem key="name">{props.user.name}</DropdownItem>
-                  <DropdownItem key="email">{props.user.email}</DropdownItem>
                   <DropdownItem
                     key="delete"
                     className="text-danger"

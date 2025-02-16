@@ -5,7 +5,7 @@ import {
   IntroMenu,
   Menu,
   NoticesMenu,
-  ProductsMenu,
+  OtherMenu,
 } from '@/utils/menus'
 import type { MetadataRoute } from 'next'
 
@@ -33,7 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...toSitemap(IntroMenu),
     ...toSitemap(BusinessMenu),
     ...toSitemap(NoticesMenu),
-    ...toSitemap(ProductsMenu),
     ...toSitemap(InfoMenu),
+    ...toSitemap(OtherMenu),
   ].map((item) => ({ ...item, changeFrequency: 'monthly' }))
 }

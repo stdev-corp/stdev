@@ -3,11 +3,22 @@ import { prisma } from '../prisma'
 import { redirect } from 'next/navigation'
 import { Links } from '../links'
 
+export async function getOrders(userId: string) {
+  const orders = await prisma.order.findMany({
+    where: { userId },
+    include: { product: true },
+  })
+  return orders
+}
+
 type CreateOrderInput = {
   productId: string
+  userId: string
   name: string
   email: string
   phone: string
+  affiliation: string
+  position: string
 }
 
 export async function createOrder(data: CreateOrderInput) {

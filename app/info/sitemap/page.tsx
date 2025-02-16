@@ -4,7 +4,7 @@ import {
   IntroMenu,
   Menu,
   NoticesMenu,
-  ProductsMenu,
+  OtherMenu,
 } from '@/utils/menus'
 import Link from 'next/link'
 
@@ -37,8 +37,8 @@ export default async function Sitemap() {
         <SitemapMenu menu={IntroMenu} />
         <SitemapMenu menu={BusinessMenu} />
         <SitemapMenu menu={NoticesMenu} />
-        <SitemapMenu menu={ProductsMenu} />
         <SitemapMenu menu={InfoMenu} />
+        <SitemapMenu menu={OtherMenu} />
       </div>
     </div>
   )

@@ -19,6 +19,7 @@ model User {
   accounts  Account[]
   sessions  Session[]
   redirects Redirect[]
+  orders    Order[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -232,8 +233,13 @@ model Order {
   paymentKey  String?
   paymentInfo Json?
 
+  affiliation String?
+  position    String?
+
   productId String
   product   Product @relation(fields: [productId], references: [id])
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

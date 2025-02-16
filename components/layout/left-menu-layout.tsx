@@ -1,7 +1,8 @@
 import LeftMenu from '@/components/layout/left-menu'
 import { Menu } from '@/utils/menus'
 import { ReactNode } from 'react'
-import SubMenuSelect from './sub-menu-select'
+import SubMenuSelect from '@/components/layout/sub-menu-select'
+import BasicLayout from '@/components/layout/basic-layout'
 
 type Props = {
   menu: Menu
@@ -17,9 +18,7 @@ export default function LeftMenuLayout(props: Props) {
       <div className="sm:hidden">
         <SubMenuSelect menu={props.menu} />
       </div>
-      <div className="relative max-w-5xl mx-auto px-8 py-12">
-        {props.children}
-      </div>
+      <BasicLayout>{props.children}</BasicLayout>
     </>
   )
 }

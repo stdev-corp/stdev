@@ -7,7 +7,7 @@ export default async function OrderPage() {
   return (
     <>
       <h1>행사 참가 신청하기</h1>
-      <div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {products.map((product, index) => (
           <ProductCard product={product} key={index} isButton />
         ))}
