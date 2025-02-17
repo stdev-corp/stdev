@@ -1,8 +1,16 @@
 import ProductCard from '@/components/product-card'
 import { queryProducts } from '@/utils/server/product'
 
-export default async function OrderPage() {
-  const products = await queryProducts()
+type Props = {
+  searchParams: Promise<{ id: string }>
+}
+
+export default async function OrderPage(props: Props) {
+  const { id } = await props.searchParams
+
+  console.log(`OrderPage: id=${id}`)
+
+  const products = await queryProducts({ id })
 
   return (
     <>

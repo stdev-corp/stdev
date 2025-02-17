@@ -54,7 +54,7 @@ export default async function CheckoutUserInfoPage(props: Props) {
   return (
     <>
       <h1>상품 결제</h1>
-      <div className="flex flex-row gap-12">
+      <div className="gap-12 grid grid-cols-1 lg:grid-cols-2">
         <form className="flex flex-col w-96 gap-4">
           <h2>주문자 정보</h2>
           <Input

@@ -30,7 +30,7 @@ export default async function CheckoutPage(props: Props) {
   return (
     <>
       <h1>상품 결제</h1>
-      <div className="flex flex-row gap-8">
+      <div className="gap-12 grid grid-cols-1 lg:grid-cols-2">
         <div className="flex-1">
           <TossWidget product={product} order={order} userId={userId} />
         </div>

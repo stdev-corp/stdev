@@ -91,7 +91,7 @@ export default function Navigation(props: Props) {
       <NavbarContent className="hidden sm:flex" justify="center">
         <MenuDropdown menus={Menus} />
       </NavbarContent>
-      <NavbarMenu>
+      <NavbarMenu className="gap-4">
         {Menus.map((menu) => (
           <Link key={menu.label} href={menu.href}>
             <NavbarMenuItem onClick={() => setIsMenuOpen(false)}>
@@ -99,6 +99,16 @@ export default function Navigation(props: Props) {
             </NavbarMenuItem>
           </Link>
         ))}
+        <Button
+          key="products"
+          as={Link}
+          color="primary"
+          className="text-white"
+          href={Links.products}
+          onPress={() => setIsMenuOpen(false)}
+        >
+          행사 참가하기
+        </Button>
       </NavbarMenu>
       <NavbarContent justify="end">
         <NavbarItem className="flex gap-4">

@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Links } from '@/utils/links'
 
 export default async function AdminProductsPage() {
-  const products = await queryProducts()
+  const products = await queryProducts({})
 
   return (
     <>

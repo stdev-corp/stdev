@@ -1,7 +1,12 @@
 import { prisma } from '../prisma'
 
-export async function queryProducts() {
+type QueryProductsInput = {
+  id?: string
+}
+
+export async function queryProducts({ id }: QueryProductsInput) {
   const data = await prisma.product.findMany({
+    where: { id },
     orderBy: { createdAt: 'desc' },
   })
   return data

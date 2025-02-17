@@ -11,7 +11,7 @@ import SnsLink, {
 export default async function Footer() {
   return (
     <footer className="bg-gray-800 text-white py-8">
-      <div className="container mx-auto px-4 flex flex-row gap-8 justify-center">
+      <div className="container mx-auto px-4 flex flex-col lg:flex-row gap-2 lg:gap-8 justify-center">
         <SnsLink
           logo={<HomepageLogo />}
           handle="stdev.kr"
