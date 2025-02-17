@@ -34,7 +34,9 @@ export default async function CheckoutPage(props: Props) {
         <div className="flex-1">
           <TossWidget product={product} order={order} userId={userId} />
         </div>
-        <ProductCard product={product} isButton={false} />
+        <div className="hidden lg:block">
+          <ProductCard product={product} isButton={false} />
+        </div>
       </div>
     </>
   )

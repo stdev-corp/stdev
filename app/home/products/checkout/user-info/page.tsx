@@ -75,7 +75,9 @@ export default async function CheckoutUserInfoPage(props: Props) {
             다음
           </Button>
         </form>
-        <ProductCard product={product} isButton={false} />
+        <div className="hidden lg:block">
+          <ProductCard product={product} isButton={false} />
+        </div>
       </div>
     </>
   )

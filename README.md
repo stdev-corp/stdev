@@ -52,6 +52,7 @@ services:
       AUTH_LINKEDIN_ID: example
       AUTH_LINKEDIN_SECRET: example
       AUTH_URL: https://example.com/api/auth
+      TOSS_SECRET_KEY: example
 ```
 
 아래 명령을 실행합니다.
