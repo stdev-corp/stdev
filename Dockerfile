@@ -16,7 +16,8 @@ COPY . .
 
 RUN npx prisma generate --schema ./prisma/schema.prisma
 
-RUN --mount=type=secret,id=NEXT_PUBLIC_TOSS_CLIENT_KEY,env=NEXT_PUBLIC_TOSS_CLIENT_KEY \
+RUN --mount=type=secret,id=TOSS_SECRET_KEY,env=TOSS_SECRET_KEY \
+  --mount=type=secret,id=NEXT_PUBLIC_TOSS_CLIENT_KEY,env=NEXT_PUBLIC_TOSS_CLIENT_KEY \
   --mount=type=secret,id=NEXT_PUBLIC_CHANNEL_PLUGIN_KEY,env=NEXT_PUBLIC_CHANNEL_PLUGIN_KEY \
   --mount=type=secret,id=NEXT_PUBLIC_GTM_ID,env=NEXT_PUBLIC_GTM_ID \
   --mount=type=secret,id=NEXT_PUBLIC_GA_ID,env=NEXT_PUBLIC_GA_ID \
