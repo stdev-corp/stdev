@@ -9,7 +9,6 @@ if (!process.env.NEXT_PUBLIC_CHANNEL_PLUGIN_KEY) {
 
 export function Providers({ children }: { children: ReactNode }) {
   useEffect(() => {
-    console.log('ChannelService.loadScript()')
     ChannelService.loadScript()
     ChannelService.boot({
       pluginKey: process.env.NEXT_PUBLIC_CHANNEL_PLUGIN_KEY!,

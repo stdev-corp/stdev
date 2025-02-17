@@ -3,6 +3,12 @@ import { prisma } from '../prisma'
 import { redirect } from 'next/navigation'
 import { Links } from '../links'
 
+const secretKey = process.env.TOSS_SECRET_KEY
+
+if (secretKey === undefined) {
+  throw new Error('TOSS_SECRET_KEY is not defined')
+}
+
 export async function getOrders(userId: string) {
   const orders = await prisma.order.findMany({
     where: { userId },
@@ -40,7 +46,7 @@ export async function confirmOrder(
   paymentKey: string,
   amount: number,
 ) {
-  const widgetSecretKey = 'test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6'
+  const widgetSecretKey = secretKey
   const encryptedSecretKey =
     'Basic ' + Buffer.from(widgetSecretKey + ':').toString('base64')
 

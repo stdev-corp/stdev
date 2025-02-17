@@ -8,8 +8,6 @@ type Props = {
 export default async function OrderPage(props: Props) {
   const { id } = await props.searchParams
 
-  console.log(`OrderPage: id=${id}`)
-
   const products = await queryProducts({ id })
 
   return (
