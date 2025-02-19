@@ -35,10 +35,10 @@ export default function ProductCard(props: ProductCardProps) {
             size="lg"
             href={Links.checkoutUserInfo(props.product.id)}
           >
-            ₩ {props.product.price}원
+            현장 무료 참가
           </Button>
         ) : (
-          <span className="font-bold text-2xl">₩ {props.product.price}원</span>
+          <span className="font-bold text-2xl">현장 무료 참가</span>
         )}
       </CardBody>
       <Divider />
