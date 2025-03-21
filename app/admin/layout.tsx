@@ -55,7 +55,7 @@ export default async function Layout(props: Props) {
             상품
           </NavbarItem>
           <NavbarItem as={Link} href={Links.adminRecord}>
-            회의록
+            문서
           </NavbarItem>
         </NavbarContent>
       </Navbar>

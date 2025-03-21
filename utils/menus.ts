@@ -36,8 +36,8 @@ export const NoticesMenu: Menu = {
   href: Links.notices,
   subMenus: [
     { label: '보도자료', href: Links.noticesPress },
-    { label: '재정보고', href: Links.noticesDonation },
-    { label: '회의록', href: Links.noticesRecords },
+    { label: '연간 기부금 모금액 및 활용실적', href: Links.noticesDonation },
+    { label: '총회 및 이사회', href: Links.noticesRecords },
   ],
 }
 

@@ -27,11 +27,11 @@ export default async function AdminRecordCreatePage() {
 
   return (
     <>
-      <h1>새 회의록 만들기</h1>
+      <h1>새 문서 만들기</h1>
       <form>
-        <Input label="회의록 제목" name="title" />
+        <Input label="문서 제목" name="title" />
         <div className="h-4" />
-        <DateInput label="회의 날짜" name="date" />
+        <DateInput label="게시 날짜" name="date" />
         <div className="h-4" />
         <Input label="AWS S3 PDF URL" name="pdfUrl" />
         <div className="h-4" />

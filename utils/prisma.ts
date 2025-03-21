@@ -10,30 +10,18 @@ export type Model = 'redirect' | 'user'
 
 export function toRecordTypeString(recordType: RecordType) {
   switch (recordType) {
-    case RecordType.REGULAR_GENERAL_MEETING:
-      return '정기 총회'
-    case RecordType.EXTRAORDINARY_GENERAL_MEETING:
-      return '임시 총회'
-    case RecordType.INAUGURAL_GENERAL_MEETING:
-      return '창립 총회'
-    case RecordType.REGULAR_BOARD_MEETING:
-      return '정기 이사회'
-    case RecordType.EXTRAORDINARY_BOARD_MEETING:
-      return '임시 이사회'
+    case RecordType.GENERAL_MEETING:
+      return '총회'
+    case RecordType.BOARD_MEETING:
+      return '이사회'
   }
 }
 
 export function toRecordType(recordTypeString: string): RecordType | undefined {
   switch (recordTypeString) {
-    case '정기 총회':
-      return RecordType.REGULAR_GENERAL_MEETING
-    case '임시 총회':
-      return RecordType.EXTRAORDINARY_GENERAL_MEETING
-    case '창립 총회':
-      return RecordType.INAUGURAL_GENERAL_MEETING
-    case '정기 이사회':
-      return RecordType.REGULAR_BOARD_MEETING
-    case '임시 이사회':
-      return RecordType.EXTRAORDINARY_BOARD_MEETING
+    case '총회':
+      return RecordType.GENERAL_MEETING
+    case '이사회':
+      return RecordType.BOARD_MEETING
   }
 }

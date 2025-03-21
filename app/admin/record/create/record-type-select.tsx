@@ -5,11 +5,8 @@ import { RecordType } from '@prisma/client'
 import { useState } from 'react'
 
 export const recordTypes = [
-  RecordType.REGULAR_BOARD_MEETING,
-  RecordType.EXTRAORDINARY_BOARD_MEETING,
-  RecordType.INAUGURAL_GENERAL_MEETING,
-  RecordType.REGULAR_BOARD_MEETING,
-  RecordType.EXTRAORDINARY_BOARD_MEETING,
+  RecordType.BOARD_MEETING,
+  RecordType.GENERAL_MEETING,
 ]
 
 export default function RecordTypeSelect() {

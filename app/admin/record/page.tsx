@@ -9,9 +9,9 @@ export default async function AdminRecordPage() {
 
   return (
     <>
-      <h1>회의록 & 보고서</h1>
+      <h1>문서</h1>
       <Button as={Link} href={Links.adminRecordCreate}>
-        새 회의록 만들기
+        새 문서 올리기
       </Button>
       <div className="h-4" />
       <RecordTable records={records} />

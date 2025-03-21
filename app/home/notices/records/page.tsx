@@ -6,7 +6,7 @@ export default async function RecordsPage() {
 
   return (
     <div>
-      <h1>회의록</h1>
+      <h1>총회 및 이사회</h1>
       <RecordList records={records} />
     </div>
   )

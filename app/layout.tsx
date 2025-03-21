@@ -6,6 +6,9 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'STDev Corp.',
   description: '사단법인 STDev 홈페이지',
+  icons: {
+    icon: '/favicon.ico',
+  },
 }
 
 export const dynamic = 'force-dynamic'
