@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import Logo from '@/components/layout/logo'
 import { Links } from '@/utils/links'
 import SnsLink, {
+  GithubLogo,
   HomepageLogo,
   InstagramLogo,
   LinkedinLogo,
@@ -19,17 +20,22 @@ export default async function Footer() {
         />
         <SnsLink
           logo={<InstagramLogo />}
-          handle="@stdev.kr"
-          url="https://instagram.com/stdev.kr"
+          handle="@stdev.corp"
+          url="https://instagram.com/stdev.corp"
         />
         <SnsLink
           logo={<LinkedinLogo />}
-          handle="사단법인 STDev"
+          handle="@stdev-corp"
           url="https://www.linkedin.com/company/stdev-corp"
         />
         <SnsLink
+          logo={<GithubLogo />}
+          handle="@stdev-corp"
+          url="https://github.com/stdev-corp"
+        />
+        <SnsLink
           logo={<YoutubeLogo />}
-          handle="@stdev-kr"
+          handle="@stdev-corp"
           url="https://www.youtube.com/@stdev-kr"
         />
       </div>
