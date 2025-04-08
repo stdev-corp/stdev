@@ -8,10 +8,20 @@ import { Files } from '@/utils/db/files'
 import { Images } from '@/utils/db/images'
 import { Webpages } from '@/utils/db/webpages'
 import { Institutions } from '@/utils/db/institutions'
+import { Reports } from '@/utils/db/reports'
+import { Markdowns } from './utils/db/markdowns'
 
 export default buildConfig({
   editor: lexicalEditor(),
-  collections: [Businesses, Files, Images, Institutions, Webpages],
+  collections: [
+    Businesses,
+    Files,
+    Images,
+    Institutions,
+    Markdowns,
+    Reports,
+    Webpages,
+  ],
   plugins: [
     s3Storage({
       collections: {

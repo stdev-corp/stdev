@@ -1,20 +1,39 @@
-import { queryInstitutions } from '@/utils/server/institutions'
-import Image from 'next/image'
+import { Image } from '@/payload-types'
+import { payload } from '@/utils/payload'
+import NextImage from 'next/image'
 
 export default async function Page() {
-  const institutions = await queryInstitutions()
+  const result = await payload.find({
+    collection: 'institutions', // required
+    depth: 2,
+    page: 1,
+    limit: 30,
+  })
+
+  const institutions = result.docs.map((institution) => {
+    const logo = institution.logo as Image
+    return {
+      imageUrl: logo.url,
+      imageAlt: logo.alt,
+    }
+  })
 
   return (
     <div className="mx-auto max-w-5xl p-4">
       <div className="h-[120px]" />
-      <Image
+      <NextImage
         src="/images/intro/title.png"
         alt="title"
         width={600}
         height={600}
       />
       <div className="h-[120px]" />
-      <Image src="/images/intro/3w1h.png" alt="3w1h" width={800} height={800} />
+      <NextImage
+        src="/images/intro/3w1h.png"
+        alt="3w1h"
+        width={800}
+        height={800}
+      />
       <div className="h-[120px]" />
       <div className="bg-gray-100 py-12">
         <div className="container mx-auto px-6 lg:px-16">
@@ -24,8 +43,8 @@ export default async function Page() {
           <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
             {institutions.map((institution, index) => (
               <div key={index} className="flex items-center justify-center">
-                <Image
-                  src={institution.imageUrl}
+                <NextImage
+                  src={institution.imageUrl || ''}
                   alt={`Logo ${index + 1}`}
                   width={120}
                   height={60}

@@ -11,7 +11,6 @@
     "generate:importmap": "payload generate:importmap"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "^2.8.0",
     "@channel.io/channel-web-sdk-loader": "^2.0.0",
     "@heroui/react": "^2.7.6",
     "@next/third-parties": "^15.2.4",
@@ -20,13 +19,11 @@
     "@payloadcms/payload-cloud": "3.33.0",
     "@payloadcms/richtext-lexical": "3.33.0",
     "@payloadcms/storage-s3": "^3.33.0",
-    "@prisma/client": "^6.6.0",
     "@tosspayments/tosspayments-sdk": "^2.3.4",
     "dayjs": "^1.11.13",
     "framer-motion": "^12.6.3",
     "graphql": "^16.10.0",
     "next": "15.2.4",
-    "next-auth": "^5.0.0-beta.25",
     "payload": "3.33.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",

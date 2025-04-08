@@ -1,9 +1,8 @@
 import WebpageList from '@/components/webpage-list'
-import { queryWebpages } from '@/utils/server/webpage'
-import { WebpageType } from '@prisma/client'
+import { queryWebpages } from '@/utils/payload'
 
 export default async function PressPage() {
-  const webpages = await queryWebpages(WebpageType.PRESS_RELEASE)
+  const webpages = await queryWebpages('press_release')
 
   return (
     <div>

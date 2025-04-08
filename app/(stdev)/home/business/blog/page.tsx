@@ -1,9 +1,8 @@
 import WebpageList from '@/components/webpage-list'
-import { queryWebpages } from '@/utils/server/webpage'
-import { WebpageType } from '@prisma/client'
+import { queryWebpages } from '@/utils/payload'
 
 export default async function BlogPage() {
-  const webpages = await queryWebpages(WebpageType.BLOG_POST)
+  const webpages = await queryWebpages('blog_post')
 
   return (
     <div>

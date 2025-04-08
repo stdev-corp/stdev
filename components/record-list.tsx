@@ -1,16 +1,19 @@
 'use client'
 import { Divider } from '@heroui/divider'
 import { Button } from '@heroui/button'
-import { Record } from '@prisma/client'
 import Link from 'next/link'
-import { toDateString } from '@/utils/datetime'
 
 type Props = {
-  records: Record[]
+  reports: {
+    id: number
+    title: string
+    publishedDate: string
+    file_url: string
+  }[]
 }
 
 export default function RecordList(props: Props) {
-  if (props.records.length === 0) {
+  if (props.reports.length === 0) {
     return (
       <>
         <Divider />
@@ -25,16 +28,16 @@ export default function RecordList(props: Props) {
   return (
     <>
       <Divider />
-      {props.records.map((record) => (
+      {props.reports.map((record) => (
         <div key={record.id}>
           <div className="w-full h-12 flex flex-row items-center">
             <span className="flex-1">{record.title}</span>
-            <span className="">{toDateString(record.date)}</span>
+            <span className="">{record.publishedDate}</span>
             <div className="w-8" />
             <Button
               variant="bordered"
               as={Link}
-              href={record.pdfUrl}
+              href={record.file_url}
               size="sm"
               target="_blank"
             >

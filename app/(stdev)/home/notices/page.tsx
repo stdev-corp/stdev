@@ -4,7 +4,7 @@ export default async function NoticesPage() {
   return (
     <div>
       <h1>공지사항</h1>
-      <RecordList records={[]} />
+      <RecordList reports={[]} />
     </div>
   )
 }

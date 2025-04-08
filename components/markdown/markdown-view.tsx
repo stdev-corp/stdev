@@ -1,4 +1,4 @@
-import { getMarkdownByTitle } from '@/utils/server/markdown'
+import { getMarkdownByTitle } from '@/utils/payload'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 

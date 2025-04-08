@@ -8,16 +8,7 @@ import {
   NavbarMenuItem,
   NavbarMenuToggle,
 } from '@heroui/navbar'
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-} from '@heroui/dropdown'
 import { Button } from '@heroui/button'
-import { signIn, signOut } from 'next-auth/react'
-import { User } from 'next-auth'
-import { Avatar } from '@heroui/avatar'
 import { Links } from '@/utils/links'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -67,11 +58,7 @@ function MenuDropdown(props: MenuDropdownProps) {
   )
 }
 
-type Props = {
-  user?: User
-}
-
-export default function Navigation(props: Props) {
+export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
@@ -120,45 +107,6 @@ export default function Navigation(props: Props) {
           >
             행사 참가하기
           </Button>
-          {props.user ? (
-            <>
-              {props.user.email?.endsWith('@stdev.kr') && (
-                <Button as={Link} href={Links.admin}>
-                  Admin
-                </Button>
-              )}
-              <Dropdown>
-                <DropdownTrigger>
-                  <Avatar
-                    isBordered
-                    src={props.user.image ?? undefined}
-                    name={props.user.name ?? undefined}
-                  />
-                </DropdownTrigger>
-                <DropdownMenu aria-label="Static Actions">
-                  <DropdownItem key="profile" href={Links.my}>
-                    <p>내 정보</p>
-                    <div className="h-2" />
-                    <p>{props.user.name}</p>
-                    <div className="h-2" />
-                    <p>{props.user.email}</p>
-                  </DropdownItem>
-                  <DropdownItem
-                    key="delete"
-                    className="text-danger"
-                    color="danger"
-                    onPress={() => signOut()}
-                  >
-                    로그아웃
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </>
-          ) : (
-            <Button color="primary" variant="flat" onPress={() => signIn()}>
-              로그인
-            </Button>
-          )}
         </NavbarItem>
       </NavbarContent>
     </Navbar>

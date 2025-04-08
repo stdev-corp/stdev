@@ -1,22 +1,18 @@
 'use client'
 
-import { toDateString } from '@/utils/datetime'
+import { Webpage } from '@/payload-types'
 import { Divider } from '@heroui/divider'
-import { Webpage } from '@prisma/client'
 import Link from 'next/link'
 
-type WebpageWithEvent = Pick<
+type WebpageWithBusiness = Pick<
   Webpage,
-  'id' | 'title' | 'author' | 'url' | 'date'
+  'id' | 'title' | 'author' | 'url' | 'publishedDate'
 > & {
-  event: {
-    title: string
-    slug: string
-  }
+  business_name: string
 }
 
 type Props = {
-  webpages: WebpageWithEvent[]
+  webpages: WebpageWithBusiness[]
 }
 
 export default function WebpageList(props: Props) {
@@ -41,9 +37,9 @@ export default function WebpageList(props: Props) {
             <span className="w-full font-bold">{webpage.title}</span>
             <div className="flex flex-row items-center gap-4">
               <span>{webpage.author}</span>
-              <span>({toDateString(webpage.date)})</span>
+              <span>{webpage.publishedDate}</span>
               <div className="flex-1" />
-              <span>{webpage.event.title}</span>
+              <span>{webpage.business_name}</span>
             </div>
           </div>
           <Divider />

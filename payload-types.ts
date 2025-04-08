@@ -71,6 +71,8 @@ export interface Config {
     files: File;
     images: Image;
     institutions: Institution;
+    markdowns: Markdown;
+    reports: Report;
     webpages: Webpage;
     users: User;
     'payload-locked-documents': PayloadLockedDocument;
@@ -83,6 +85,8 @@ export interface Config {
     files: FilesSelect<false> | FilesSelect<true>;
     images: ImagesSelect<false> | ImagesSelect<true>;
     institutions: InstitutionsSelect<false> | InstitutionsSelect<true>;
+    markdowns: MarkdownsSelect<false> | MarkdownsSelect<true>;
+    reports: ReportsSelect<false> | ReportsSelect<true>;
     webpages: WebpagesSelect<false> | WebpagesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -189,6 +193,31 @@ export interface Institution {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "markdowns".
+ */
+export interface Markdown {
+  id: number;
+  title: string;
+  subtitle?: string | null;
+  content: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reports".
+ */
+export interface Report {
+  id: number;
+  title: string;
+  publishedDate: string;
+  type: 'meeting';
+  file: number | File;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "webpages".
  */
 export interface Webpage {
@@ -198,6 +227,7 @@ export interface Webpage {
   author: string;
   publishedDate: string;
   business?: (number | null) | Business;
+  type: 'blog_post' | 'news_article' | 'press_release';
   updatedAt: string;
   createdAt: string;
 }
@@ -240,6 +270,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'institutions';
         value: number | Institution;
+      } | null)
+    | ({
+        relationTo: 'markdowns';
+        value: number | Markdown;
+      } | null)
+    | ({
+        relationTo: 'reports';
+        value: number | Report;
       } | null)
     | ({
         relationTo: 'webpages';
@@ -355,6 +393,29 @@ export interface InstitutionsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "markdowns_select".
+ */
+export interface MarkdownsSelect<T extends boolean = true> {
+  title?: T;
+  subtitle?: T;
+  content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reports_select".
+ */
+export interface ReportsSelect<T extends boolean = true> {
+  title?: T;
+  publishedDate?: T;
+  type?: T;
+  file?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "webpages_select".
  */
 export interface WebpagesSelect<T extends boolean = true> {
@@ -363,6 +424,7 @@ export interface WebpagesSelect<T extends boolean = true> {
   author?: T;
   publishedDate?: T;
   business?: T;
+  type?: T;
   updatedAt?: T;
   createdAt?: T;
 }

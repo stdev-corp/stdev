@@ -1,9 +1,8 @@
 import WebpageList from '@/components/webpage-list'
-import { queryWebpages } from '@/utils/server/webpage'
-import { WebpageType } from '@prisma/client'
+import { queryWebpages } from '@/utils/payload'
 
 export default async function NewsPage() {
-  const webpages = await queryWebpages(WebpageType.NEWS_ARTICLE)
+  const webpages = await queryWebpages('news_article')
 
   return (
     <div>
