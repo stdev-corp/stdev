@@ -2,39 +2,53 @@
   "name": "stdev",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbo --experimental-https",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate:importmap": "payload generate:importmap"
   },
   "dependencies": {
-    "@auth/prisma-adapter": "^2.7.4",
+    "@auth/prisma-adapter": "^2.8.0",
     "@channel.io/channel-web-sdk-loader": "^2.0.0",
-    "@heroui/react": "^2.6.14",
-    "@next/third-parties": "^15.1.7",
-    "@prisma/client": "^6.5.0",
+    "@heroui/react": "^2.7.6",
+    "@next/third-parties": "^15.2.4",
+    "@payloadcms/db-postgres": "3.33.0",
+    "@payloadcms/next": "3.33.0",
+    "@payloadcms/payload-cloud": "3.33.0",
+    "@payloadcms/richtext-lexical": "3.33.0",
+    "@payloadcms/storage-s3": "^3.33.0",
+    "@prisma/client": "^6.6.0",
     "@tosspayments/tosspayments-sdk": "^2.3.4",
     "dayjs": "^1.11.13",
-    "framer-motion": "^12.4.2",
-    "next": "15.1.7",
+    "framer-motion": "^12.6.3",
+    "graphql": "^16.10.0",
+    "next": "15.2.4",
     "next-auth": "^5.0.0-beta.25",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "react-markdown": "^9.0.3",
-    "remark-gfm": "^4.0.1"
+    "payload": "3.33.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "sharp": "0.34.1"
   },
   "devDependencies": {
-    "@types/node": "^22.13.1",
-    "@types/react": "^19.0.8",
-    "@types/react-dom": "^19.0.3",
-    "eslint": "^9.20.1",
-    "eslint-config-next": "15.1.7",
-    "eslint-config-prettier": "^10.0.1",
-    "postcss": "^8.5.2",
-    "prettier": "^3.5.0",
-    "prisma": "^6.5.0",
+    "@eslint/eslintrc": "^3.3.1",
+    "@types/node": "^22.14.0",
+    "@types/react": "19.1.0",
+    "@types/react-dom": "19.1.1",
+    "eslint": "^9.24.0",
+    "eslint-config-next": "15.2.4",
+    "prettier": "^3.5.3",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.3"
-  }
+    "typescript": "5.8.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "sharp"
+    ]
+  },
+  "packageManager": "pnpm@8.15.5+sha1.a58c038faac410c947dbdb93eb30994037d0fce2"
 }
