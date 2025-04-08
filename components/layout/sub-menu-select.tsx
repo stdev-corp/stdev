@@ -21,15 +21,11 @@ export default function SubMenuSelect(props: Props) {
       }}
     >
       <SelectSection showDivider>
-        <SelectItem key={props.menu.href} value={props.menu.href}>
-          {props.menu.label}
-        </SelectItem>
+        <SelectItem key={props.menu.href}>{props.menu.label}</SelectItem>
       </SelectSection>
       <SelectSection>
         {props.menu.subMenus.map((subMenu) => (
-          <SelectItem key={subMenu.href} value={subMenu.href}>
-            {subMenu.label}
-          </SelectItem>
+          <SelectItem key={subMenu.href}>{subMenu.label}</SelectItem>
         ))}
       </SelectSection>
     </Select>
