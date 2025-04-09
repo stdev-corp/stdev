@@ -1,10 +1,33 @@
+'use server'
+
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { Business, File } from '@/payload-types'
+import { Business, File, Image } from '@/payload-types'
 
-export const payload = await getPayload({ config })
+export async function queryInstitutions() {
+  const payload = await getPayload({ config })
+
+  const result = await payload.find({
+    collection: 'institutions', // required
+    depth: 2,
+    page: 1,
+    limit: 30,
+  })
+
+  const institutions = result.docs.map((institution) => {
+    const logo = institution.logo as Image
+    return {
+      imageUrl: logo.url,
+      imageAlt: logo.alt,
+    }
+  })
+
+  return institutions
+}
 
 export async function queryWebpages(type: string) {
+  const payload = await getPayload({ config })
+
   const result = await payload.find({
     collection: 'webpages',
     where: {
@@ -29,6 +52,8 @@ export async function queryWebpages(type: string) {
 }
 
 export async function queryReports(type: string) {
+  const payload = await getPayload({ config })
+
   const result = await payload.find({
     collection: 'reports',
     where: {
@@ -51,6 +76,8 @@ export async function queryReports(type: string) {
 }
 
 export async function getMarkdownByTitle(title: string) {
+  const payload = await getPayload({ config })
+
   const result = await payload.find({
     collection: 'markdowns',
     where: {

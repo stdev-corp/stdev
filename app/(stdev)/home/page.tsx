@@ -1,22 +1,8 @@
-import { Image } from '@/payload-types'
-import { payload } from '@/utils/payload'
+import { queryInstitutions } from '@/utils/payload'
 import NextImage from 'next/image'
 
 export default async function Page() {
-  const result = await payload.find({
-    collection: 'institutions', // required
-    depth: 2,
-    page: 1,
-    limit: 30,
-  })
-
-  const institutions = result.docs.map((institution) => {
-    const logo = institution.logo as Image
-    return {
-      imageUrl: logo.url,
-      imageAlt: logo.alt,
-    }
-  })
+  const institutions = await queryInstitutions()
 
   return (
     <div className="mx-auto max-w-5xl p-4">
