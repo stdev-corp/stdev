@@ -12,41 +12,44 @@
   },
   "dependencies": {
     "@channel.io/channel-web-sdk-loader": "^2.0.0",
-    "@heroui/react": "^2.7.6",
-    "@next/third-parties": "^15.2.4",
-    "@payloadcms/db-postgres": "^3.33.0",
-    "@payloadcms/next": "^3.44.0",
-    "@payloadcms/payload-cloud": "^3.33.0",
-    "@payloadcms/richtext-lexical": "^3.33.0",
-    "@payloadcms/storage-s3": "^3.33.0",
-    "@tosspayments/tosspayments-sdk": "^2.3.4",
-    "dayjs": "^1.11.13",
-    "framer-motion": "^12.6.3",
-    "graphql": "^16.10.0",
-    "next": "15.2.4",
-    "payload": "3.33.0",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "@heroui/react": "^2.8.2",
+    "@next/third-parties": "^15.5.2",
+    "@payloadcms/db-postgres": "^3.54.0",
+    "@payloadcms/next": "^3.54.0",
+    "@payloadcms/payload-cloud": "^3.54.0",
+    "@payloadcms/richtext-lexical": "^3.54.0",
+    "@payloadcms/storage-s3": "^3.54.0",
+    "@tosspayments/tosspayments-sdk": "^2.3.7",
+    "dayjs": "^1.11.18",
+    "framer-motion": "^12.23.12",
+    "graphql": "^16.11.0",
+    "next": "15.5.2",
+    "payload": "3.54.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
-    "sharp": "0.34.1"
+    "sharp": "0.34.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
-    "@types/node": "^22.14.0",
-    "@types/react": "19.1.0",
-    "@types/react-dom": "19.1.1",
-    "eslint": "^9.24.0",
-    "eslint-config-next": "15.2.4",
-    "eslint-config-prettier": "^10.1.1",
-    "prettier": "^3.5.3",
+    "@types/node": "^22.18.0",
+    "@types/react": "19.1.12",
+    "@types/react-dom": "19.1.9",
+    "eslint": "^9.34.0",
+    "eslint-config-next": "15.5.2",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.6.2",
     "tailwindcss": "^3.4.17",
-    "typescript": "5.8.3"
+    "typescript": "5.9.2"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "@heroui/shared-utils",
+      "@prisma/client",
+      "esbuild",
       "sharp"
     ]
   },
-  "packageManager": "pnpm@10.8.0+sha512.0e82714d1b5b43c74610193cb20734897c1d00de89d0e18420aebc5977fa13d780a9cb05734624e81ebd81cc876cd464794850641c48b9544326b5622ca29971"
+  "packageManager": "pnpm@10.15.0"
 }
