@@ -3,6 +3,7 @@ import { Menu } from '@/utils/menus'
 import { ReactNode } from 'react'
 import SubMenuSelect from '@/components/layout/sub-menu-select'
 import BasicLayout from '@/components/layout/basic-layout'
+import { Box } from '@chakra-ui/react'
 
 type Props = {
   menu: Menu
@@ -12,12 +13,17 @@ type Props = {
 export default function LeftMenuLayout(props: Props) {
   return (
     <>
-      <div className="fixed top-28 left-12 hidden sm:block">
+      <Box
+        position="fixed"
+        top="7rem"
+        left="3rem"
+        display={{ base: 'none', sm: 'block' }}
+      >
         <LeftMenu menu={props.menu} />
-      </div>
-      <div className="sm:hidden">
+      </Box>
+      <Box display={{ base: 'block', sm: 'none' }}>
         <SubMenuSelect menu={props.menu} />
-      </div>
+      </Box>
       <BasicLayout>{props.children}</BasicLayout>
     </>
   )

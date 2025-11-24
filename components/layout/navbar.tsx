@@ -1,114 +1,154 @@
 'use client'
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  NavbarMenu,
-  NavbarMenuItem,
-  NavbarMenuToggle,
-} from '@heroui/navbar'
-import { Button } from '@heroui/button'
 import { Links } from '@/utils/links'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import Menus from '@/utils/menus'
+import {
+  Box,
+  Button,
+  Flex,
+  Link as ChakraLink,
+  Menu,
+  Stack,
+  Text,
+} from '@chakra-ui/react'
+import Link from 'next/link'
 import { useState } from 'react'
 
-type MenuDropdownProps = {
-  menus: {
-    label: string
-    href: string
-    subMenus: {
-      label: string
-      href: string
-    }[]
-  }[]
+function HamburgerIcon() {
+  return (
+    <svg style={{ width: '20px', height: '20px' }} viewBox="0 0 20 20">
+      <path
+        fill="currentColor"
+        d="M1,4 H18 V6 H1 V4 M1,9 H18 V11 H1 V7 M3,14 H18 V16 H1 V14"
+      />
+    </svg>
+  )
 }
 
-function MenuDropdown(props: MenuDropdownProps) {
-  const router = useRouter()
-
+function CloseIcon() {
   return (
-    <div className="w-full flex">
-      <div className="group relative dropdown px-4 cursor-pointer flex flex-row gap-8">
-        {props.menus.map((menu) => (
-          <NavbarMenuItem
-            key={menu.label}
-            onClick={() => router.push(menu.href)}
-          >
-            {menu.label}
-          </NavbarMenuItem>
-        ))}
-        <div className="group-hover:block dropdown-menu absolute hidden h-auto">
-          <div className="top-0 mt-12 bg-white shadow px-6 py-12 flex flex-row">
-            {props.menus.map((menu) => (
-              <div key={menu.label} className="flex flex-col gap-4 w-28">
-                {menu.subMenus.map((subMenu) => (
-                  <Link key={subMenu.label} href={subMenu.href}>
-                    {subMenu.label}
-                  </Link>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+    <svg width="40" height="40" viewBox="0 0 40 40">
+      <path
+        d="M 10,10 L 30,30 M 30,10 L 10,30"
+        stroke="black"
+        stroke-width="4"
+      />
+    </svg>
+  )
+}
+
+function DesktopMenu() {
+  return (
+    <Flex as="nav" align="center" gap={2}>
+      {Menus.map((menu) => (
+        <Menu.Root key={menu.label}>
+          <Menu.Trigger asChild>
+            <Button
+              variant="ghost"
+              fontWeight="medium"
+              display="inline-flex"
+              gap={1}
+              alignItems="center"
+            >
+              {menu.label}
+            </Button>
+          </Menu.Trigger>
+          <Menu.Positioner>
+            <Menu.Content>
+              <Menu.Item asChild value={`${menu.label}-all`}>
+                <Link href={menu.href}>{menu.label}</Link>
+              </Menu.Item>
+              <Menu.Separator />
+              {menu.subMenus.map((subMenu) => (
+                <Menu.Item key={subMenu.label} asChild value={subMenu.label}>
+                  <Link href={subMenu.href}>{subMenu.label}</Link>
+                </Menu.Item>
+              ))}
+            </Menu.Content>
+          </Menu.Positioner>
+        </Menu.Root>
+      ))}
+    </Flex>
   )
 }
 
 export default function Navigation() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [open, setOpen] = useState(false)
 
   return (
-    <Navbar isBordered isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
-      <NavbarContent>
-        <NavbarMenuToggle
-          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-          className="sm:hidden"
-        />
-        <NavbarBrand>
-          <NavbarItem as={Link} href={Links.home}>
-            <p className="font-bold text-inherit">사단법인 STDev</p>
-          </NavbarItem>
-        </NavbarBrand>
-      </NavbarContent>
-
-      <NavbarContent className="hidden sm:flex" justify="center">
-        <MenuDropdown menus={Menus} />
-      </NavbarContent>
-      <NavbarMenu className="gap-4">
-        {Menus.map((menu) => (
-          <Link key={menu.label} href={menu.href}>
-            <NavbarMenuItem onClick={() => setIsMenuOpen(false)}>
-              {menu.label}
-            </NavbarMenuItem>
-          </Link>
-        ))}
+    <Box as="header" borderBottomWidth="1px" bg="white">
+      <Flex align="center" h={16} px={{ base: 4, md: 8 }} gap={4}>
         <Button
-          key="products"
-          as={Link}
-          color="primary"
-          className="text-white"
-          href={Links.products}
-          onPress={() => setIsMenuOpen(false)}
+          display={{ base: 'inline-flex', md: 'none' }}
+          onClick={() => setOpen((prev) => !prev)}
+          variant="ghost"
+          aria-label={open ? '닫기' : '메뉴 열기'}
+          p={2}
         >
-          행사 참가하기
+          {open ? <CloseIcon /> : <HamburgerIcon />}
         </Button>
-      </NavbarMenu>
-      <NavbarContent justify="end">
-        <NavbarItem className="flex gap-4">
-          <Button
-            color="secondary"
-            as={Link}
-            href={Links.products}
-            className="hidden sm:flex"
-          >
-            행사 참가하기
-          </Button>
-        </NavbarItem>
-      </NavbarContent>
-    </Navbar>
+        <ChakraLink
+          as={Link}
+          href={Links.home}
+          fontWeight="bold"
+          _hover={{ textDecoration: 'none' }}
+        >
+          사단법인 STDev
+        </ChakraLink>
+        <Flex flex="1" />
+        <Box display={{ base: 'none', md: 'block' }}>
+          <DesktopMenu />
+        </Box>
+        <Button
+          bg="teal.500"
+          _hover={{ bg: 'teal.600' }}
+          color="white"
+          size="sm"
+        >
+          <Link href={Links.products}>행사 참가하기</Link>
+        </Button>
+      </Flex>
+      {open && (
+        <Box px={4} pb={4} display={{ md: 'none' }} borderTopWidth="1px">
+          <Stack gap={3}>
+            {Menus.map((menu) => (
+              <Box key={menu.label}>
+                <Text fontWeight="semibold" mb={1}>
+                  {menu.label}
+                </Text>
+                <Stack gap={1} pl={2}>
+                  <Button
+                    variant="ghost"
+                    justifyContent="flex-start"
+                    size="sm"
+                    onClick={() => setOpen(false)}
+                  >
+                    <Link href={menu.href}>전체보기</Link>
+                  </Button>
+                  {menu.subMenus.map((subMenu) => (
+                    <Button
+                      key={subMenu.label}
+                      variant="ghost"
+                      justifyContent="flex-start"
+                      size="sm"
+                      onClick={() => setOpen(false)}
+                    >
+                      <Link href={subMenu.href}>{subMenu.label}</Link>
+                    </Button>
+                  ))}
+                </Stack>
+              </Box>
+            ))}
+            <Button
+              bg="teal.500"
+              _hover={{ bg: 'teal.600' }}
+              color="white"
+              onClick={() => setOpen(false)}
+            >
+              <Link href={Links.products}>행사 참가하기</Link>
+            </Button>
+          </Stack>
+        </Box>
+      )}
+    </Box>
   )
 }

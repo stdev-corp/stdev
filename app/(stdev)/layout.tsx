@@ -29,7 +29,7 @@ export default function RootLayout({
 
   return (
     <html lang="ko">
-      <body className="min-h-screen">
+      <body style={{ minHeight: '100vh' }}>
         <Providers>{children}</Providers>
       </body>
       <GoogleTagManager gtmId={gtmId} />

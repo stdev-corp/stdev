@@ -1,3 +1,4 @@
+import { Box } from '@chakra-ui/react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -9,7 +10,7 @@ type Props = {
 export default function Logo(props: Props) {
   return (
     <Link href={props.url} passHref target="_blank">
-      <div className="bg-white h-12 w-56 relative">
+      <Box bg="white" h="3rem" w="14rem" position="relative">
         <Image
           src={props.src}
           alt="logo"
@@ -19,7 +20,7 @@ export default function Logo(props: Props) {
             objectPosition: 'left center',
           }}
         />
-      </div>
+      </Box>
     </Link>
   )
 }

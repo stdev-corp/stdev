@@ -1,14 +1,17 @@
+import { Box, Heading, Stack } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 
 type Props = {
   children: ReactNode
 }
 
-export default async function WithLine(props: Props) {
+export default function WithLine(props: Props) {
   return (
-    <div className="flex items-stretch gap-2 mt-8 mb-4">
-      <div className="bg-primary w-1 rounded my-1" />
-      <h2 className="my-0">{props.children}</h2>
-    </div>
+    <Stack direction="row" align="stretch" gap={2} mt={8} mb={4}>
+      <Box bg="teal.600" w="4px" borderRadius="full" my={1} />
+      <Heading as="h2" size="md" m={0}>
+        {props.children}
+      </Heading>
+    </Stack>
   )
 }

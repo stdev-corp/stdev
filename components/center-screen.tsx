@@ -1,36 +1,36 @@
+'use client'
 import { Links } from '@/utils/links'
-import { Card, CardBody, CardFooter, CardHeader } from '@heroui/card'
-import { Button } from '@heroui/button'
 import Link from 'next/link'
 import { ReactNode } from 'react'
-import { Divider } from '@heroui/divider'
+import { Box, Button, Heading, Separator, Stack, Text } from '@chakra-ui/react'
 
 type Props = {
   title: string
   children: ReactNode
 }
 
-export default async function CenterScreen(props: Props) {
+export default function CenterScreen(props: Props) {
   return (
-    <div className="flex justify-center items-center h-screen">
-      <Card>
-        <CardHeader className="text-4xl font-bold m-4">
-          {props.title}
-        </CardHeader>
-        <Divider />
-        <CardBody className="m-4">{props.children}</CardBody>
-        <Divider />
-        <CardFooter className="m-4">
-          <Button
-            as={Link}
-            href={Links.root}
-            color="primary"
-            className="text-white"
-          >
-            홈페이지로 돌아가기
+    <Box minH="100vh" display="flex" alignItems="center" justifyContent="center">
+      <Box
+        maxW="lg"
+        w="full"
+        p={4}
+        borderWidth="1px"
+        borderRadius="lg"
+        boxShadow="md"
+        bg="white"
+      >
+        <Stack gap={3}>
+          <Heading size="lg">{props.title}</Heading>
+          <Separator />
+          <Box>{props.children}</Box>
+          <Separator />
+          <Button asChild bg="teal.500" _hover={{ bg: 'teal.600' }} color="white">
+            <Link href={Links.root}>홈페이지로 돌아가기</Link>
           </Button>
-        </CardFooter>
-      </Card>
-    </div>
+        </Stack>
+      </Box>
+    </Box>
   )
 }

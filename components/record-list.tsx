@@ -1,6 +1,5 @@
 'use client'
-import { Divider } from '@heroui/divider'
-import { Button } from '@heroui/button'
+import { Box, Button, Separator, Stack, Text, Flex } from '@chakra-ui/react'
 import Link from 'next/link'
 
 type Props = {
@@ -15,38 +14,33 @@ type Props = {
 export default function RecordList(props: Props) {
   if (props.reports.length === 0) {
     return (
-      <>
-        <Divider />
-        <span className="w-full h-12 flex flex-row items-center">
+      <Stack gap={4}>
+        <Separator />
+        <Text minH="3rem" display="flex" alignItems="center">
           자료가 존재하지 않습니다.
-        </span>
-        <Divider />
-      </>
+        </Text>
+        <Separator />
+      </Stack>
     )
   }
 
   return (
-    <>
-      <Divider />
+    <Stack gap={0}>
+      <Separator />
       {props.reports.map((record) => (
-        <div key={record.id}>
-          <div className="w-full h-12 flex flex-row items-center">
-            <span className="flex-1">{record.title}</span>
-            <span className="">{record.publishedDate}</span>
-            <div className="w-8" />
-            <Button
-              variant="bordered"
-              as={Link}
-              href={record.file_url}
-              size="sm"
-              target="_blank"
-            >
-              PDF
+        <Box key={record.id}>
+          <Flex minH="3rem" gap={4} align="center">
+            <Text flex="1">{record.title}</Text>
+            <Text>{record.publishedDate}</Text>
+            <Button variant="outline" asChild size="sm">
+              <Link href={record.file_url} target="_blank">
+                PDF
+              </Link>
             </Button>
-          </div>
-          <Divider />
-        </div>
+          </Flex>
+          <Separator />
+        </Box>
       ))}
-    </>
+    </Stack>
   )
 }

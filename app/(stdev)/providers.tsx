@@ -1,7 +1,7 @@
 'use client'
 import * as ChannelService from '@channel.io/channel-web-sdk-loader'
-import { HeroUIProvider } from '@heroui/react'
 import { ReactNode, useEffect } from 'react'
+import { Box, ChakraProvider, defaultSystem } from '@chakra-ui/react'
 
 if (!process.env.NEXT_PUBLIC_CHANNEL_PLUGIN_KEY) {
   throw new Error('NEXT_PUBLIC_CHANNEL_PLUGIN_KEY is not defined')
@@ -19,6 +19,8 @@ export function Providers({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <HeroUIProvider style={{ minHeight: '100vh' }}>{children}</HeroUIProvider>
+    <ChakraProvider value={defaultSystem}>
+      <Box minH="100vh">{children}</Box>
+    </ChakraProvider>
   )
 }

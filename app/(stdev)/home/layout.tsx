@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import Navigation from '@/components/layout/navbar'
 import Footer from '@/components/layout/footer'
+import { Box } from '@chakra-ui/react'
 
 type Props = {
   children: ReactNode
@@ -8,10 +9,10 @@ type Props = {
 
 export default async function Layout(props: Props) {
   return (
-    <div className="flex flex-col" style={{ minHeight: '100vh' }}>
+    <Box display="flex" flexDirection="column" minH="100vh">
       <Navigation />
-      <div className="flex-1">{props.children}</div>
+      <Box flex="1">{props.children}</Box>
       <Footer />
-    </div>
+    </Box>
   )
 }

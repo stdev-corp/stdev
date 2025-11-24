@@ -1,7 +1,8 @@
 'use client'
 import { Menu } from '@/utils/menus'
-import { Select, SelectItem, SelectSection } from '@heroui/react'
+import { Box } from '@chakra-ui/react'
 import { usePathname, useRouter } from 'next/navigation'
+import type { ChangeEvent } from 'react'
 
 type Props = {
   menu: Menu
@@ -12,22 +13,26 @@ export default function SubMenuSelect(props: Props) {
   const router = useRouter()
 
   return (
-    <Select
-      className="p-4"
-      selectedKeys={[pathname]}
-      onSelectionChange={(keys) => {
-        const [key] = Array.from(keys as Set<string>)
-        router.push(key)
-      }}
-    >
-      <SelectSection showDivider>
-        <SelectItem key={props.menu.href}>{props.menu.label}</SelectItem>
-      </SelectSection>
-      <SelectSection>
+    <Box p={4}>
+      <select
+        value={pathname}
+        onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+          router.push(event.target.value)
+        }
+        style={{
+          width: '100%',
+          padding: '12px',
+          borderRadius: '8px',
+          border: '1px solid #e2e8f0',
+        }}
+      >
+        <option value={props.menu.href}>{props.menu.label}</option>
         {props.menu.subMenus.map((subMenu) => (
-          <SelectItem key={subMenu.href}>{subMenu.label}</SelectItem>
+          <option key={subMenu.href} value={subMenu.href}>
+            {subMenu.label}
+          </option>
         ))}
-      </SelectSection>
-    </Select>
+      </select>
+    </Box>
   )
 }

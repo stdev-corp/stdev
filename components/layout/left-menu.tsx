@@ -1,6 +1,6 @@
 'use client'
 import { Menu } from '@/utils/menus'
-import { Listbox, ListboxItem, ListboxSection } from '@heroui/listbox'
+import { Box, Button, Separator, Stack } from '@chakra-ui/react'
 import Link from 'next/link'
 
 type LeftMenuProps = {
@@ -9,31 +9,31 @@ type LeftMenuProps = {
 
 export default function LeftMenu(props: LeftMenuProps) {
   return (
-    <div className="border-small px-1 py-2 rounded-small border-default-200 dark:border-default-100">
-      <Listbox className="w-40">
-        <ListboxSection showDivider>
-          <ListboxItem
-            key={props.menu.label}
-            as={Link}
-            href={props.menu.href}
-            className="h-12"
-          >
-            {props.menu.label}
-          </ListboxItem>
-        </ListboxSection>
-        <ListboxSection>
+    <Box borderWidth="1px" borderRadius="md" w="10rem" p={3}>
+      <Stack gap={1} separator={<Separator />}>
+        <Button
+          key={props.menu.label}
+          asChild
+          variant="ghost"
+          justifyContent="flex-start"
+          fontWeight="bold"
+        >
+          <Link href={props.menu.href}>{props.menu.label}</Link>
+        </Button>
+        <Stack gap={1}>
           {props.menu.subMenus.map((menu) => (
-            <ListboxItem
+            <Button
               key={menu.label}
-              as={Link}
-              href={menu.href}
-              className="h-12"
+              asChild
+              variant="ghost"
+              justifyContent="flex-start"
+              size="sm"
             >
-              {menu.label}
-            </ListboxItem>
+              <Link href={menu.href}>{menu.label}</Link>
+            </Button>
           ))}
-        </ListboxSection>
-      </Listbox>
-    </div>
+        </Stack>
+      </Stack>
+    </Box>
   )
 }

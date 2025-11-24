@@ -1,10 +1,10 @@
 'use client'
-import { CircularProgress } from '@heroui/progress'
+import { Center, Spinner } from '@chakra-ui/react'
 
 export default function Loading() {
   return (
-    <div className="flex justify-center items-center h-screen">
-      <CircularProgress size="lg" />
-    </div>
+    <Center h="100vh">
+      <Spinner size="lg" />
+    </Center>
   )
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { Webpage } from '@/payload-types'
-import { Divider } from '@heroui/divider'
+import { Separator, Stack, Text, Flex } from '@chakra-ui/react'
 import Link from 'next/link'
 
 type WebpageWithBusiness = Pick<
@@ -16,35 +16,35 @@ type Props = {
 }
 
 export default function WebpageList(props: Props) {
-  const itemStyle = 'w-full flex flex-col py-4 gap-2'
-
   if (props.webpages.length === 0) {
     return (
-      <>
-        <Divider />
-        <span className={itemStyle}>자료가 존재하지 않습니다.</span>
-        <Divider />
-      </>
+      <Stack gap={4}>
+        <Separator />
+        <Text w="full" py={4}>
+          자료가 존재하지 않습니다.
+        </Text>
+        <Separator />
+      </Stack>
     )
   }
 
   return (
-    <>
-      <Divider />
+    <Stack gap={0}>
+      <Separator />
       {props.webpages.map((webpage) => (
         <Link key={webpage.id} href={webpage.url} target="_blank">
-          <div className={itemStyle}>
-            <span className="w-full font-bold">{webpage.title}</span>
-            <div className="flex flex-row items-center gap-4">
-              <span>{webpage.author}</span>
-              <span>{webpage.publishedDate}</span>
-              <div className="flex-1" />
-              <span>{webpage.business_name}</span>
-            </div>
-          </div>
-          <Divider />
+          <Stack gap={2} py={4} w="full">
+            <Text fontWeight="bold">{webpage.title}</Text>
+            <Flex gap={4} align="center">
+              <Text>{webpage.author}</Text>
+              <Text>{webpage.publishedDate}</Text>
+              <Flex flex="1" />
+              <Text>{webpage.business_name}</Text>
+            </Flex>
+            <Separator />
+          </Stack>
         </Link>
       ))}
-    </>
+    </Stack>
   )
 }
