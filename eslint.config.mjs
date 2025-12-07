@@ -1,13 +1,10 @@
-import { FlatCompat } from '@eslint/eslintrc'
+import eslintConfigNext from 'eslint-config-next'
 import eslintConfigPrettier from 'eslint-config-prettier'
 
-const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname,
-})
-
 const config = [
-  ...compat.extends('next/core-web-vitals', 'next/typescript'),
+  ...eslintConfigNext,
   eslintConfigPrettier,
+  { ignores: ['./src/generated/payload-types.ts'] },
   {
     rules: {
       '@typescript-eslint/no-unused-expressions': 'off',
