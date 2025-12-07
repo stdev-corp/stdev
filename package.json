@@ -10,6 +10,7 @@
     "lint": "eslint",
     "prettier:write": "prettier --write .",
     "prettier:check": "prettier --check .",
+    "generate:types": "payload generate:types",
     "generate:importmap": "payload generate:importmap"
   },
   "dependencies": {

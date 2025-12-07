@@ -1,6 +1,6 @@
 'use client'
 
-import { Webpage } from '@/payload-types'
+import { Webpage } from '@/generated/payload-types'
 import { Separator, Stack, Text, Flex } from '@chakra-ui/react'
 import Link from 'next/link'
 

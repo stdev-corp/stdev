@@ -2,7 +2,7 @@
 
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { Business, File, Image } from '@/payload-types'
+import { Business, File, Image } from '@/generated/payload-types'
 
 export async function queryInstitutions() {
   const payload = await getPayload({ config })

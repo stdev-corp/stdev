@@ -1,4 +1,6 @@
 import sharp from 'sharp'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { s3Storage } from '@payloadcms/storage-s3'
@@ -9,7 +11,9 @@ import { Images } from '@/utils/db/images'
 import { Webpages } from '@/utils/db/webpages'
 import { Institutions } from '@/utils/db/institutions'
 import { Reports } from '@/utils/db/reports'
-import { Markdowns } from './utils/db/markdowns'
+import { Markdowns } from '@/utils/db/markdowns'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export default buildConfig({
   editor: lexicalEditor(),
@@ -52,4 +56,7 @@ export default buildConfig({
     },
   }),
   sharp,
+  typescript: {
+    outputFile: path.resolve(__dirname, './src/generated/payload-types.ts'),
+  },
 })
