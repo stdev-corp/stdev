@@ -40,7 +40,7 @@ services:
     restart: always
     environment:
       DATABASE_URL: postgres://user:password@url:port/schema
-      PAYLOAD_SECRET: PugM4PevIH
+      PAYLOAD_SECRET: example
       AWS_ACCESS_KEY: example
       AWS_SECRET_KEY: example
       SMTP_HOST: smtp.example.com
