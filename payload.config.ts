@@ -52,7 +52,7 @@ export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || '',
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URI,
+      connectionString: process.env.DATABASE_URL,
       ssl: {
         rejectUnauthorized: false, // Allow self-signed certificates
       },
@@ -69,8 +69,8 @@ export default buildConfig({
       host: process.env.SMTP_HOST,
       port: 587,
       auth: {
-        user: process.env.AWS_ACCESS_KEY,
-        pass: process.env.AWS_SECRET_KEY,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
       },
     },
   }),
