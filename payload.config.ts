@@ -1,10 +1,13 @@
 import sharp from 'sharp'
 import path from 'path'
 import { fileURLToPath } from 'url'
+
+import { buildConfig } from 'payload'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { s3Storage } from '@payloadcms/storage-s3'
-import { buildConfig } from 'payload'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
+
 import { Businesses } from '@/utils/db/businesses'
 import { Files } from '@/utils/db/files'
 import { Images } from '@/utils/db/images'
@@ -59,4 +62,16 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(__dirname, './src/generated/payload-types.ts'),
   },
+  email: nodemailerAdapter({
+    defaultFromAddress: 'noreply@mail.stdev.kr',
+    defaultFromName: 'STDev Corp.',
+    transportOptions: {
+      host: process.env.SMTP_HOST,
+      port: 587,
+      auth: {
+        user: process.env.AWS_ACCESS_KEY,
+        pass: process.env.AWS_SECRET_KEY,
+      },
+    },
+  }),
 })
