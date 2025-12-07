@@ -15,7 +15,12 @@ import { useState } from 'react'
 
 function HamburgerIcon() {
   return (
-    <svg style={{ width: '20px', height: '20px' }} viewBox="0 0 20 20">
+    <svg
+      style={{ width: '20px', height: '20px' }}
+      viewBox="0 0 20 20"
+      role="img"
+      aria-hidden="true"
+    >
       <path
         fill="currentColor"
         d="M1,4 H18 V6 H1 V4 M1,9 H18 V11 H1 V7 M3,14 H18 V16 H1 V14"
@@ -26,11 +31,17 @@ function HamburgerIcon() {
 
 function CloseIcon() {
   return (
-    <svg width="40" height="40" viewBox="0 0 40 40">
+    <svg
+      width="40"
+      height="40"
+      viewBox="0 0 40 40"
+      role="img"
+      aria-hidden="true"
+    >
       <path
         d="M 10,10 L 30,30 M 30,10 L 10,30"
         stroke="black"
-        stroke-width="4"
+        strokeWidth="4"
       />
     </svg>
   )

@@ -18,16 +18,28 @@ export default async function MarkdownView(props: Props) {
         h3: (props) => <h3 {...props} />,
         h4: (props) => <h4 {...props} />,
         h5: (props) => <h5 {...props} />,
-        a: (props) => <a target="_blank" {...props} />,
+        a: (props) => (
+          <a target="_blank" rel="noopener noreferrer" {...props} />
+        ),
         li: (props) => (
-          <li style={{ listStyleType: 'disc', marginLeft: '1rem' }} {...props} />
+          <li
+            style={{ listStyleType: 'disc', marginLeft: '1rem' }}
+            {...props}
+          />
         ),
         ul: (props) => (
-          <ul style={{ listStyleType: 'disc', marginLeft: '1rem' }} {...props} />
+          <ul
+            style={{ listStyleType: 'disc', marginLeft: '1rem' }}
+            {...props}
+          />
         ),
         table: (props) => (
           <table
-            style={{ width: '100%', borderCollapse: 'collapse', margin: '1rem 0' }}
+            style={{
+              width: '100%',
+              borderCollapse: 'collapse',
+              margin: '1rem 0',
+            }}
             {...props}
           />
         ),
@@ -40,9 +52,7 @@ export default async function MarkdownView(props: Props) {
             {...props}
           />
         ),
-        tr: (props) => (
-          <tr style={{ backgroundColor: '#f5f5f5' }} {...props} />
-        ),
+        tr: (props) => <tr style={{ backgroundColor: '#f5f5f5' }} {...props} />,
         td: (props) => (
           <td
             style={{ border: '1px solid #d1d5db', padding: '0.5rem' }}

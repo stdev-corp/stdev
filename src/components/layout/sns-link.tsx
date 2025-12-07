@@ -84,7 +84,7 @@ type Props = {
 
 export default function SnsLink(props: Props) {
   return (
-    <Link href={props.url} target="_blank">
+    <Link href={props.url} target="_blank" rel="noopener noreferrer">
       <Button
         variant="ghost"
         justifyContent="flex-start"

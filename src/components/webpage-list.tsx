@@ -32,7 +32,12 @@ export default function WebpageList(props: Props) {
     <Stack gap={0}>
       <Separator />
       {props.webpages.map((webpage) => (
-        <Link key={webpage.id} href={webpage.url} target="_blank">
+        <Link
+          key={webpage.id}
+          href={webpage.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <Stack gap={2} py={4} w="full">
             <Text fontWeight="bold">{webpage.title}</Text>
             <Flex gap={4} align="center">

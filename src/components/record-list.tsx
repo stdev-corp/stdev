@@ -33,7 +33,11 @@ export default function RecordList(props: Props) {
             <Text flex="1">{record.title}</Text>
             <Text>{record.publishedDate}</Text>
             <Button variant="outline" asChild size="sm">
-              <Link href={record.file_url} target="_blank">
+              <Link
+                href={record.file_url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 PDF
               </Link>
             </Button>

@@ -1,7 +1,7 @@
 export const HOST =
   process.env.NODE_ENV === 'production'
     ? 'https://stdev.kr'
-    : 'https://localhost:3000'
+    : 'http://localhost:3000'
 
 export class Links {
   static root = '/'
