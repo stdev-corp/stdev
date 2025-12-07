@@ -51,15 +51,6 @@ export const InfoMenu: Menu = {
   ],
 }
 
-export const OtherMenu: Menu = {
-  label: '기타',
-  href: Links.root,
-  subMenus: [
-    { label: '내 정보', href: Links.my },
-    { label: '행사 참가하기', href: Links.products },
-  ],
-}
-
 const Menus: Menu[] = [IntroMenu, BusinessMenu, NoticesMenu]
 
 export default Menus

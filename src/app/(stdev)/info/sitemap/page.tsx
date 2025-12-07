@@ -4,7 +4,6 @@ import {
   IntroMenu,
   Menu,
   NoticesMenu,
-  OtherMenu,
 } from '@/utils/menus'
 import Link from 'next/link'
 import { Box, Heading, Link as ChakraLink, Stack, Text } from '@chakra-ui/react'
@@ -45,7 +44,6 @@ export default async function Sitemap() {
         <SitemapMenu menu={BusinessMenu} />
         <SitemapMenu menu={NoticesMenu} />
         <SitemapMenu menu={InfoMenu} />
-        <SitemapMenu menu={OtherMenu} />
       </Stack>
     </Box>
   )

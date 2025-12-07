@@ -6,68 +6,32 @@ export const HOST =
 export class Links {
   static root = '/'
 
-  static home = '/home'
-  static my = '/home/my'
+  static intro = '/intro'
+  static introChart = '/intro/chart'
+  static introArticles = '/intro/articles'
+  static introDirectors = '/intro/directors'
+  static introHistory = '/intro/history'
 
-  static signin = '/api/auth/signin'
+  static business = '/business'
+  static businessHackathon = '/business/hackathon'
+  static businessConference = '/business/conference'
+  static businessBlog = '/business/blog'
+  static businessNews = '/business/news'
 
-  static intro = '/home/intro'
-  static introChart = '/home/intro/chart'
-  static introArticles = '/home/intro/articles'
-  static introDirectors = '/home/intro/directors'
-  static introHistory = '/home/intro/history'
-
-  static business = '/home/business'
-  static businessHackathon = '/home/business/hackathon'
-  static businessConference = '/home/business/conference'
-  static businessBlog = '/home/business/blog'
-  static businessNews = '/home/business/news'
-
-  static notices = '/home/notices'
-  static noticesPress = '/home/notices/press'
-  static noticesDonation = '/home/notices/donation'
-  static noticesRecords = '/home/notices/records'
+  static notices = '/notices'
+  static noticesPress = '/notices/press'
+  static noticesDonation = '/notices/donation'
+  static noticesRecords = '/notices/records'
 
   static infoPrivacy = '/info/privacy'
   static infoTerms = '/info/terms'
   static infoSitemap = '/info/sitemap'
-
-  static products = '/home/products'
-  static checkoutUserInfo = (productId: string) =>
-    `/home/products/checkout/user-info?productId=${productId}`
-  static checkoutPay = (orderId: string) =>
-    `/home/products/checkout/pay?orderId=${orderId}`
-  static checkoutSuccess = `/home/products/checkout/success`
-  static checkoutFail = `/home/products/checkout/fail`
-  static checkoutFailWithParams = (code: string, message: string) =>
-    `/home/products/checkout/fail?code=${code}&message=${message}`
 
   static msit = 'https://www.msit.go.kr'
   static nts = 'https://www.nts.go.kr'
   static acrc = 'https://www.acrc.go.kr'
 
   static admin = '/admin'
-  static adminUser = '/admin/user'
-  static adminMarkdown = '/admin/markdown'
-  static adminMarkdownCreate = '/admin/markdown/create-edit'
-  static adminMarkdownEdit = (id: string) =>
-    `/admin/markdown/create-edit?id=${id}`
-  static adminProduct = '/admin/product'
-  static adminProductCreate = '/admin/product/create'
-  static adminRedirect = '/admin/redirect'
-  static adminRedirectCreate = '/admin/redirect/create'
-  static adminRecord = '/admin/record'
-  static adminRecordCreate = '/admin/record/create'
-  static adminInstitution = '/admin/institution'
-  static adminInstitutionCreate = '/admin/institution/create'
-  static adminEvent = '/admin/event'
-  static adminEventCreate = '/admin/event/create'
-  static adminWebpage = '/admin/webpage'
-  static adminWebpageCreate = '/admin/webpage/create'
 
-  static apiDelete = '/api/delete'
-
-  static googleMail = 'http://mail.stdev.kr'
-  static googleDrive = 'http://drive.stdev.kr'
-  static googleCalendar = 'http://calendar.stdev.kr'
+  static shop = 'https://shop.stdev.kr'
 }

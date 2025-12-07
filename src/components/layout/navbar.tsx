@@ -88,7 +88,7 @@ export default function Navigation() {
         </Button>
         <ChakraLink
           as={Link}
-          href={Links.home}
+          href={Links.root}
           fontWeight="bold"
           _hover={{ textDecoration: 'none' }}
         >
@@ -104,7 +104,7 @@ export default function Navigation() {
           color="white"
           size="sm"
         >
-          <Link href={Links.products}>행사 참가하기</Link>
+          <Link href={Links.shop}>행사 참가하기</Link>
         </Button>
       </Flex>
       {open && (
@@ -144,7 +144,7 @@ export default function Navigation() {
               color="white"
               onClick={() => setOpen(false)}
             >
-              <Link href={Links.products}>행사 참가하기</Link>
+              <Link href={Links.shop}>행사 참가하기</Link>
             </Button>
           </Stack>
         </Box>
