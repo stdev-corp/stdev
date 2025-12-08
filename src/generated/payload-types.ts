@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     businesses: Business;
     files: File;
+    histories: History;
     images: Image;
     institutions: Institution;
     markdowns: Markdown;
@@ -84,6 +85,7 @@ export interface Config {
   collectionsSelect: {
     businesses: BusinessesSelect<false> | BusinessesSelect<true>;
     files: FilesSelect<false> | FilesSelect<true>;
+    histories: HistoriesSelect<false> | HistoriesSelect<true>;
     images: ImagesSelect<false> | ImagesSelect<true>;
     institutions: InstitutionsSelect<false> | InstitutionsSelect<true>;
     markdowns: MarkdownsSelect<false> | MarkdownsSelect<true>;
@@ -160,6 +162,19 @@ export interface File {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "histories".
+ */
+export interface History {
+  id: number;
+  date: string;
+  title: string;
+  content?: string | null;
+  image?: (number | null) | Image;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -291,6 +306,10 @@ export interface PayloadLockedDocument {
         value: number | File;
       } | null)
     | ({
+        relationTo: 'histories';
+        value: number | History;
+      } | null)
+    | ({
         relationTo: 'images';
         value: number | Image;
       } | null)
@@ -386,6 +405,18 @@ export interface FilesSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "histories_select".
+ */
+export interface HistoriesSelect<T extends boolean = true> {
+  date?: T;
+  title?: T;
+  content?: T;
+  image?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
