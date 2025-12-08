@@ -3,6 +3,10 @@ FROM node:24-alpine AS base
 # Stage 1: Install dependencies
 FROM base AS deps
 WORKDIR /app
+
+# Install libc6-compat for sharp on Alpine
+RUN apk add --no-cache libc6-compat
+
 COPY package.json pnpm-lock.yaml ./
 RUN corepack enable pnpm && pnpm i --frozen-lockfile
 
