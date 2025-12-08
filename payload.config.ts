@@ -65,6 +65,7 @@ export default buildConfig({
   email: nodemailerAdapter({
     defaultFromAddress: 'noreply@mail.stdev.kr',
     defaultFromName: 'STDev Corp.',
+    skipVerify: true,
     transportOptions: {
       host: process.env.SMTP_HOST,
       port: 587,
