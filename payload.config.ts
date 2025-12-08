@@ -15,6 +15,7 @@ import { Webpages } from '@/utils/db/webpages'
 import { Institutions } from '@/utils/db/institutions'
 import { Reports } from '@/utils/db/reports'
 import { Markdowns } from '@/utils/db/markdowns'
+import { Histories } from '@/utils/db/histories'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -23,6 +24,7 @@ export default buildConfig({
   collections: [
     Businesses,
     Files,
+    Histories,
     Images,
     Institutions,
     Markdowns,
