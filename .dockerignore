@@ -1,7 +1,9 @@
 .github
+.idea
 .next
 node_modules
 eslint.config.mjs
 prettier.config.mjs
 .gitignore
 README.md
+tsconfig.tsbuildinfo
