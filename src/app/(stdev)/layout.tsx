@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Providers } from './providers'
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
-import './globals.css'
 
 export const metadata: Metadata = {
   title: 'STDev Corp.',

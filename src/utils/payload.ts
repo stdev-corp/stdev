@@ -2,7 +2,7 @@
 
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { Business, File, Image } from '@/generated/payload-types'
+import { Business, File, History, Image } from '@/generated/payload-types'
 
 export async function queryInstitutions() {
   const payload = await getPayload({ config })
@@ -88,4 +88,27 @@ export async function getMarkdownByTitle(title: string) {
     limit: 1,
   })
   return result.docs[0]
+}
+
+export async function queryHistories() {
+  const payload = await getPayload({ config })
+
+  const result = await payload.find({
+    collection: 'histories',
+    limit: 100,
+    depth: 2,
+    sort: '-date',
+  })
+
+  return result.docs.map((doc: History) => {
+    const { id, date, title, content, image } = doc
+    return {
+      id,
+      date,
+      title,
+      content,
+      imageUrl: image ? (image as Image).url : null,
+      imageAlt: image ? (image as Image).alt : null,
+    }
+  })
 }
