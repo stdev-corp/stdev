@@ -215,8 +215,9 @@ export interface Institution {
  */
 export interface Markdown {
   id: number;
-  title: string;
-  subtitle?: string | null;
+  type: 'articles' | 'privacy' | 'terms';
+  revisionDate: string;
+  effectiveDate: string;
   content: string;
   updatedAt: string;
   createdAt: string;
@@ -454,8 +455,9 @@ export interface InstitutionsSelect<T extends boolean = true> {
  * via the `definition` "markdowns_select".
  */
 export interface MarkdownsSelect<T extends boolean = true> {
-  title?: T;
-  subtitle?: T;
+  type?: T;
+  revisionDate?: T;
+  effectiveDate?: T;
   content?: T;
   updatedAt?: T;
   createdAt?: T;
