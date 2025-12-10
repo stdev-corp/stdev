@@ -1,23 +1,21 @@
-import { getMarkdownByTitle } from '@/utils/payload'
+import { Heading } from '@chakra-ui/react'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
 type Props = {
-  title: string
+  content: string
 }
 
 export default async function MarkdownView(props: Props) {
-  const data = await getMarkdownByTitle(props.title)
-
   return (
     <Markdown
       remarkPlugins={[[remarkGfm]]}
       components={{
-        h1: (props) => <h1 {...props} />,
-        h2: (props) => <h2 {...props} />,
-        h3: (props) => <h3 {...props} />,
-        h4: (props) => <h4 {...props} />,
-        h5: (props) => <h5 {...props} />,
+        h1: (props) => <Heading size="3xl" marginY={4} {...props} />,
+        h2: (props) => <Heading size="2xl" marginY={3} {...props} />,
+        h3: (props) => <Heading size="xl" marginY={2} {...props} />,
+        h4: (props) => <Heading size="lg" marginY={1} {...props} />,
+        h5: (props) => <Heading size="md" marginY={1} {...props} />,
         a: (props) => (
           <a target="_blank" rel="noopener noreferrer" {...props} />
         ),
@@ -61,7 +59,7 @@ export default async function MarkdownView(props: Props) {
         ),
       }}
     >
-      {data?.content}
+      {props.content}
     </Markdown>
   )
 }

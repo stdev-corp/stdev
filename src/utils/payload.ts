@@ -75,16 +75,37 @@ export async function queryReports(type: string) {
   })
 }
 
-export async function getMarkdownByTitle(title: string) {
+export async function getMarkdownsByType(
+  type: 'articles' | 'privacy' | 'terms',
+) {
   const payload = await getPayload({ config })
 
   const result = await payload.find({
     collection: 'markdowns',
     where: {
-      title: {
-        equals: title,
+      type: {
+        equals: type,
       },
     },
+    sort: '-effectiveDate',
+    limit: 100,
+  })
+  return result.docs
+}
+
+export async function getLatestMarkdownByType(
+  type: 'articles' | 'privacy' | 'terms',
+) {
+  const payload = await getPayload({ config })
+
+  const result = await payload.find({
+    collection: 'markdowns',
+    where: {
+      type: {
+        equals: type,
+      },
+    },
+    sort: '-effectiveDate',
     limit: 1,
   })
   return result.docs[0]
