@@ -1,5 +1,6 @@
 'use client'
 import { Box, Button, Separator, Stack, Text, Flex } from '@chakra-ui/react'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 
 type Props = {
@@ -31,7 +32,7 @@ export default function RecordList(props: Props) {
         <Box key={record.id}>
           <Flex minH="3rem" gap={4} align="center">
             <Text flex="1">{record.title}</Text>
-            <Text>{record.publishedDate}</Text>
+            <Text>{dayjs(record.publishedDate).format('YYYY년 M월 D일')}</Text>
             <Button variant="outline" asChild size="sm">
               <Link
                 href={record.file_url}
