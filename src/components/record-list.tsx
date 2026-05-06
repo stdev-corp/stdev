@@ -1,15 +1,11 @@
 'use client'
+import type { ReportWithFile } from '@/utils/cms-types'
+import { toDateString } from '@/utils/datetime'
 import { Box, Button, Separator, Stack, Text, Flex } from '@chakra-ui/react'
-import dayjs from 'dayjs'
 import Link from 'next/link'
 
 type Props = {
-  reports: {
-    id: number
-    title: string
-    publishedDate: string
-    file_url: string
-  }[]
+  reports: ReportWithFile[]
 }
 
 export default function RecordList(props: Props) {
@@ -32,7 +28,7 @@ export default function RecordList(props: Props) {
         <Box key={record.id}>
           <Flex minH="3rem" gap={4} align="center">
             <Text flex="1">{record.title}</Text>
-            <Text>{dayjs(record.publishedDate).format('YYYY년 M월 D일')}</Text>
+            <Text>{toDateString(record.publishedDate)}</Text>
             <Button variant="outline" asChild size="sm">
               <Link
                 href={record.file_url}

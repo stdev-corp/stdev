@@ -1,5 +1,5 @@
 import RecordList from '@/components/record-list'
-import { queryReports } from '@/utils/payload'
+import { queryReports } from '@/utils/cms'
 import { Box, Heading } from '@chakra-ui/react'
 
 export default async function RecordsPage() {

@@ -1,4 +1,4 @@
-import { queryInstitutions } from '@/utils/payload'
+import { queryInstitutions } from '@/utils/cms'
 import NextImage from 'next/image'
 import Navigation from '@/components/layout/navbar'
 import Footer from '@/components/layout/footer'
@@ -17,15 +17,22 @@ export default async function Page() {
           <NextImage
             src="/images/intro/title.png"
             alt="title"
-            width={600}
-            height={600}
+            width={4960}
+            height={844}
+            sizes="(max-width: 672px) calc(100vw - 32px), 600px"
+            loading="eager"
+            fetchPriority="high"
+            style={{ width: '100%', maxWidth: '600px', height: 'auto' }}
           />
           <Box h="120px" />
           <NextImage
             src="/images/intro/3w1h.png"
             alt="3w1h"
-            width={800}
-            height={800}
+            width={6672}
+            height={3160}
+            sizes="(max-width: 832px) calc(100vw - 32px), 800px"
+            loading="eager"
+            style={{ width: '100%', maxWidth: '800px', height: 'auto' }}
           />
           <Box h="120px" />
           <Box py={12}>

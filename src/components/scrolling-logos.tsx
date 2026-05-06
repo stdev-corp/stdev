@@ -1,5 +1,6 @@
 'use client'
 
+import type { InstitutionLogo } from '@/utils/cms-types'
 import NextImage from 'next/image'
 import { Box, Flex } from '@chakra-ui/react'
 import { keyframes } from '@emotion/react'
@@ -13,15 +14,15 @@ const scrollAnimation = keyframes`
   }
 `
 
-type Institution = {
-  imageUrl?: string | null | undefined
-}
-
 type Props = {
-  institutions: Institution[]
+  institutions: InstitutionLogo[]
 }
 
 export default function ScrollingLogos({ institutions }: Props) {
+  if (institutions.length === 0) {
+    return null
+  }
+
   return (
     <Box overflow="hidden" width="100%">
       <Flex
@@ -32,15 +33,21 @@ export default function ScrollingLogos({ institutions }: Props) {
       >
         {/* Duplicate institutions array for seamless infinite scroll */}
         {[...institutions, ...institutions].map((institution, index) => (
-          <Flex key={index} align="center" justify="center" flexShrink={0}>
+          <Box
+            key={index}
+            position="relative"
+            width="180px"
+            height="90px"
+            flexShrink={0}
+          >
             <NextImage
-              src={institution.imageUrl || ''}
-              alt={`Logo ${(index % institutions.length) + 1}`}
-              width={180}
-              height={90}
+              src={institution.imageUrl || '/images/intro/title.png'}
+              alt={institution.imageAlt || `Logo ${(index % institutions.length) + 1}`}
+              fill
+              sizes="180px"
               style={{ objectFit: 'contain' }}
             />
-          </Flex>
+          </Box>
         ))}
       </Flex>
     </Box>

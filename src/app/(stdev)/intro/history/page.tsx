@@ -1,7 +1,7 @@
 import { Box, Timeline, Text, Heading } from '@chakra-ui/react'
 import Image from 'next/image'
-import { queryHistories } from '@/utils/payload'
-import dayjs from 'dayjs'
+import { queryHistories } from '@/utils/cms'
+import { toDateString } from '@/utils/datetime'
 
 export default async function HistoryPage() {
   const histories = await queryHistories()
@@ -25,7 +25,7 @@ export default async function HistoryPage() {
               </Timeline.Title>
               <Timeline.Description>
                 <Text color="gray.500" fontSize="sm">
-                  {dayjs(history.date).format('YYYY년 M월 D일')}
+                  {toDateString(history.date)}
                 </Text>
               </Timeline.Description>
               {history.content && (

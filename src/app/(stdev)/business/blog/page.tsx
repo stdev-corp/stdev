@@ -1,5 +1,5 @@
 import WebpageList from '@/components/webpage-list'
-import { queryWebpages } from '@/utils/payload'
+import { queryWebpages } from '@/utils/cms'
 
 export default async function BlogPage() {
   const webpages = await queryWebpages('blog_post')

@@ -5,13 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
     "prettier:write": "prettier --write .",
     "prettier:check": "prettier --check .",
-    "generate:types": "payload generate:types",
-    "generate:importmap": "payload generate:importmap"
+    "db:generate": "prisma generate",
+    "db:migrate": "node scripts/run-prisma-migrate-dev.mjs",
+    "db:migrate:deploy": "node scripts/run-prisma-migrate-deploy.mjs",
+    "db:studio": "prisma studio",
+    "migrate:payload": "tsx scripts/migrate-payload-to-prisma.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1042.0",
@@ -20,35 +23,39 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@next/third-parties": "16.2.4",
-    "@payloadcms/db-postgres": "^3.84.1",
-    "@payloadcms/email-nodemailer": "^3.84.1",
-    "@payloadcms/next": "^3.84.1",
-    "@payloadcms/richtext-lexical": "^3.84.1",
-    "@payloadcms/storage-s3": "^3.84.1",
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "better-auth": "^1.6.9",
     "dayjs": "^1.11.20",
-    "graphql": "^16.13.2",
+    "dotenv": "^17.4.2",
     "next": "16.2.4",
-    "payload": "^3.84.1",
+    "pg": "^8.20.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
-    "sharp": "^0.34.5"
+    "sharp": "^0.34.5",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^24.12.2",
+    "@types/pg": "^8.20.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.4",
     "eslint-config-next": "^16.2.4",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.8.3",
+    "prisma": "^7.8.0",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
       "@prisma/client",
+      "@prisma/engines",
       "esbuild",
+      "prisma",
       "sharp"
     ]
   },

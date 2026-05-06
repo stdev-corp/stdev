@@ -1,15 +1,9 @@
 'use client'
 
-import { Webpage } from '@/generated/payload-types'
+import type { WebpageWithBusiness } from '@/utils/cms-types'
+import { toDateString } from '@/utils/datetime'
 import { Separator, Stack, Text, Flex } from '@chakra-ui/react'
 import Link from 'next/link'
-
-type WebpageWithBusiness = Pick<
-  Webpage,
-  'id' | 'title' | 'author' | 'url' | 'publishedDate'
-> & {
-  business_name: string
-}
 
 type Props = {
   webpages: WebpageWithBusiness[]
@@ -42,7 +36,7 @@ export default function WebpageList(props: Props) {
             <Text fontWeight="bold">{webpage.title}</Text>
             <Flex gap={4} align="center">
               <Text>{webpage.author}</Text>
-              <Text>{webpage.publishedDate}</Text>
+              <Text>{toDateString(webpage.publishedDate)}</Text>
               <Flex flex="1" />
               <Text>{webpage.business_name}</Text>
             </Flex>

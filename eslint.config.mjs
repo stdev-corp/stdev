@@ -4,7 +4,6 @@ import eslintConfigPrettier from 'eslint-config-prettier'
 const config = [
   ...eslintConfigNext,
   eslintConfigPrettier,
-  { ignores: ['./src/generated/payload-types.ts'] },
   {
     rules: {
       '@typescript-eslint/no-unused-expressions': 'off',
