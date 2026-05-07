@@ -19,6 +19,64 @@ pnpm dev
 
 브라우저에서 [http://localhost:3000](http://localhost:3000)로 이동합니다.
 
+## Test
+
+테스트는 목적에 따라 단위/컴포넌트 테스트, 커버리지 테스트, E2E 테스트로 나누어 실행합니다.
+
+### 단위/컴포넌트/통합 테스트
+
+브라우저나 실제 DB 연결이 필요 없는 Vitest 테스트를 실행합니다. 컴포넌트 테스트는 React Testing Library와 jsdom 환경에서 실행됩니다.
+
+```bash
+pnpm test
+```
+
+개발 중에는 watch mode를 사용할 수 있습니다.
+
+```bash
+pnpm test:watch
+```
+
+### 커버리지 확인
+
+전체 Vitest 테스트를 실행하고 V8 coverage 리포트를 생성합니다. 프로젝트 커버리지 기준은 95% 이상입니다.
+
+```bash
+pnpm test:coverage
+```
+
+CI에서 사용하는 JUnit 리포트까지 함께 생성하려면 아래 명령을 실행합니다.
+
+```bash
+pnpm test:ci
+```
+
+### E2E 테스트
+
+Playwright E2E 테스트는 실제 브라우저와 Next.js 서버가 필요합니다. 처음 실행하는 환경에서는 Chromium 브라우저를 먼저 설치합니다.
+
+```bash
+pnpm test:e2e:install
+```
+
+그 다음 E2E 테스트를 실행합니다.
+
+```bash
+pnpm test:e2e
+```
+
+UI 모드로 테스트를 확인하려면 아래 명령을 사용합니다.
+
+```bash
+pnpm test:e2e:ui
+```
+
+### 테스트 파일 위치
+
+- 단위/컴포넌트 테스트: 대상 파일 옆의 `*.test.ts` 또는 `*.test.tsx`
+- 통합 테스트: `src/tests/**`
+- E2E 테스트: `src/e2e/**`
+
 ## How to deploy
 
 Github 레포지토리 설정에서 `Actions secrets and variables` 페이지로 이동한 후 `Repository secrets`에 아래 값을 입력합니다.

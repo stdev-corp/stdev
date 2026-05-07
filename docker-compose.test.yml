@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: stdev-test-postgres
+    environment:
+      POSTGRES_USER: stdev
+      POSTGRES_PASSWORD: stdev
+      POSTGRES_DB: stdev_test
+    ports:
+      - '5433:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U stdev -d stdev_test']
+      interval: 3s
+      timeout: 5s
+      retries: 10
+    tmpfs:
+      - /var/lib/postgresql/data
