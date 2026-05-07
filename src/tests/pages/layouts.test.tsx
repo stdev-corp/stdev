@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { isValidElement, type ReactElement, type ReactNode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderWithChakra, screen } from '@/tests/utils/render'
 import * as ChannelService from '@channel.io/channel-web-sdk-loader'
@@ -7,12 +7,7 @@ import IntroLayout from '@/app/(stdev)/intro/layout'
 import BusinessLayout from '@/app/(stdev)/business/layout'
 import NoticesLayout from '@/app/(stdev)/notices/layout'
 import InfoLayout from '@/app/(stdev)/info/layout'
-import {
-  BusinessMenu,
-  IntroMenu,
-  NoticesMenu,
-  type Menu,
-} from '@/utils/menus'
+import { BusinessMenu, IntroMenu, NoticesMenu, type Menu } from '@/utils/menus'
 
 vi.mock('@next/third-parties/google', () => ({
   GoogleTagManager: () => null,
@@ -21,7 +16,7 @@ vi.mock('@next/third-parties/google', () => ({
 
 vi.mock('@/app/(stdev)/providers', () => ({
   Providers: ({ children }: { children: ReactNode }) => (
-    <div data-testid='providers'>{children}</div>
+    <div data-testid="providers">{children}</div>
   ),
 }))
 
@@ -32,16 +27,16 @@ vi.mock('@channel.io/channel-web-sdk-loader', () => ({
 }))
 
 vi.mock('@/components/layout/navbar', () => ({
-  default: () => <nav data-testid='navbar' />,
+  default: () => <nav data-testid="navbar" />,
 }))
 
 vi.mock('@/components/layout/footer', () => ({
-  default: () => <footer data-testid='footer' />,
+  default: () => <footer data-testid="footer" />,
 }))
 
 vi.mock('@/components/layout/left-menu-layout', () => ({
   default: ({ menu, children }: { menu: Menu; children: ReactNode }) => (
-    <div data-testid='left-menu-layout' data-menu={menu.label}>
+    <div data-testid="left-menu-layout" data-menu={menu.label}>
       {children}
     </div>
   ),
@@ -76,14 +71,11 @@ describe('RootLayout (stdev/layout.tsx)', () => {
     vi.stubEnv('NEXT_PUBLIC_GTM_ID', 'GTM-TEST')
     vi.stubEnv('NEXT_PUBLIC_GA_ID', 'G-TEST')
     const html = RootLayout({
-      children: <div data-testid='child-content' />,
+      children: <div data-testid="child-content" />,
     }) as { props: { children: ReactNode[] } }
     const bodyElement = html.props.children.find(
-      (child): child is { props: { children: ReactNode } } =>
-        typeof child === 'object' &&
-        child !== null &&
-        'type' in (child as { type?: string }) &&
-        (child as { type?: string }).type === 'body',
+      (child): child is ReactElement<{ children: ReactNode }, 'body'> =>
+        isValidElement(child) && child.type === 'body',
     )
     renderWithChakra(<>{bodyElement?.props.children}</>)
     expect(screen.getByTestId('child-content')).toBeInTheDocument()
@@ -120,7 +112,7 @@ describe('Providers (stdev/providers.tsx)', () => {
     const Providers = await importRealProviders()
     renderWithChakra(
       <Providers>
-        <div data-testid='providers-child' />
+        <div data-testid="providers-child" />
       </Providers>,
     )
     expect(screen.getByTestId('providers-child')).toBeInTheDocument()
@@ -153,9 +145,9 @@ describe('Providers (stdev/providers.tsx)', () => {
   it('throws when NEXT_PUBLIC_CHANNEL_PLUGIN_KEY is missing', async () => {
     vi.stubEnv('NEXT_PUBLIC_CHANNEL_PLUGIN_KEY', '')
     vi.resetModules()
-    await expect(
-      vi.importActual('@/app/(stdev)/providers'),
-    ).rejects.toThrow('NEXT_PUBLIC_CHANNEL_PLUGIN_KEY is not defined')
+    await expect(vi.importActual('@/app/(stdev)/providers')).rejects.toThrow(
+      'NEXT_PUBLIC_CHANNEL_PLUGIN_KEY is not defined',
+    )
   })
 })
 
@@ -163,7 +155,7 @@ describe('IntroLayout', () => {
   it('renders Navigation and Footer around children', () => {
     renderWithChakra(
       <IntroLayout>
-        <p data-testid='intro-child'>안녕</p>
+        <p data-testid="intro-child">안녕</p>
       </IntroLayout>,
     )
     expect(screen.getByTestId('navbar')).toBeInTheDocument()
@@ -174,7 +166,7 @@ describe('IntroLayout', () => {
   it('wraps children in LeftMenuLayout with IntroMenu', () => {
     renderWithChakra(
       <IntroLayout>
-        <p data-testid='intro-child'>X</p>
+        <p data-testid="intro-child">X</p>
       </IntroLayout>,
     )
     const wrapper = screen.getByTestId('left-menu-layout')
@@ -187,7 +179,7 @@ describe('BusinessLayout', () => {
   it('renders Navigation and Footer around children', () => {
     renderWithChakra(
       <BusinessLayout>
-        <p data-testid='business-child'>X</p>
+        <p data-testid="business-child">X</p>
       </BusinessLayout>,
     )
     expect(screen.getByTestId('navbar')).toBeInTheDocument()
@@ -197,7 +189,7 @@ describe('BusinessLayout', () => {
   it('wraps children in LeftMenuLayout with BusinessMenu', () => {
     renderWithChakra(
       <BusinessLayout>
-        <p data-testid='business-child'>X</p>
+        <p data-testid="business-child">X</p>
       </BusinessLayout>,
     )
     const wrapper = screen.getByTestId('left-menu-layout')
@@ -210,7 +202,7 @@ describe('NoticesLayout', () => {
   it('renders Navigation and Footer around children', () => {
     renderWithChakra(
       <NoticesLayout>
-        <p data-testid='notices-child'>X</p>
+        <p data-testid="notices-child">X</p>
       </NoticesLayout>,
     )
     expect(screen.getByTestId('navbar')).toBeInTheDocument()
@@ -220,7 +212,7 @@ describe('NoticesLayout', () => {
   it('wraps children in LeftMenuLayout with NoticesMenu', () => {
     renderWithChakra(
       <NoticesLayout>
-        <p data-testid='notices-child'>X</p>
+        <p data-testid="notices-child">X</p>
       </NoticesLayout>,
     )
     const wrapper = screen.getByTestId('left-menu-layout')
@@ -232,7 +224,7 @@ describe('NoticesLayout', () => {
 describe('InfoLayout', () => {
   it('renders children inside Navigation/Footer chrome', async () => {
     const element = await InfoLayout({
-      children: <p data-testid='info-child'>hello</p>,
+      children: <p data-testid="info-child">hello</p>,
     })
     renderWithChakra(element)
     expect(screen.getByTestId('navbar')).toBeInTheDocument()
@@ -242,7 +234,7 @@ describe('InfoLayout', () => {
 
   it('does not use LeftMenuLayout wrapper', async () => {
     const element = await InfoLayout({
-      children: <p data-testid='info-child'>X</p>,
+      children: <p data-testid="info-child">X</p>,
     })
     renderWithChakra(element)
     expect(screen.queryByTestId('left-menu-layout')).not.toBeInTheDocument()

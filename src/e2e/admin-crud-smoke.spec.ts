@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { isDatabaseAvailable, resetDatabase } from './fixtures/db'
+import { isDatabaseAvailable } from './fixtures/db'
 import { seedAdminSession } from './fixtures/auth'
 
 test.describe('admin CRUD smoke', () => {
@@ -8,8 +8,6 @@ test.describe('admin CRUD smoke', () => {
       !(await isDatabaseAvailable()),
       'Test Postgres is unavailable; run docker compose -f docker-compose.test.yml up -d postgres',
     )
-
-    await resetDatabase()
   })
 
   test('seeded admin session reaches dashboard', async ({ context, page }) => {

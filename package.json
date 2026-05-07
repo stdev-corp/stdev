@@ -20,8 +20,9 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "test:ci": "vitest run --coverage --reporter=default --reporter=junit --outputFile=test-results/junit.xml",
-    "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui",
+    "e2e:prepare": "node scripts/prepare-playwright-e2e.mjs",
+    "test:e2e": "cp .env.example .env && pnpm build && playwright test",
+    "test:e2e:ui": "cp .env.example .env && pnpm build && playwright test --ui",
     "test:e2e:install": "playwright install --with-deps chromium"
   },
   "dependencies": {

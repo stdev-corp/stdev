@@ -27,7 +27,9 @@ test.describe('public responsive navigation', () => {
     await expect(menuButton).toBeVisible()
     await menuButton.click()
     await expect(page.getByRole('button', { name: '닫기' })).toBeVisible()
-    await expect(page.getByText('법인소개').first()).toBeVisible()
+    await expect(
+      page.locator('p').filter({ hasText: /^법인소개$/ }),
+    ).toBeVisible()
     await expect(page.getByRole('link', { name: '연혁' })).toBeVisible()
   })
 })

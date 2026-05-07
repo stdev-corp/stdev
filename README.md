@@ -53,13 +53,13 @@ pnpm test:ci
 
 ### E2E 테스트
 
-Playwright E2E 테스트는 실제 브라우저와 Next.js 서버가 필요합니다. 처음 실행하는 환경에서는 Chromium 브라우저를 먼저 설치합니다.
+Playwright E2E 테스트는 실제 브라우저, Next.js 서버, 테스트용 Postgres DB가 필요합니다. 처음 실행하는 환경에서는 Chromium 브라우저를 먼저 설치합니다.
 
 ```bash
 pnpm test:e2e:install
 ```
 
-그 다음 E2E 테스트를 실행합니다.
+그 다음 E2E 테스트를 실행합니다. 이 명령은 `.env.example`을 `.env`로 복사하고, `docker-compose.test.yml`의 dummy Postgres DB를 띄운 뒤 Prisma migration과 dummy data seed를 적용한 다음 Playwright를 실행합니다.
 
 ```bash
 pnpm test:e2e

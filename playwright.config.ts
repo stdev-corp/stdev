@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { defineConfig, devices } from '@playwright/test'
 
 const PORT = Number(process.env.PLAYWRIGHT_PORT ?? 3100)
@@ -38,13 +39,14 @@ export default defineConfig({
   webServer: {
     command: process.env.PLAYWRIGHT_SKIP_WEB_SERVER
       ? 'echo skip'
-      : `pnpm start -p ${PORT}`,
+      : `pnpm e2e:prepare && pnpm start -p ${PORT}`,
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
     stdout: 'pipe',
     stderr: 'pipe',
     env: {
+      ...process.env,
       DATABASE_URL:
         process.env.DATABASE_URL ??
         'postgresql://stdev:stdev@localhost:5433/stdev_test',
