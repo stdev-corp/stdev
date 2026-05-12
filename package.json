@@ -14,15 +14,14 @@
     "db:migrate": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
-    "migrate:payload": "tsx scripts/migrate-payload-to-prisma.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "test:ci": "vitest run --coverage --reporter=default --reporter=junit --outputFile=test-results/junit.xml",
-    "e2e:prepare": "node scripts/prepare-playwright-e2e.mjs",
-    "test:e2e": "cp .env.example .env && pnpm build && playwright test",
-    "test:e2e:ui": "cp .env.example .env && pnpm build && playwright test --ui",
+    "e2e:prepare": "node src/scripts/prepare-playwright-e2e.mjs",
+    "test:e2e": "pnpm build && playwright test",
+    "test:e2e:ui": "pnpm build && playwright test --ui",
     "test:e2e:install": "playwright install --with-deps chromium"
   },
   "dependencies": {

@@ -32,7 +32,7 @@ ignore:
   - 'prisma/migrations/**/*'
   - 'prisma.config.ts'
   - 'next.config.ts'
-  - 'scripts/**/*'
+  - 'src/scripts/**/*'
   - 'src/generated/**/*'
   - 'src/**/*.d.ts'
   - 'src/tests/**/*'

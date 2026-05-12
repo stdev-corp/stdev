@@ -16,12 +16,15 @@ function requiredEnv(name: string) {
 }
 
 function s3Client() {
+  const endpoint = process.env.AWS_ENDPOINT_URL_S3
+
   return new S3Client({
     region,
     credentials: {
       accessKeyId: requiredEnv('AWS_ACCESS_KEY'),
       secretAccessKey: requiredEnv('AWS_SECRET_KEY'),
     },
+    ...(endpoint ? { endpoint, forcePathStyle: true } : {}),
   })
 }
 

@@ -15,3 +15,28 @@ services:
       retries: 10
     tmpfs:
       - /var/lib/postgresql/data
+
+  # MinIO acts as a local S3-compatible endpoint for Playwright E2E tests so
+  # `@aws-sdk/client-s3` calls from the Next.js server never touch real AWS.
+  # The entrypoint is overridden to pre-create the `stdev-kr` bucket as a
+  # top-level directory (MinIO single-drive mode treats those as buckets)
+  # before execing the server, so no extra init sidecar is needed.
+  minio:
+    image: minio/minio:latest
+    container_name: stdev-test-minio
+    environment:
+      MINIO_ROOT_USER: test-access-key
+      MINIO_ROOT_PASSWORD: test-secret-key
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    entrypoint: sh
+    command: -c 'mkdir -p /data/stdev-kr && exec minio server /data --console-address ":9001"'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://127.0.0.1:9000/minio/health/live']
+      interval: 3s
+      timeout: 5s
+      retries: 15
+      start_period: 3s
+    tmpfs:
+      - /data
