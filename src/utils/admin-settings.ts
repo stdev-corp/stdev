@@ -1,5 +1,3 @@
-'use server'
-
 import { prisma } from '@/utils/prisma'
 
 export const ADMIN_SETTINGS_KEYS = {

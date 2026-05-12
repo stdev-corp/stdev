@@ -38,7 +38,8 @@ export function ReportListClient({
             #{report.id} · {report.title}
           </Text>
           <Text fontSize="sm" color="gray.600">
-            {reportTypeLabel(report.type)} · {toDateString(report.publishedDate)}
+            {reportTypeLabel(report.type)} ·{' '}
+            {toDateString(report.publishedDate)}
           </Text>
         </>
       )}

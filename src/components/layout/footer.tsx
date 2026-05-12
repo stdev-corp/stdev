@@ -110,7 +110,11 @@ export default function Footer() {
               © {dayjs().year()} STDev Nonprofit Corporation. All rights
               reserved.
             </Text>
-            <Text fontSize="xs" color="gray.400" display={{ base: 'none', sm: 'inline' }}>
+            <Text
+              fontSize="xs"
+              color="gray.400"
+              display={{ base: 'none', sm: 'inline' }}
+            >
               ·
             </Text>
             <Link

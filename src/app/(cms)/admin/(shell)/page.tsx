@@ -1,12 +1,5 @@
 import Link from 'next/link'
-import {
-  Box,
-  Heading,
-  SimpleGrid,
-  Stack,
-  Stat,
-  Text,
-} from '@chakra-ui/react'
+import { Box, Heading, SimpleGrid, Stack, Stat, Text } from '@chakra-ui/react'
 import { prisma } from '@/utils/prisma'
 
 type StatCardProps = {

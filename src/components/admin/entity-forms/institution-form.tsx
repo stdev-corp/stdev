@@ -31,11 +31,19 @@ export function InstitutionFormDrawer({
       <Stack gap={4}>
         <Field.Root required>
           <Field.Label>국문명</Field.Label>
-          <Input name="nameKo" defaultValue={institution?.nameKo ?? ''} required />
+          <Input
+            name="nameKo"
+            defaultValue={institution?.nameKo ?? ''}
+            required
+          />
         </Field.Root>
         <Field.Root required>
           <Field.Label>영문명</Field.Label>
-          <Input name="nameEn" defaultValue={institution?.nameEn ?? ''} required />
+          <Input
+            name="nameEn"
+            defaultValue={institution?.nameEn ?? ''}
+            required
+          />
         </Field.Root>
         <Field.Root required>
           <Field.Label>URL</Field.Label>

@@ -37,7 +37,7 @@ export function SettingFormDrawer({
             required
           />
           {editing && (
-            <Field.HelpText>키는 변경할 수 없습니다.</Field.HelpText>
+            <Field.HelperText>키는 변경할 수 없습니다.</Field.HelperText>
           )}
         </Field.Root>
         <Field.Root required>
@@ -48,9 +48,9 @@ export function SettingFormDrawer({
             defaultValue={setting?.value ?? ''}
             required
           />
-          <Field.HelpText>
+          <Field.HelperText>
             저장된 값은 관리자만 확인할 수 있습니다.
-          </Field.HelpText>
+          </Field.HelperText>
         </Field.Root>
       </Stack>
     </FormDrawer>

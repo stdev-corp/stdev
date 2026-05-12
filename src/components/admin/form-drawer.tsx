@@ -1,12 +1,6 @@
 'use client'
 
-import {
-  Button,
-  CloseButton,
-  Drawer,
-  Portal,
-  Stack,
-} from '@chakra-ui/react'
+import { Button, CloseButton, Drawer, Portal, Stack } from '@chakra-ui/react'
 import { useTransition, type ReactNode } from 'react'
 import { toaster } from './toaster'
 

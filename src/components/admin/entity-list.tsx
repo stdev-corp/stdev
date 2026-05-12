@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Stack,
-  Text,
-} from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import { useState, type ReactNode } from 'react'
 import { DeleteAlertDialog } from './delete-alert-dialog'
 

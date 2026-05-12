@@ -45,7 +45,11 @@ export function HistoryFormDrawer({
         </Field.Root>
         <Field.Root>
           <Field.Label>내용</Field.Label>
-          <Textarea name="content" rows={5} defaultValue={history?.content ?? ''} />
+          <Textarea
+            name="content"
+            rows={5}
+            defaultValue={history?.content ?? ''}
+          />
         </Field.Root>
         <Field.Root>
           <Field.Label>이미지</Field.Label>

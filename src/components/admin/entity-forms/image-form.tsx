@@ -11,12 +11,7 @@ type Props = {
   action: (formData: FormData) => Promise<void>
 }
 
-export function ImageFormDrawer({
-  open,
-  onOpenChange,
-  image,
-  action,
-}: Props) {
+export function ImageFormDrawer({ open, onOpenChange, image, action }: Props) {
   const editing = Boolean(image)
   return (
     <FormDrawer

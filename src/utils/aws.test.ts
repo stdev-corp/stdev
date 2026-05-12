@@ -67,12 +67,10 @@ describe('describeOrganization', () => {
 
 describe('listAllAccounts', () => {
   it('collects accounts across pages until NextToken is undefined', async () => {
-    orgMock
-      .on(ListAccountsCommand, { NextToken: undefined })
-      .resolvesOnce({
-        Accounts: [{ Id: '1', Name: 'A' }],
-        NextToken: 'page2',
-      })
+    orgMock.on(ListAccountsCommand, { NextToken: undefined }).resolvesOnce({
+      Accounts: [{ Id: '1', Name: 'A' }],
+      NextToken: 'page2',
+    })
     orgMock
       .on(ListAccountsCommand, { NextToken: 'page2' })
       .resolvesOnce({ Accounts: [{ Id: '2', Name: 'B' }] })

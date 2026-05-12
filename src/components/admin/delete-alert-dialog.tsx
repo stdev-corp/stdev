@@ -28,7 +28,10 @@ export function DeleteAlertDialog({
       formData.set('id', String(recordId))
       try {
         await action(formData)
-        toaster.create({ title: `${label} 항목을 삭제했습니다.`, type: 'success' })
+        toaster.create({
+          title: `${label} 항목을 삭제했습니다.`,
+          type: 'success',
+        })
         setOpen(false)
       } catch (error) {
         toaster.create({
@@ -63,7 +66,8 @@ export function DeleteAlertDialog({
                 <Dialog.Title>{label} 삭제</Dialog.Title>
               </Dialog.Header>
               <Dialog.Body>
-                {description ?? '이 작업은 되돌릴 수 없습니다. 정말 삭제하시겠습니까?'}
+                {description ??
+                  '이 작업은 되돌릴 수 없습니다. 정말 삭제하시겠습니까?'}
               </Dialog.Body>
               <Dialog.Footer gap={2}>
                 <Button
