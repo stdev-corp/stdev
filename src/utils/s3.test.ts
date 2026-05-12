@@ -270,6 +270,16 @@ describe('uploadAsset - env var handling', () => {
       /^https:\/\/my-bucket\.s3\.us-east-1\.amazonaws\.com\/images\//,
     )
   })
+
+  it('still uploads when AWS_ENDPOINT_URL_S3 is set (S3Client endpoint override branch)', async () => {
+    vi.stubEnv('AWS_ENDPOINT_URL_S3', 'http://127.0.0.1:9000')
+    const { uploadAsset } = await loadS3Module()
+    const result = await uploadAsset(makePng('m.png'), 'images')
+    expect(s3Mock.commandCalls(PutObjectCommand)).toHaveLength(1)
+    expect(result.url).toMatch(
+      /^https:\/\/stdev-kr\.s3\.ap-northeast-2\.amazonaws\.com\/images\//,
+    )
+  })
 })
 
 describe('deleteManagedAsset', () => {
