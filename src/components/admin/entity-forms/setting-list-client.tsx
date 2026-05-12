@@ -1,9 +1,8 @@
 'use client'
 
 import { Code, Text } from '@chakra-ui/react'
-import type { AdminSettings } from '@prisma/client'
 import { EntityList } from '../entity-list'
-import { SettingFormDrawer } from './setting-form'
+import { SettingFormDrawer, type AdminSettingSummary } from './setting-form'
 
 type Actions = {
   createAdminSetting: (formData: FormData) => Promise<void>
@@ -11,18 +10,18 @@ type Actions = {
   deleteAdminSetting: (formData: FormData) => Promise<void>
 }
 
-function maskedPreview(value: string) {
-  if (value.length === 0) {
+function maskedPreview(setting: AdminSettingSummary) {
+  if (!setting.hasValue) {
     return '(빈 값)'
   }
-  return '•'.repeat(Math.min(value.length, 12))
+  return '•'.repeat(Math.min(setting.valueLength, 12))
 }
 
 export function SettingListClient({
   settings,
   actions,
 }: {
-  settings: AdminSettings[]
+  settings: AdminSettingSummary[]
   actions: Actions
 }) {
   return (
@@ -38,7 +37,7 @@ export function SettingListClient({
             <Code>{setting.key}</Code>
           </Text>
           <Text fontSize="sm" color="gray.600">
-            값: {maskedPreview(setting.value)}
+            값: {maskedPreview(setting)}
           </Text>
         </>
       )}

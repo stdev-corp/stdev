@@ -1,13 +1,21 @@
 'use client'
 
 import { Field, Input, Stack } from '@chakra-ui/react'
-import type { AdminSettings } from '@prisma/client'
 import { FormDrawer } from '../form-drawer'
+
+export type AdminSettingSummary = {
+  id: number
+  key: string
+  hasValue: boolean
+  valueLength: number
+  createdAt: Date
+  updatedAt: Date
+}
 
 type Props = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  setting?: AdminSettings
+  setting?: AdminSettingSummary
   action: (formData: FormData) => Promise<void>
 }
 
@@ -52,8 +60,8 @@ export function SettingFormDrawer({
           />
           <Field.HelperText>
             {editing
-              ? '비워두면 기존 값이 유지됩니다. 저장된 값은 서버 외부로 노출되지 않습니다.'
-              : '저장된 값은 서버 외부로 노출되지 않습니다.'}
+              ? '비워두면 기존 값이 유지됩니다. 저장된 값은 서버에서 사용될 때만 읽어옵니다.'
+              : '저장된 값은 서버에서 사용될 때만 읽어옵니다.'}
           </Field.HelperText>
         </Field.Root>
       </Stack>
