@@ -585,3 +585,40 @@ export async function deleteHistory(formData: FormData) {
   )
   revalidatePath('/admin')
 }
+
+export async function createAdminSetting(formData: FormData) {
+  await requireAdminActionSession()
+  await withMutationMessage(
+    () =>
+      prisma.adminSettings.create({
+        data: {
+          key: text(formData, 'key'),
+          value: text(formData, 'value'),
+        },
+      }),
+    '설정',
+  )
+  revalidatePath('/admin/settings')
+}
+
+export async function updateAdminSetting(formData: FormData) {
+  await requireAdminActionSession()
+  await withMutationMessage(
+    () =>
+      prisma.adminSettings.update({
+        where: { id: recordId(formData) },
+        data: { value: text(formData, 'value') },
+      }),
+    '설정',
+  )
+  revalidatePath('/admin/settings')
+}
+
+export async function deleteAdminSetting(formData: FormData) {
+  await requireAdminActionSession()
+  await withDeleteMessage(
+    () => prisma.adminSettings.delete({ where: { id: recordId(formData) } }),
+    '설정',
+  )
+  revalidatePath('/admin/settings')
+}
