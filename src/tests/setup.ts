@@ -35,8 +35,7 @@ process.env.NEXT_PUBLIC_CHANNEL_PLUGIN_KEY =
 process.env.AWS_REGION = process.env.AWS_REGION ?? 'ap-northeast-2'
 process.env.AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY ?? 'test-access-key'
 process.env.AWS_SECRET_KEY = process.env.AWS_SECRET_KEY ?? 'test-secret-key'
-process.env.PAYLOAD_S3_TARGET_BUCKET =
-  process.env.PAYLOAD_S3_TARGET_BUCKET ?? 'stdev-kr'
+process.env.S3_BUCKET = process.env.S3_BUCKET ?? 'stdev-kr'
 
 if (typeof globalThis.ResizeObserver === 'undefined') {
   globalThis.ResizeObserver = class ResizeObserverMock {

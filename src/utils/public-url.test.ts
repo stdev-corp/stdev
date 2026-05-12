@@ -180,24 +180,8 @@ describe('allowedImageHosts with dynamic env', () => {
     vi.unstubAllEnvs()
   })
 
-  it('adds PAYLOAD_S3_BASE_URL hostname to allowedImageHosts', async () => {
-    vi.stubEnv('PAYLOAD_S3_BASE_URL', 'https://legacy.example.com')
-    const mod = await import('@/utils/public-url')
-    expect(
-      mod.isAllowedImageUrl('https://legacy.example.com/images/photo.png'),
-    ).toBe(true)
-  })
-
-  it('rejects a different host when PAYLOAD_S3_BASE_URL is set to another domain', async () => {
-    vi.stubEnv('PAYLOAD_S3_BASE_URL', 'https://legacy.example.com')
-    const mod = await import('@/utils/public-url')
-    expect(
-      mod.isAllowedImageUrl('https://not-legacy.example.com/images/photo.png'),
-    ).toBe(false)
-  })
-
-  it('adds custom PAYLOAD_S3_TARGET_BUCKET and AWS_REGION to allowedImageHosts', async () => {
-    vi.stubEnv('PAYLOAD_S3_TARGET_BUCKET', 'custom-bucket')
+  it('adds custom S3_BUCKET and AWS_REGION to allowedImageHosts', async () => {
+    vi.stubEnv('S3_BUCKET', 'custom-bucket')
     vi.stubEnv('AWS_REGION', 'us-east-1')
     const mod = await import('@/utils/public-url')
     expect(
@@ -205,5 +189,16 @@ describe('allowedImageHosts with dynamic env', () => {
         'https://custom-bucket.s3.us-east-1.amazonaws.com/images/photo.png',
       ),
     ).toBe(true)
+  })
+
+  it('rejects a host that does not match custom S3_BUCKET/AWS_REGION', async () => {
+    vi.stubEnv('S3_BUCKET', 'custom-bucket')
+    vi.stubEnv('AWS_REGION', 'us-east-1')
+    const mod = await import('@/utils/public-url')
+    expect(
+      mod.isAllowedImageUrl(
+        'https://other-bucket.s3.us-east-1.amazonaws.com/images/photo.png',
+      ),
+    ).toBe(false)
   })
 })

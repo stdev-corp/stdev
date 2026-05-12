@@ -261,8 +261,8 @@ describe('uploadAsset - env var handling', () => {
     )
   })
 
-  it('uses custom PAYLOAD_S3_TARGET_BUCKET and AWS_REGION in returned URL', async () => {
-    vi.stubEnv('PAYLOAD_S3_TARGET_BUCKET', 'my-bucket')
+  it('uses custom S3_BUCKET and AWS_REGION in returned URL', async () => {
+    vi.stubEnv('S3_BUCKET', 'my-bucket')
     vi.stubEnv('AWS_REGION', 'us-east-1')
     const { uploadAsset } = await loadS3Module()
     const result = await uploadAsset(makePng('p.png'), 'images')
@@ -325,8 +325,8 @@ describe('deleteManagedAsset', () => {
     expect(s3Mock.commandCalls(DeleteObjectCommand)).toHaveLength(0)
   })
 
-  it('uses custom PAYLOAD_S3_TARGET_BUCKET and AWS_REGION for host matching', async () => {
-    vi.stubEnv('PAYLOAD_S3_TARGET_BUCKET', 'custom-bucket')
+  it('uses custom S3_BUCKET and AWS_REGION for host matching', async () => {
+    vi.stubEnv('S3_BUCKET', 'custom-bucket')
     vi.stubEnv('AWS_REGION', 'us-east-1')
     const { deleteManagedAsset } = await loadS3Module()
     await deleteManagedAsset(

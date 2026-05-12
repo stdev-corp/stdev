@@ -64,8 +64,7 @@ export default defineConfig({
       AWS_REGION: process.env.AWS_REGION ?? 'ap-northeast-2',
       AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY ?? 'test-access-key',
       AWS_SECRET_KEY: process.env.AWS_SECRET_KEY ?? 'test-secret-key',
-      PAYLOAD_S3_TARGET_BUCKET:
-        process.env.PAYLOAD_S3_TARGET_BUCKET ?? 'stdev-kr',
+      S3_BUCKET: process.env.S3_BUCKET ?? 'stdev-kr',
     },
   },
 })
