@@ -1,5 +1,10 @@
 export function withDatabaseSslParams(databaseUrl: string) {
-  const url = new URL(databaseUrl)
+  let url: URL
+  try {
+    url = new URL(databaseUrl)
+  } catch {
+    return databaseUrl
+  }
 
   if (!url.hostname.endsWith('.rds.amazonaws.com')) {
     return databaseUrl
