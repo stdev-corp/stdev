@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/stdev-kr/stdev/actions/workflows/ci.yml/badge.svg)](https://github.com/stdev-kr/stdev/actions/workflows/ci.yml)
 [![CD](https://github.com/stdev-kr/stdev/actions/workflows/cd.yml/badge.svg)](https://github.com/stdev-kr/stdev/actions/workflows/cd.yml)
+[![codecov](https://codecov.io/gh/stdev-corp/stdev/graph/badge.svg?token=ZLV3V4LE1Y)](https://codecov.io/gh/stdev-corp/stdev)
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
@@ -86,7 +87,7 @@ Github 레포지토리 설정에서 `Actions secrets and variables` 페이지로
 - NEXT_PUBLIC_GA_ID=G-example
 - DATABASE_URL=postgres://user:password@url:port/schema
 - BETTER_AUTH_SECRET=example
-- BETTER_AUTH_URL=https://www.stdev.kr
+- BETTER_AUTH_URL=<https://www.stdev.kr>
 - GOOGLE_CLIENT_ID=example.apps.googleusercontent.com
 - GOOGLE_CLIENT_SECRET=example
 
