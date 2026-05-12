@@ -2,13 +2,14 @@ name: CD
 
 on:
   push:
-    branches: ["main"]
+    branches: ['main']
   pull_request:
-    branches: ["main"]
+    branches: ['main']
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  NODE_VERSION: '24'
 
 jobs:
   build-and-push:
@@ -21,6 +22,20 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          run_install: false
+
+      - name: Install Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Install cosign
         if: github.event_name != 'pull_request'
@@ -54,3 +69,10 @@ jobs:
             "NEXT_PUBLIC_CHANNEL_PLUGIN_KEY=${{ secrets.NEXT_PUBLIC_CHANNEL_PLUGIN_KEY }}"
             "NEXT_PUBLIC_GTM_ID=${{ secrets.NEXT_PUBLIC_GTM_ID }}"
             "NEXT_PUBLIC_GA_ID=${{ secrets.NEXT_PUBLIC_GA_ID }}"
+            "DATABASE_URL=${{ secrets.DATABASE_URL }}"
+            "S3_BUCKET=${{ secrets.S3_BUCKET }}"
+            "AWS_REGION=${{ secrets.AWS_REGION }}"
+            "BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}"
+            "BETTER_AUTH_URL=${{ secrets.BETTER_AUTH_URL }}"
+            "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}"
+            "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}"

@@ -11,12 +11,12 @@ export function toDateTimeString(date?: Date | null): string {
   if (!date) {
     return 'N/A'
   }
-  return dayjs(date).format('YYYY년 M월 D일 H:mm:ss')
+  return dayjs(date).tz('Asia/Seoul').format('YYYY년 M월 D일 H:mm:ss')
 }
 
 export function toDateString(date?: Date | null): string {
   if (!date) {
     return 'N/A'
   }
-  return dayjs(date).format('YYYY년 M월 D일')
+  return dayjs(date).tz('Asia/Seoul').format('YYYY년 M월 D일')
 }

@@ -1,7 +1,12 @@
 .github
+.idea
 .next
+.env
+.env.*
+!.env.example
 node_modules
 eslint.config.mjs
 prettier.config.mjs
 .gitignore
 README.md
+tsconfig.tsbuildinfo

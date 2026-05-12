@@ -1,0 +1,186 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  @@map("verification")
+}
+
+model Business {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  code      String    @unique
+  startDate DateTime
+  endDate   DateTime
+  location  String?
+  webpages  Webpage[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model FileAsset {
+  id           Int      @id @default(autoincrement())
+  filename     String
+  url          String?
+  mimeType     String?
+  filesize     Int?
+  prefix       String?  @default("files")
+  thumbnailURL String?
+  width        Int?
+  height       Int?
+  focalX       Int?
+  focalY       Int?
+  reports      Report[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ImageAsset {
+  id           Int           @id @default(autoincrement())
+  alt          String?
+  filename     String?
+  url          String?
+  mimeType     String?
+  filesize     Int?
+  prefix       String?       @default("images")
+  thumbnailURL String?
+  width        Int?
+  height       Int?
+  focalX       Int?
+  focalY       Int?
+  histories    History[]
+  institutions Institution[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model History {
+  id        Int         @id @default(autoincrement())
+  date      DateTime
+  title     String
+  content   String?
+  imageId   Int?
+  image     ImageAsset? @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model Institution {
+  id        Int        @id @default(autoincrement())
+  nameKo    String     @unique
+  nameEn    String     @unique
+  url       String     @unique
+  logoId    Int        @unique
+  logo      ImageAsset @relation(fields: [logoId], references: [id], onDelete: Restrict)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Markdown {
+  id            Int          @id @default(autoincrement())
+  type          MarkdownType
+  revisionDate  DateTime
+  effectiveDate DateTime
+  content       String
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Report {
+  id            Int        @id @default(autoincrement())
+  title         String
+  publishedDate DateTime
+  type          ReportType
+  fileId        Int        @unique
+  file          FileAsset  @relation(fields: [fileId], references: [id], onDelete: Restrict)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Webpage {
+  id            Int          @id @default(autoincrement())
+  url           String       @unique
+  title         String
+  author        String
+  publishedDate DateTime
+  businessId    Int?
+  business      Business?    @relation(fields: [businessId], references: [id], onDelete: SetNull)
+  type          WebpageType
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+enum MarkdownType {
+  articles
+  privacy
+  terms
+}
+
+enum ReportType {
+  meeting
+  donation
+}
+
+enum WebpageType {
+  blog_post
+  news_article
+  press_release
+}

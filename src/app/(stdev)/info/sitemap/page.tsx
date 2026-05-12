@@ -15,16 +15,20 @@ type SitemapMenuProps = {
 function SitemapMenu(props: SitemapMenuProps) {
   return (
     <Box>
-      <ChakraLink as={Link} href={props.menu.href}>
-        <Heading as="h2" size="md" mb={4}>
-          {props.menu.label}
-        </Heading>
+      <ChakraLink asChild>
+        <Link href={props.menu.href}>
+          <Heading as="h2" size="md" mb={4}>
+            {props.menu.label}
+          </Heading>
+        </Link>
       </ChakraLink>
       <Stack as="ul" gap={3} listStyleType="none" m={0} p={0}>
         {props.menu.subMenus?.map((child) => (
           <Box as="li" key={child.href}>
-            <ChakraLink as={Link} href={child.href}>
-              <Text fontSize="lg">{child.label}</Text>
+            <ChakraLink asChild>
+              <Link href={child.href}>
+                <Text fontSize="lg">{child.label}</Text>
+              </Link>
             </ChakraLink>
           </Box>
         ))}

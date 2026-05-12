@@ -15,6 +15,7 @@ export default function Logo(props: Props) {
           src={props.src}
           alt="logo"
           fill
+          sizes="224px"
           style={{
             objectFit: 'contain',
             objectPosition: 'left center',

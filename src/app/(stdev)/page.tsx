@@ -1,8 +1,9 @@
-import { queryInstitutions } from '@/utils/payload'
+import { queryInstitutions } from '@/utils/cms'
 import NextImage from 'next/image'
 import Navigation from '@/components/layout/navbar'
 import Footer from '@/components/layout/footer'
-import { Box, Container, Flex, Heading, SimpleGrid } from '@chakra-ui/react'
+import ScrollingLogos from '@/components/scrolling-logos'
+import { Box, Heading } from '@chakra-ui/react'
 
 export default async function Page() {
   const institutions = await queryInstitutions()
@@ -16,42 +17,35 @@ export default async function Page() {
           <NextImage
             src="/images/intro/title.png"
             alt="title"
-            width={600}
-            height={600}
+            width={4960}
+            height={844}
+            sizes="(max-width: 672px) calc(100vw - 32px), 600px"
+            loading="eager"
+            fetchPriority="high"
+            style={{ width: '100%', maxWidth: '600px', height: 'auto' }}
           />
           <Box h="120px" />
           <NextImage
             src="/images/intro/3w1h.png"
             alt="3w1h"
-            width={800}
-            height={800}
+            width={6672}
+            height={3160}
+            sizes="(max-width: 832px) calc(100vw - 32px), 800px"
+            loading="eager"
+            style={{ width: '100%', maxWidth: '800px', height: 'auto' }}
           />
           <Box h="120px" />
-          <Box bg="gray.100" py={12}>
-            <Container maxW="6xl" px={{ base: 6, lg: 16 }}>
-              <Heading
-                as="h2"
-                size="lg"
-                textAlign="center"
-                color="gray.800"
-                mb={10}
-              >
-                함께하는 기관
-              </Heading>
-              <SimpleGrid columns={{ base: 3, md: 4, lg: 6 }} gap={6}>
-                {institutions.map((institution, index) => (
-                  <Flex key={index} align="center" justify="center">
-                    <NextImage
-                      src={institution.imageUrl || ''}
-                      alt={`Logo ${index + 1}`}
-                      width={120}
-                      height={60}
-                      style={{ objectFit: 'contain' }}
-                    />
-                  </Flex>
-                ))}
-              </SimpleGrid>
-            </Container>
+          <Box py={12}>
+            <Heading
+              as="h2"
+              size="lg"
+              textAlign="center"
+              color="gray.800"
+              mb={10}
+            >
+              함께하는 기관
+            </Heading>
+            <ScrollingLogos institutions={institutions} />
           </Box>
           <Box h="120px" />
         </Box>
