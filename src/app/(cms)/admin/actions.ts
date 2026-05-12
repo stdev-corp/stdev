@@ -603,14 +603,17 @@ export async function createAdminSetting(formData: FormData) {
 
 export async function updateAdminSetting(formData: FormData) {
   await requireAdminActionSession()
-  await withMutationMessage(
-    () =>
-      prisma.adminSettings.update({
-        where: { id: recordId(formData) },
-        data: { value: text(formData, 'value') },
-      }),
-    '설정',
-  )
+  const newValue = text(formData, 'value')
+  if (newValue.length > 0) {
+    await withMutationMessage(
+      () =>
+        prisma.adminSettings.update({
+          where: { id: recordId(formData) },
+          data: { value: newValue },
+        }),
+      '설정',
+    )
+  }
   revalidatePath('/admin/settings')
 }
 

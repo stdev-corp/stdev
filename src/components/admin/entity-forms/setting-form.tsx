@@ -40,16 +40,20 @@ export function SettingFormDrawer({
             <Field.HelperText>키는 변경할 수 없습니다.</Field.HelperText>
           )}
         </Field.Root>
-        <Field.Root required>
+        <Field.Root required={!editing}>
           <Field.Label>값</Field.Label>
           <Input
             name="value"
             type="password"
-            defaultValue={setting?.value ?? ''}
-            required
+            placeholder={
+              editing ? '새 값을 입력하면 변경됩니다' : '값을 입력하세요'
+            }
+            required={!editing}
           />
           <Field.HelperText>
-            저장된 값은 관리자만 확인할 수 있습니다.
+            {editing
+              ? '비워두면 기존 값이 유지됩니다. 저장된 값은 서버 외부로 노출되지 않습니다.'
+              : '저장된 값은 서버 외부로 노출되지 않습니다.'}
           </Field.HelperText>
         </Field.Root>
       </Stack>

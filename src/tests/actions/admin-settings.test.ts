@@ -73,13 +73,19 @@ describe('admin-settings actions', () => {
       expect(prismaMock.adminSettings.update).not.toHaveBeenCalled()
     })
 
-    it('updates value by id and revalidates', async () => {
+    it('updates value by id and revalidates when value is provided', async () => {
       prismaMock.adminSettings.update.mockResolvedValue(fixture as never)
       await updateAdminSetting(createFormData({ id: '1', value: 'new' }))
       expect(prismaMock.adminSettings.update).toHaveBeenCalledWith({
         where: { id: 1 },
         data: { value: 'new' },
       })
+      expect(revalidatePathMock).toHaveBeenCalledWith('/admin/settings')
+    })
+
+    it('skips DB update but still revalidates when value is empty', async () => {
+      await updateAdminSetting(createFormData({ id: '1', value: '' }))
+      expect(prismaMock.adminSettings.update).not.toHaveBeenCalled()
       expect(revalidatePathMock).toHaveBeenCalledWith('/admin/settings')
     })
   })
