@@ -28,6 +28,8 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Copy test env for Next.js build
+        run: cp .env.test .env
       - name: Build the project
         run: pnpm build
 
@@ -102,6 +104,8 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Install Playwright browser
         run: pnpm test:e2e:install
+      - name: Copy test env for Next.js build
+        run: cp .env.test .env
       - name: Run Playwright with dummy DB
         run: pnpm test:e2e
       - name: Stop dummy DB
