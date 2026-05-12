@@ -1,0 +1,58 @@
+coverage:
+  precision: 2
+  round: down
+  range: 90..100
+  status:
+    project:
+      default:
+        target: 95%
+        threshold: 1%
+        if_ci_failed: error
+        only_pulls: false
+        branches:
+          - main
+    patch:
+      default:
+        target: 90%
+        threshold: 1%
+        if_ci_failed: error
+
+comment:
+  layout: 'reach,diff,flags,files,footer'
+  behavior: default
+  require_changes: false
+
+flags:
+  unittests:
+    paths:
+      - src/
+
+ignore:
+  - '.next/**/*'
+  - 'prisma/migrations/**/*'
+  - 'prisma.config.ts'
+  - 'next.config.ts'
+  - 'src/scripts/**/*'
+  - 'src/generated/**/*'
+  - 'src/**/*.d.ts'
+  - 'src/tests/**/*'
+  - 'src/e2e/**/*'
+  - 'src/app/**/loading.tsx'
+  - 'src/app/**/not-found.tsx'
+  - 'src/app/**/forbidden.tsx'
+  - 'src/app/**/unauthorized.tsx'
+  - 'src/app/**/layout.tsx'
+  - 'src/app/**/providers.tsx'
+  - 'src/app/api/auth/**/*'
+  - 'src/app/(stdev)/sitemap.ts'
+  - 'playwright.config.ts'
+  - 'vitest.config.ts'
+  - 'vitest.config.integration.ts'
+  - 'eslint.config.mjs'
+  - 'prettier.config.mjs'
+  - 'public/service-worker.js'
+
+codecov:
+  require_ci_to_pass: true
+  notify:
+    wait_for_ci: true

@@ -20,16 +20,16 @@ jobs:
         name: Install pnpm
         with:
           run_install: false
-      - name: Install Node.js ${{ env.NODE_VERSION }}
+      - name: Install Node.js 24
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
-      - name: Copy example env file
-        run: cp .env.example .env
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Copy test env for Next.js build
+        run: cp .env.test .env
       - name: Build the project
         run: pnpm build
 
@@ -43,13 +43,109 @@ jobs:
         name: Install pnpm
         with:
           run_install: false
-      - name: Install Node.js ${{ env.NODE_VERSION }}
+      - name: Install Node.js 24
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Lint the project
         run: pnpm lint
+
+  test:
+    name: Unit + Component + Integration (mocked) Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          run_install: false
+      - name: Install Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Generate Prisma client
+        run: pnpm db:generate
+      - name: Run Vitest with coverage
+        run: pnpm test:ci
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ github.sha }}
+          path: coverage/
+          retention-days: 7
+          if-no-files-found: warn
+
+  e2e:
+    name: Playwright E2E Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          run_install: false
+      - name: Install Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install Playwright browser
+        run: pnpm test:e2e:install
+      - name: Copy test env for Next.js build
+        run: cp .env.test .env
+      - name: Run Playwright with dummy DB
+        run: pnpm test:e2e
+      - name: Stop dummy DB
+        if: always()
+        run: docker compose -f docker-compose.test.yml down
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ github.sha }}
+          path: playwright-report/
+          retention-days: 7
+          if-no-files-found: ignore
+      - name: Upload E2E test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-results-${{ github.sha }}
+          path: test-results/e2e*
+          retention-days: 7
+          if-no-files-found: ignore
+
+  coverage:
+    name: Upload coverage to Codecov
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: always() && needs.test.result == 'success'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-${{ github.sha }}
+          path: coverage/
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}

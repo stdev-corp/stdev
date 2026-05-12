@@ -8,6 +8,18 @@ if (!databaseUrl) {
   throw new Error('DATABASE_URL is required')
 }
 
+const databaseHost = new URL(databaseUrl).hostname
+const databaseSslRejectUnauthorized =
+  process.env.DATABASE_SSL_REJECT_UNAUTHORIZED
+const isLocalDatabase =
+  databaseHost === 'localhost' || databaseHost === '127.0.0.1'
+const ssl =
+  databaseSslRejectUnauthorized === 'false'
+    ? { rejectUnauthorized: false }
+    : databaseSslRejectUnauthorized === 'true' || !isLocalDatabase
+      ? { rejectUnauthorized: true }
+      : undefined
+
 const adapter = new PrismaPg({
   connectionString: withDatabaseSslParams(databaseUrl),
 })
