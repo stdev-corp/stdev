@@ -17,22 +17,22 @@ type StatCardProps = {
 
 function StatCard({ label, value, href }: StatCardProps) {
   return (
-    <Box
-      as={Link}
-      href={href}
-      bg="white"
-      borderWidth="1px"
-      borderColor="gray.200"
-      borderRadius="lg"
-      p={5}
-      transition="all 0.15s"
-      _hover={{ borderColor: 'teal.400', shadow: 'sm' }}
-    >
-      <Stat.Root>
-        <Stat.Label color="gray.600">{label}</Stat.Label>
-        <Stat.ValueText fontSize="3xl">{value}</Stat.ValueText>
-      </Stat.Root>
-    </Box>
+    <Link href={href} style={{ textDecoration: 'none', display: 'block' }}>
+      <Box
+        bg="white"
+        borderWidth="1px"
+        borderColor="gray.200"
+        borderRadius="lg"
+        p={5}
+        transition="all 0.15s"
+        _hover={{ borderColor: 'teal.400', shadow: 'sm' }}
+      >
+        <Stat.Root>
+          <Stat.Label color="gray.600">{label}</Stat.Label>
+          <Stat.ValueText fontSize="3xl">{value}</Stat.ValueText>
+        </Stat.Root>
+      </Box>
+    </Link>
   )
 }
 

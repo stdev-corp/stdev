@@ -11,10 +11,10 @@ vi.mock('@/utils/auth-client', () => ({
 }))
 
 describe('SignInPage', () => {
-  it('renders CMS 로그인 heading', () => {
+  it('renders STDev CMS 로그인 heading', () => {
     renderWithChakra(<SignInPage />)
     expect(
-      screen.getByRole('heading', { name: 'CMS 로그인' }),
+      screen.getByRole('heading', { name: 'STDev CMS 로그인' }),
     ).toBeInTheDocument()
   })
 
@@ -22,6 +22,15 @@ describe('SignInPage', () => {
     renderWithChakra(<SignInPage />)
     expect(
       screen.getByText('STDev Google 계정으로 로그인하세요.'),
+    ).toBeInTheDocument()
+  })
+
+  it('renders the @stdev.kr restriction notice on the page (outside form)', () => {
+    renderWithChakra(<SignInPage />)
+    expect(
+      screen.getByText(
+        '관리자는 Google로 연결된 @stdev.kr 계정만 접근할 수 있습니다.',
+      ),
     ).toBeInTheDocument()
   })
 

@@ -27,18 +27,9 @@ describe('SignInForm', () => {
     ).toBeInTheDocument()
   })
 
-  it('renders the @stdev.kr restriction notice', () => {
+  it('does not show an error alert on initial render', () => {
     renderWithChakra(<SignInForm />)
-    expect(
-      screen.getByText(
-        '관리자는 Google로 연결된 @stdev.kr 계정만 접근할 수 있습니다.',
-      ),
-    ).toBeInTheDocument()
-  })
-
-  it('does not show an error message on initial render', () => {
-    const { container } = renderWithChakra(<SignInForm />)
-    expect(container.querySelectorAll('p')).toHaveLength(1)
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   })
 
   it('calls authClient.signIn.social with expected arguments on click', async () => {
@@ -76,12 +67,12 @@ describe('SignInForm', () => {
     ).toBeInTheDocument()
   })
 
-  it('does not render an error when result has no error', async () => {
+  it('does not render an error alert when result has no error', async () => {
     socialMock.mockResolvedValue({ error: null })
-    const { user, container } = renderWithChakra(<SignInForm />)
+    const { user } = renderWithChakra(<SignInForm />)
     await user.click(
       screen.getByRole('button', { name: 'Google 계정으로 로그인' }),
     )
-    expect(container.querySelectorAll('p')).toHaveLength(1)
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   })
 })
