@@ -1,29 +1,43 @@
 'use client'
 
-import { useState } from 'react'
+import { Alert, Button, Stack } from '@chakra-ui/react'
+import { useState, useTransition } from 'react'
 import { authClient } from '@/utils/auth-client'
 
 export default function SignInForm() {
   const [error, setError] = useState<string | null>(null)
+  const [pending, startTransition] = useTransition()
 
-  async function signInWithGoogle() {
-    const result = await authClient.signIn.social({
-      provider: 'google',
-      callbackURL: '/admin',
-      errorCallbackURL: '/admin/sign-in',
+  function signInWithGoogle() {
+    setError(null)
+    startTransition(async () => {
+      const result = await authClient.signIn.social({
+        provider: 'google',
+        callbackURL: '/admin',
+        errorCallbackURL: '/admin/sign-in',
+      })
+      if (result.error) {
+        setError(result.error.message ?? '로그인에 실패했습니다.')
+      }
     })
-    if (result.error) {
-      setError(result.error.message ?? '로그인에 실패했습니다.')
-    }
   }
 
   return (
-    <div style={{ display: 'grid', gap: 12 }}>
-      <button type="button" onClick={signInWithGoogle}>
+    <Stack gap={3}>
+      <Button
+        type="button"
+        colorPalette="teal"
+        loading={pending}
+        onClick={signInWithGoogle}
+      >
         Google 계정으로 로그인
-      </button>
-      <p>관리자는 Google로 연결된 @stdev.kr 계정만 접근할 수 있습니다.</p>
-      {error && <p>{error}</p>}
-    </div>
+      </Button>
+      {error && (
+        <Alert.Root status="error">
+          <Alert.Indicator />
+          <Alert.Title>{error}</Alert.Title>
+        </Alert.Root>
+      )}
+    </Stack>
   )
 }
