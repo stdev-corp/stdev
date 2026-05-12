@@ -89,51 +89,152 @@ export function AdminDashboard({
         <div style={listStyle}>
           <h3>사업</h3>
           {businesses.map((business) => (
-            <form key={business.id} action={actions.updateBusiness} style={formStyle}>
+            <form
+              key={business.id}
+              action={actions.updateBusiness}
+              style={formStyle}
+            >
               <input type="hidden" name="id" value={business.id} />
               <strong>#{business.id}</strong>
-              <input name="name" defaultValue={business.name} required style={inputStyle} />
-              <input name="code" defaultValue={business.code} required style={inputStyle} />
-              <input name="startDate" type="date" defaultValue={dateValue(business.startDate)} required style={inputStyle} />
-              <input name="endDate" type="date" defaultValue={dateValue(business.endDate)} required style={inputStyle} />
-              <input name="location" defaultValue={business.location ?? ''} style={inputStyle} />
+              <input
+                name="name"
+                defaultValue={business.name}
+                required
+                style={inputStyle}
+              />
+              <input
+                name="code"
+                defaultValue={business.code}
+                required
+                style={inputStyle}
+              />
+              <input
+                name="startDate"
+                type="date"
+                defaultValue={dateValue(business.startDate)}
+                required
+                style={inputStyle}
+              />
+              <input
+                name="endDate"
+                type="date"
+                defaultValue={dateValue(business.endDate)}
+                required
+                style={inputStyle}
+              />
+              <input
+                name="location"
+                defaultValue={business.location ?? ''}
+                style={inputStyle}
+              />
               <AdminActionButtons deleteAction={actions.deleteBusiness} />
             </form>
           ))}
           <h3>이미지</h3>
           {images.map((image) => (
-            <form key={image.id} action={actions.updateImageAsset} style={formStyle}>
+            <form
+              key={image.id}
+              action={actions.updateImageAsset}
+              style={formStyle}
+            >
               <input type="hidden" name="id" value={image.id} />
               <strong>#{image.id}</strong>
-              <input name="url" defaultValue={image.url ?? ''} style={inputStyle} />
-              <input name="file" type="file" accept="image/*" style={inputStyle} />
-              <input name="filename" defaultValue={image.filename ?? ''} style={inputStyle} />
-              <input name="alt" defaultValue={image.alt ?? ''} style={inputStyle} />
-              <input name="mimeType" defaultValue={image.mimeType ?? ''} style={inputStyle} />
+              <input
+                name="url"
+                defaultValue={image.url ?? ''}
+                style={inputStyle}
+              />
+              <input
+                name="file"
+                type="file"
+                accept="image/*"
+                style={inputStyle}
+              />
+              <input
+                name="filename"
+                defaultValue={image.filename ?? ''}
+                style={inputStyle}
+              />
+              <input
+                name="alt"
+                defaultValue={image.alt ?? ''}
+                style={inputStyle}
+              />
+              <input
+                name="mimeType"
+                defaultValue={image.mimeType ?? ''}
+                style={inputStyle}
+              />
               <AdminActionButtons deleteAction={actions.deleteImageAsset} />
             </form>
           ))}
           <h3>파일</h3>
           {files.map((file) => (
-            <form key={file.id} action={actions.updateFileAsset} style={formStyle}>
+            <form
+              key={file.id}
+              action={actions.updateFileAsset}
+              style={formStyle}
+            >
               <input type="hidden" name="id" value={file.id} />
               <strong>#{file.id}</strong>
-              <input name="url" defaultValue={file.url ?? ''} style={inputStyle} />
-              <input name="file" type="file" accept="application/pdf" style={inputStyle} />
-              <input name="filename" defaultValue={file.filename} required style={inputStyle} />
-              <input name="mimeType" defaultValue={file.mimeType ?? ''} style={inputStyle} />
+              <input
+                name="url"
+                defaultValue={file.url ?? ''}
+                style={inputStyle}
+              />
+              <input
+                name="file"
+                type="file"
+                accept="application/pdf"
+                style={inputStyle}
+              />
+              <input
+                name="filename"
+                defaultValue={file.filename}
+                required
+                style={inputStyle}
+              />
+              <input
+                name="mimeType"
+                defaultValue={file.mimeType ?? ''}
+                style={inputStyle}
+              />
               <AdminActionButtons deleteAction={actions.deleteFileAsset} />
             </form>
           ))}
           <h3>기관</h3>
           {institutions.map((institution) => (
-            <form key={institution.id} action={actions.updateInstitution} style={formStyle}>
+            <form
+              key={institution.id}
+              action={actions.updateInstitution}
+              style={formStyle}
+            >
               <input type="hidden" name="id" value={institution.id} />
               <strong>#{institution.id}</strong>
-              <input name="nameKo" defaultValue={institution.nameKo} required style={inputStyle} />
-              <input name="nameEn" defaultValue={institution.nameEn} required style={inputStyle} />
-              <input name="url" defaultValue={institution.url} required style={inputStyle} />
-              <select name="logoId" defaultValue={institution.logoId} required style={inputStyle}>
+              <input
+                name="nameKo"
+                defaultValue={institution.nameKo}
+                required
+                style={inputStyle}
+              />
+              <input
+                name="nameEn"
+                defaultValue={institution.nameEn}
+                required
+                style={inputStyle}
+              />
+              <input
+                name="url"
+                defaultValue={institution.url}
+                required
+                style={inputStyle}
+              />
+              <select
+                name="logoId"
+                defaultValue={institution.logoId}
+                required
+                style={inputStyle}
+              >
                 {images.map((image) => (
                   <option key={image.id} value={image.id}>
                     #{image.id} {image.filename ?? image.url}
@@ -145,35 +246,96 @@ export function AdminDashboard({
           ))}
           <h3>마크다운</h3>
           {markdowns.map((markdown) => (
-            <form key={markdown.id} action={actions.updateMarkdown} style={formStyle}>
+            <form
+              key={markdown.id}
+              action={actions.updateMarkdown}
+              style={formStyle}
+            >
               <input type="hidden" name="id" value={markdown.id} />
               <strong>#{markdown.id}</strong>
-              <select name="type" defaultValue={markdown.type} required style={inputStyle}>
+              <select
+                name="type"
+                defaultValue={markdown.type}
+                required
+                style={inputStyle}
+              >
                 <option value="articles">정관</option>
                 <option value="privacy">개인정보처리방침</option>
                 <option value="terms">이용약관</option>
               </select>
-              <input name="revisionDate" type="date" defaultValue={dateValue(markdown.revisionDate)} required style={inputStyle} />
-              <input name="effectiveDate" type="date" defaultValue={dateValue(markdown.effectiveDate)} required style={inputStyle} />
-              <textarea name="content" defaultValue={markdown.content} required rows={8} style={inputStyle} />
+              <input
+                name="revisionDate"
+                type="date"
+                defaultValue={dateValue(markdown.revisionDate)}
+                required
+                style={inputStyle}
+              />
+              <input
+                name="effectiveDate"
+                type="date"
+                defaultValue={dateValue(markdown.effectiveDate)}
+                required
+                style={inputStyle}
+              />
+              <textarea
+                name="content"
+                defaultValue={markdown.content}
+                required
+                rows={8}
+                style={inputStyle}
+              />
               <AdminActionButtons deleteAction={actions.deleteMarkdown} />
             </form>
           ))}
           <h3>웹페이지</h3>
           {webpages.map((webpage) => (
-            <form key={webpage.id} action={actions.updateWebpage} style={formStyle}>
+            <form
+              key={webpage.id}
+              action={actions.updateWebpage}
+              style={formStyle}
+            >
               <input type="hidden" name="id" value={webpage.id} />
               <strong>#{webpage.id}</strong>
-              <select name="type" defaultValue={webpage.type} required style={inputStyle}>
+              <select
+                name="type"
+                defaultValue={webpage.type}
+                required
+                style={inputStyle}
+              >
                 <option value="blog_post">블로그 포스트</option>
                 <option value="news_article">신문 기사</option>
                 <option value="press_release">보도 자료</option>
               </select>
-              <input name="url" defaultValue={webpage.url} required style={inputStyle} />
-              <input name="title" defaultValue={webpage.title} required style={inputStyle} />
-              <input name="author" defaultValue={webpage.author} required style={inputStyle} />
-              <input name="publishedDate" type="date" defaultValue={dateValue(webpage.publishedDate)} required style={inputStyle} />
-              <select name="businessId" defaultValue={webpage.businessId ?? ''} style={inputStyle}>
+              <input
+                name="url"
+                defaultValue={webpage.url}
+                required
+                style={inputStyle}
+              />
+              <input
+                name="title"
+                defaultValue={webpage.title}
+                required
+                style={inputStyle}
+              />
+              <input
+                name="author"
+                defaultValue={webpage.author}
+                required
+                style={inputStyle}
+              />
+              <input
+                name="publishedDate"
+                type="date"
+                defaultValue={dateValue(webpage.publishedDate)}
+                required
+                style={inputStyle}
+              />
+              <select
+                name="businessId"
+                defaultValue={webpage.businessId ?? ''}
+                style={inputStyle}
+              >
                 <option value="">관련 사업 없음</option>
                 {businesses.map((business) => (
                   <option key={business.id} value={business.id}>
@@ -186,16 +348,41 @@ export function AdminDashboard({
           ))}
           <h3>보고서</h3>
           {reports.map((report) => (
-            <form key={report.id} action={actions.updateReport} style={formStyle}>
+            <form
+              key={report.id}
+              action={actions.updateReport}
+              style={formStyle}
+            >
               <input type="hidden" name="id" value={report.id} />
               <strong>#{report.id}</strong>
-              <input name="title" defaultValue={report.title} required style={inputStyle} />
-              <input name="publishedDate" type="date" defaultValue={dateValue(report.publishedDate)} required style={inputStyle} />
-              <select name="type" defaultValue={report.type} required style={inputStyle}>
+              <input
+                name="title"
+                defaultValue={report.title}
+                required
+                style={inputStyle}
+              />
+              <input
+                name="publishedDate"
+                type="date"
+                defaultValue={dateValue(report.publishedDate)}
+                required
+                style={inputStyle}
+              />
+              <select
+                name="type"
+                defaultValue={report.type}
+                required
+                style={inputStyle}
+              >
                 <option value="meeting">총회 및 이사회</option>
                 <option value="donation">기부금 모금액 및 활용실적</option>
               </select>
-              <select name="fileId" defaultValue={report.fileId} required style={inputStyle}>
+              <select
+                name="fileId"
+                defaultValue={report.fileId}
+                required
+                style={inputStyle}
+              >
                 {files.map((file) => (
                   <option key={file.id} value={file.id}>
                     #{file.id} {file.filename}
@@ -207,13 +394,37 @@ export function AdminDashboard({
           ))}
           <h3>연혁</h3>
           {histories.map((history) => (
-            <form key={history.id} action={actions.updateHistory} style={formStyle}>
+            <form
+              key={history.id}
+              action={actions.updateHistory}
+              style={formStyle}
+            >
               <input type="hidden" name="id" value={history.id} />
               <strong>#{history.id}</strong>
-              <input name="date" type="date" defaultValue={dateValue(history.date)} required style={inputStyle} />
-              <input name="title" defaultValue={history.title} required style={inputStyle} />
-              <textarea name="content" defaultValue={history.content ?? ''} rows={4} style={inputStyle} />
-              <select name="imageId" defaultValue={history.imageId ?? ''} style={inputStyle}>
+              <input
+                name="date"
+                type="date"
+                defaultValue={dateValue(history.date)}
+                required
+                style={inputStyle}
+              />
+              <input
+                name="title"
+                defaultValue={history.title}
+                required
+                style={inputStyle}
+              />
+              <textarea
+                name="content"
+                defaultValue={history.content ?? ''}
+                rows={4}
+                style={inputStyle}
+              />
+              <select
+                name="imageId"
+                defaultValue={history.imageId ?? ''}
+                style={inputStyle}
+              >
                 <option value="">이미지 없음</option>
                 {images.map((image) => (
                   <option key={image.id} value={image.id}>
@@ -240,7 +451,11 @@ export function AdminDashboard({
 
       <AdminSection title="이미지 추가">
         <form action={actions.createImageAsset} style={formStyle}>
-          <input name="url" placeholder="기존 S3 이미지 URL (선택)" style={inputStyle} />
+          <input
+            name="url"
+            placeholder="기존 S3 이미지 URL (선택)"
+            style={inputStyle}
+          />
           <input name="file" type="file" accept="image/*" style={inputStyle} />
           <input name="filename" placeholder="파일명" style={inputStyle} />
           <input name="alt" placeholder="대체 텍스트" style={inputStyle} />
@@ -251,8 +466,17 @@ export function AdminDashboard({
 
       <AdminSection title="PDF 파일 추가">
         <form action={actions.createFileAsset} style={formStyle}>
-          <input name="url" placeholder="기존 S3 PDF URL (선택)" style={inputStyle} />
-          <input name="file" type="file" accept="application/pdf" style={inputStyle} />
+          <input
+            name="url"
+            placeholder="기존 S3 PDF URL (선택)"
+            style={inputStyle}
+          />
+          <input
+            name="file"
+            type="file"
+            accept="application/pdf"
+            style={inputStyle}
+          />
           <input name="filename" placeholder="파일명" style={inputStyle} />
           <input name="mimeType" placeholder="MIME 타입" style={inputStyle} />
           <button type="submit">저장</button>
@@ -261,9 +485,24 @@ export function AdminDashboard({
 
       <AdminSection title="기관 추가">
         <form action={actions.createInstitution} style={formStyle}>
-          <input name="nameKo" placeholder="기관명(한국어)" required style={inputStyle} />
-          <input name="nameEn" placeholder="기관명(영어)" required style={inputStyle} />
-          <input name="url" placeholder="홈페이지 URL" required style={inputStyle} />
+          <input
+            name="nameKo"
+            placeholder="기관명(한국어)"
+            required
+            style={inputStyle}
+          />
+          <input
+            name="nameEn"
+            placeholder="기관명(영어)"
+            required
+            style={inputStyle}
+          />
+          <input
+            name="url"
+            placeholder="홈페이지 URL"
+            required
+            style={inputStyle}
+          />
           <select name="logoId" required style={inputStyle}>
             <option value="">로고 이미지 선택</option>
             {images.map((image) => (
@@ -285,7 +524,13 @@ export function AdminDashboard({
           </select>
           <input name="revisionDate" type="date" required style={inputStyle} />
           <input name="effectiveDate" type="date" required style={inputStyle} />
-          <textarea name="content" placeholder="내용" required rows={10} style={inputStyle} />
+          <textarea
+            name="content"
+            placeholder="내용"
+            required
+            rows={10}
+            style={inputStyle}
+          />
           <button type="submit">저장</button>
         </form>
       </AdminSection>
@@ -299,7 +544,12 @@ export function AdminDashboard({
           </select>
           <input name="url" placeholder="URL" required style={inputStyle} />
           <input name="title" placeholder="제목" required style={inputStyle} />
-          <input name="author" placeholder="작성자" required style={inputStyle} />
+          <input
+            name="author"
+            placeholder="작성자"
+            required
+            style={inputStyle}
+          />
           <input name="publishedDate" type="date" required style={inputStyle} />
           <select name="businessId" style={inputStyle}>
             <option value="">관련 사업 없음</option>
@@ -337,7 +587,12 @@ export function AdminDashboard({
         <form action={actions.createHistory} style={formStyle}>
           <input name="date" type="date" required style={inputStyle} />
           <input name="title" placeholder="제목" required style={inputStyle} />
-          <textarea name="content" placeholder="내용" rows={5} style={inputStyle} />
+          <textarea
+            name="content"
+            placeholder="내용"
+            rows={5}
+            style={inputStyle}
+          />
           <select name="imageId" style={inputStyle}>
             <option value="">이미지 없음</option>
             {images.map((image) => (

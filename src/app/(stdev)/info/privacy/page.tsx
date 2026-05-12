@@ -21,8 +21,8 @@ export default async function PrivacyPage() {
       <Heading>사단법인 에스티데브 개인정보처리방침</Heading>
       <Box h="1rem" />
       <Text color="gray.500" fontSize="sm">
-        제정/개정일: {toDateString(privacy.revisionDate)} |
-        시행일: {toDateString(privacy.effectiveDate)}
+        제정/개정일: {toDateString(privacy.revisionDate)} | 시행일:{' '}
+        {toDateString(privacy.effectiveDate)}
       </Text>
       <Box h="2rem" />
       <MarkdownView content={privacy.content} />

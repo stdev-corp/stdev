@@ -81,7 +81,10 @@ async function bestEffortDeleteManagedAsset(url: string | null | undefined) {
   }
 }
 
-async function maybeDeleteUnreferencedImage(url: string | null | undefined, keepId?: number) {
+async function maybeDeleteUnreferencedImage(
+  url: string | null | undefined,
+  keepId?: number,
+) {
   if (!url) {
     return
   }
@@ -98,7 +101,10 @@ async function maybeDeleteUnreferencedImage(url: string | null | undefined, keep
   }
 }
 
-async function maybeDeleteUnreferencedFile(url: string | null | undefined, keepId?: number) {
+async function maybeDeleteUnreferencedFile(
+  url: string | null | undefined,
+  keepId?: number,
+) {
   if (!url) {
     return
   }
@@ -123,7 +129,11 @@ function uploadedFile(formData: FormData, key: string) {
   return value
 }
 
-function requiredUrlOrUpload(formData: FormData, fileKey: string, urlKey: string) {
+function requiredUrlOrUpload(
+  formData: FormData,
+  fileKey: string,
+  urlKey: string,
+) {
   const file = uploadedFile(formData, fileKey)
   const url = text(formData, urlKey)
 
@@ -136,30 +146,38 @@ function requiredUrlOrUpload(formData: FormData, fileKey: string, urlKey: string
 
 export async function createBusiness(formData: FormData) {
   await requireAdminActionSession()
-  await withMutationMessage(() => prisma.business.create({
-    data: {
-      name: text(formData, 'name'),
-      code: text(formData, 'code'),
-      startDate: date(formData, 'startDate'),
-      endDate: date(formData, 'endDate'),
-      location: optionalText(formData, 'location'),
-    },
-  }), '사업')
+  await withMutationMessage(
+    () =>
+      prisma.business.create({
+        data: {
+          name: text(formData, 'name'),
+          code: text(formData, 'code'),
+          startDate: date(formData, 'startDate'),
+          endDate: date(formData, 'endDate'),
+          location: optionalText(formData, 'location'),
+        },
+      }),
+    '사업',
+  )
   revalidatePath('/admin')
 }
 
 export async function updateBusiness(formData: FormData) {
   await requireAdminActionSession()
-  await withMutationMessage(() => prisma.business.update({
-    where: { id: recordId(formData) },
-    data: {
-      name: text(formData, 'name'),
-      code: text(formData, 'code'),
-      startDate: date(formData, 'startDate'),
-      endDate: date(formData, 'endDate'),
-      location: optionalText(formData, 'location'),
-    },
-  }), '사업')
+  await withMutationMessage(
+    () =>
+      prisma.business.update({
+        where: { id: recordId(formData) },
+        data: {
+          name: text(formData, 'name'),
+          code: text(formData, 'code'),
+          startDate: date(formData, 'startDate'),
+          endDate: date(formData, 'endDate'),
+          location: optionalText(formData, 'location'),
+        },
+      }),
+    '사업',
+  )
   revalidatePath('/admin')
 }
 
@@ -175,7 +193,7 @@ export async function createImageAsset(formData: FormData) {
           data: {
             alt: optionalText(formData, 'alt'),
             filename: uploaded?.filename ?? optionalText(formData, 'filename'),
-          url: uploaded?.url ?? requireSafeImageUrl(url, '이미지 URL'),
+            url: uploaded?.url ?? requireSafeImageUrl(url, '이미지 URL'),
             mimeType:
               uploaded?.mimeType ??
               optionalText(formData, 'mimeType') ??
@@ -212,7 +230,10 @@ export async function updateImageAsset(formData: FormData) {
             alt: optionalText(formData, 'alt'),
             filename: uploaded?.filename ?? optionalText(formData, 'filename'),
             url: uploaded?.url ?? requireSafeImageUrl(url, '이미지 URL'),
-            mimeType: uploaded?.mimeType ?? optionalText(formData, 'mimeType') ?? 'image/*',
+            mimeType:
+              uploaded?.mimeType ??
+              optionalText(formData, 'mimeType') ??
+              'image/*',
             prefix: uploaded?.prefix ?? 'images',
           },
         }),
@@ -242,7 +263,7 @@ export async function createFileAsset(formData: FormData) {
         prisma.fileAsset.create({
           data: {
             filename: uploaded?.filename ?? text(formData, 'filename'),
-          url: uploaded?.url ?? requireSafePdfUrl(url, '파일 URL'),
+            url: uploaded?.url ?? requireSafePdfUrl(url, '파일 URL'),
             mimeType:
               uploaded?.mimeType ??
               optionalText(formData, 'mimeType') ??
@@ -278,7 +299,10 @@ export async function updateFileAsset(formData: FormData) {
           data: {
             filename: uploaded?.filename ?? text(formData, 'filename'),
             url: uploaded?.url ?? requireSafePdfUrl(url, '파일 URL'),
-            mimeType: uploaded?.mimeType ?? optionalText(formData, 'mimeType') ?? 'application/pdf',
+            mimeType:
+              uploaded?.mimeType ??
+              optionalText(formData, 'mimeType') ??
+              'application/pdf',
             prefix: uploaded?.prefix ?? 'files',
           },
         }),
@@ -299,146 +323,186 @@ export async function updateFileAsset(formData: FormData) {
 
 export async function createInstitution(formData: FormData) {
   await requireAdminActionSession()
-  await withMutationMessage(() => prisma.institution.create({
-    data: {
-      nameKo: text(formData, 'nameKo'),
-      nameEn: text(formData, 'nameEn'),
-      url: requireSafeHttpsUrl(text(formData, 'url'), '기관 URL'),
-      logoId: requiredNumber(formData, 'logoId'),
-    },
-  }), '기관')
+  await withMutationMessage(
+    () =>
+      prisma.institution.create({
+        data: {
+          nameKo: text(formData, 'nameKo'),
+          nameEn: text(formData, 'nameEn'),
+          url: requireSafeHttpsUrl(text(formData, 'url'), '기관 URL'),
+          logoId: requiredNumber(formData, 'logoId'),
+        },
+      }),
+    '기관',
+  )
   revalidatePath('/admin')
 }
 
 export async function updateInstitution(formData: FormData) {
   await requireAdminActionSession()
-  await withMutationMessage(() => prisma.institution.update({
-    where: { id: recordId(formData) },
-    data: {
-      nameKo: text(formData, 'nameKo'),
-      nameEn: text(formData, 'nameEn'),
-      url: requireSafeHttpsUrl(text(formData, 'url'), '기관 URL'),
-      logoId: requiredNumber(formData, 'logoId'),
-    },
-  }), '기관')
+  await withMutationMessage(
+    () =>
+      prisma.institution.update({
+        where: { id: recordId(formData) },
+        data: {
+          nameKo: text(formData, 'nameKo'),
+          nameEn: text(formData, 'nameEn'),
+          url: requireSafeHttpsUrl(text(formData, 'url'), '기관 URL'),
+          logoId: requiredNumber(formData, 'logoId'),
+        },
+      }),
+    '기관',
+  )
   revalidatePath('/admin')
 }
 
 export async function createMarkdown(formData: FormData) {
   await requireAdminActionSession()
-  await withMutationMessage(() => prisma.markdown.create({
-    data: {
-      type: text(formData, 'type') as 'articles' | 'privacy' | 'terms',
-      revisionDate: date(formData, 'revisionDate'),
-      effectiveDate: date(formData, 'effectiveDate'),
-      content: text(formData, 'content'),
-    },
-  }), '마크다운')
+  await withMutationMessage(
+    () =>
+      prisma.markdown.create({
+        data: {
+          type: text(formData, 'type') as 'articles' | 'privacy' | 'terms',
+          revisionDate: date(formData, 'revisionDate'),
+          effectiveDate: date(formData, 'effectiveDate'),
+          content: text(formData, 'content'),
+        },
+      }),
+    '마크다운',
+  )
   revalidatePath('/admin')
 }
 
 export async function updateMarkdown(formData: FormData) {
   await requireAdminActionSession()
-  await withMutationMessage(() => prisma.markdown.update({
-    where: { id: recordId(formData) },
-    data: {
-      type: text(formData, 'type') as 'articles' | 'privacy' | 'terms',
-      revisionDate: date(formData, 'revisionDate'),
-      effectiveDate: date(formData, 'effectiveDate'),
-      content: text(formData, 'content'),
-    },
-  }), '마크다운')
+  await withMutationMessage(
+    () =>
+      prisma.markdown.update({
+        where: { id: recordId(formData) },
+        data: {
+          type: text(formData, 'type') as 'articles' | 'privacy' | 'terms',
+          revisionDate: date(formData, 'revisionDate'),
+          effectiveDate: date(formData, 'effectiveDate'),
+          content: text(formData, 'content'),
+        },
+      }),
+    '마크다운',
+  )
   revalidatePath('/admin')
 }
 
 export async function createWebpage(formData: FormData) {
   await requireAdminActionSession()
-  await withMutationMessage(() => prisma.webpage.create({
-    data: {
-      url: requireSafeHttpsUrl(text(formData, 'url'), '웹페이지 URL'),
-      title: text(formData, 'title'),
-      author: text(formData, 'author'),
-      publishedDate: date(formData, 'publishedDate'),
-      businessId: optionalNumber(formData, 'businessId'),
-      type: text(formData, 'type') as
-        | 'blog_post'
-        | 'news_article'
-        | 'press_release',
-    },
-  }), '웹페이지')
+  await withMutationMessage(
+    () =>
+      prisma.webpage.create({
+        data: {
+          url: requireSafeHttpsUrl(text(formData, 'url'), '웹페이지 URL'),
+          title: text(formData, 'title'),
+          author: text(formData, 'author'),
+          publishedDate: date(formData, 'publishedDate'),
+          businessId: optionalNumber(formData, 'businessId'),
+          type: text(formData, 'type') as
+            | 'blog_post'
+            | 'news_article'
+            | 'press_release',
+        },
+      }),
+    '웹페이지',
+  )
   revalidatePath('/admin')
 }
 
 export async function updateWebpage(formData: FormData) {
   await requireAdminActionSession()
-  await withMutationMessage(() => prisma.webpage.update({
-    where: { id: recordId(formData) },
-    data: {
-      url: requireSafeHttpsUrl(text(formData, 'url'), '웹페이지 URL'),
-      title: text(formData, 'title'),
-      author: text(formData, 'author'),
-      publishedDate: date(formData, 'publishedDate'),
-      businessId: optionalNumber(formData, 'businessId'),
-      type: text(formData, 'type') as
-        | 'blog_post'
-        | 'news_article'
-        | 'press_release',
-    },
-  }), '웹페이지')
+  await withMutationMessage(
+    () =>
+      prisma.webpage.update({
+        where: { id: recordId(formData) },
+        data: {
+          url: requireSafeHttpsUrl(text(formData, 'url'), '웹페이지 URL'),
+          title: text(formData, 'title'),
+          author: text(formData, 'author'),
+          publishedDate: date(formData, 'publishedDate'),
+          businessId: optionalNumber(formData, 'businessId'),
+          type: text(formData, 'type') as
+            | 'blog_post'
+            | 'news_article'
+            | 'press_release',
+        },
+      }),
+    '웹페이지',
+  )
   revalidatePath('/admin')
 }
 
 export async function createReport(formData: FormData) {
   await requireAdminActionSession()
-  await withMutationMessage(() => prisma.report.create({
-    data: {
-      title: text(formData, 'title'),
-      publishedDate: date(formData, 'publishedDate'),
-      type: text(formData, 'type') as 'meeting' | 'donation',
-      fileId: requiredNumber(formData, 'fileId'),
-    },
-  }), '보고서')
+  await withMutationMessage(
+    () =>
+      prisma.report.create({
+        data: {
+          title: text(formData, 'title'),
+          publishedDate: date(formData, 'publishedDate'),
+          type: text(formData, 'type') as 'meeting' | 'donation',
+          fileId: requiredNumber(formData, 'fileId'),
+        },
+      }),
+    '보고서',
+  )
   revalidatePath('/admin')
 }
 
 export async function updateReport(formData: FormData) {
   await requireAdminActionSession()
-  await withMutationMessage(() => prisma.report.update({
-    where: { id: recordId(formData) },
-    data: {
-      title: text(formData, 'title'),
-      publishedDate: date(formData, 'publishedDate'),
-      type: text(formData, 'type') as 'meeting' | 'donation',
-      fileId: requiredNumber(formData, 'fileId'),
-    },
-  }), '보고서')
+  await withMutationMessage(
+    () =>
+      prisma.report.update({
+        where: { id: recordId(formData) },
+        data: {
+          title: text(formData, 'title'),
+          publishedDate: date(formData, 'publishedDate'),
+          type: text(formData, 'type') as 'meeting' | 'donation',
+          fileId: requiredNumber(formData, 'fileId'),
+        },
+      }),
+    '보고서',
+  )
   revalidatePath('/admin')
 }
 
 export async function createHistory(formData: FormData) {
   await requireAdminActionSession()
-  await withMutationMessage(() => prisma.history.create({
-    data: {
-      date: date(formData, 'date'),
-      title: text(formData, 'title'),
-      content: optionalText(formData, 'content'),
-      imageId: optionalNumber(formData, 'imageId'),
-    },
-  }), '연혁')
+  await withMutationMessage(
+    () =>
+      prisma.history.create({
+        data: {
+          date: date(formData, 'date'),
+          title: text(formData, 'title'),
+          content: optionalText(formData, 'content'),
+          imageId: optionalNumber(formData, 'imageId'),
+        },
+      }),
+    '연혁',
+  )
   revalidatePath('/admin')
 }
 
 export async function updateHistory(formData: FormData) {
   await requireAdminActionSession()
-  await withMutationMessage(() => prisma.history.update({
-    where: { id: recordId(formData) },
-    data: {
-      date: date(formData, 'date'),
-      title: text(formData, 'title'),
-      content: optionalText(formData, 'content'),
-      imageId: optionalNumber(formData, 'imageId'),
-    },
-  }), '연혁')
+  await withMutationMessage(
+    () =>
+      prisma.history.update({
+        where: { id: recordId(formData) },
+        data: {
+          date: date(formData, 'date'),
+          title: text(formData, 'title'),
+          content: optionalText(formData, 'content'),
+          imageId: optionalNumber(formData, 'imageId'),
+        },
+      }),
+    '연혁',
+  )
   revalidatePath('/admin')
 }
 

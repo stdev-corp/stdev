@@ -41,7 +41,6 @@ jobs:
         if: github.event_name != 'pull_request'
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DATABASE_SSL_REJECT_UNAUTHORIZED: ${{ secrets.DATABASE_SSL_REJECT_UNAUTHORIZED }}
         run: pnpm db:migrate:deploy
 
       - name: Install cosign
@@ -77,8 +76,7 @@ jobs:
             "NEXT_PUBLIC_GTM_ID=${{ secrets.NEXT_PUBLIC_GTM_ID }}"
             "NEXT_PUBLIC_GA_ID=${{ secrets.NEXT_PUBLIC_GA_ID }}"
             "DATABASE_URL=${{ secrets.DATABASE_URL }}"
-            "PAYLOAD_S3_BASE_URL=${{ secrets.PAYLOAD_S3_BASE_URL }}"
-            "PAYLOAD_S3_TARGET_BUCKET=${{ secrets.PAYLOAD_S3_TARGET_BUCKET }}"
+            "S3_BUCKET=${{ secrets.S3_BUCKET }}"
             "AWS_REGION=${{ secrets.AWS_REGION }}"
             "BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}"
             "BETTER_AUTH_URL=${{ secrets.BETTER_AUTH_URL }}"

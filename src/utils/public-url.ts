@@ -1,12 +1,11 @@
-const allowedImageHosts = new Set([
-  'stdev-kr.s3.ap-northeast-2.amazonaws.com',
-  process.env.PAYLOAD_S3_BASE_URL
-    ? new URL(process.env.PAYLOAD_S3_BASE_URL).hostname
-    : null,
-  process.env.PAYLOAD_S3_TARGET_BUCKET
-    ? `${process.env.PAYLOAD_S3_TARGET_BUCKET}.s3.${process.env.AWS_REGION ?? 'ap-northeast-2'}.amazonaws.com`
-    : null,
-].filter((host): host is string => Boolean(host)))
+const allowedImageHosts = new Set(
+  [
+    'stdev-kr.s3.ap-northeast-2.amazonaws.com',
+    process.env.S3_BUCKET
+      ? `${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION ?? 'ap-northeast-2'}.amazonaws.com`
+      : null,
+  ].filter((host): host is string => Boolean(host)),
+)
 
 export function isSafeHttpsUrl(url: string | null | undefined) {
   if (!url) {

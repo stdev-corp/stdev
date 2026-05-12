@@ -11,10 +11,9 @@
     "prettier:write": "prettier --write .",
     "prettier:check": "prettier --check .",
     "db:generate": "prisma generate",
-    "db:migrate": "node scripts/run-prisma-migrate-dev.mjs",
-    "db:migrate:deploy": "node scripts/run-prisma-migrate-deploy.mjs",
-    "db:studio": "prisma studio",
-    "migrate:payload": "tsx scripts/migrate-payload-to-prisma.ts"
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1042.0",
@@ -29,7 +28,6 @@
     "dayjs": "^1.11.20",
     "dotenv": "^17.4.2",
     "next": "16.2.4",
-    "pg": "^8.20.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-markdown": "^10.1.0",
@@ -39,7 +37,6 @@
   },
   "devDependencies": {
     "@types/node": "^24.12.2",
-    "@types/pg": "^8.20.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "eslint": "^9.39.4",

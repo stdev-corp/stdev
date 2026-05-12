@@ -42,7 +42,10 @@ export default function ScrollingLogos({ institutions }: Props) {
           >
             <NextImage
               src={institution.imageUrl || '/images/intro/title.png'}
-              alt={institution.imageAlt || `Logo ${(index % institutions.length) + 1}`}
+              alt={
+                institution.imageAlt ||
+                `Logo ${(index % institutions.length) + 1}`
+              }
               fill
               sizes="180px"
               style={{ objectFit: 'contain' }}

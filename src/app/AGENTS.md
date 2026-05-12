@@ -48,7 +48,7 @@ Admin access is limited by `src/utils/admin-auth.ts`: the user must have a Googl
 
 ## ANTI-PATTERNS
 
-- **Do not reintroduce Payload routes**; CMS work belongs under `(cms)/admin` and Prisma utilities.
+- **CMS work belongs under `(cms)/admin` and Prisma utilities**; keep public marketing routes under `(stdev)`.
 - **Do not create a new root `layout.tsx`** at `src/app/layout.tsx`. Next.js route groups work because ONLY `(stdev)/layout.tsx` declares `<html>`.
 - **Do not remove `export const dynamic = 'force-dynamic'`** from `(stdev)/layout.tsx` - CMS queries run per-request.
 - **Do not add client components as page defaults** - keep page.tsx as server async; push interactivity into child `'use client'` components (see directors: `page.tsx` server + `table.tsx` client).

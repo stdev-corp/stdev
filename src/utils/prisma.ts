@@ -1,17 +1,15 @@
 import { PrismaClient } from '@prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
+import { withDatabaseSslParams } from '@/utils/database-url'
 
 const databaseUrl = process.env.DATABASE_URL
-const shouldUseDatabaseSsl =
-  process.env.DATABASE_SSL_REJECT_UNAUTHORIZED !== 'false'
 
 if (!databaseUrl) {
   throw new Error('DATABASE_URL is required')
 }
 
 const adapter = new PrismaPg({
-  connectionString: databaseUrl,
-  ssl: shouldUseDatabaseSsl ? { rejectUnauthorized: true } : false,
+  connectionString: withDatabaseSslParams(databaseUrl),
 })
 
 const globalForPrisma = globalThis as typeof globalThis & {

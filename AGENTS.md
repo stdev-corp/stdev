@@ -10,7 +10,6 @@ STDev Corp. (사단법인 에스티데브) Korean nonprofit homepage. Next.js 16
 stdev/
 ├── prisma/schema.prisma      # CMS/auth data model
 ├── prisma.config.ts          # Prisma config; reads DATABASE_URL
-├── scripts/                  # Data migration utilities
 ├── src/
 │   ├── app/                  # (stdev) public site, (cms) admin, api/auth
 │   ├── components/           # UI building blocks
@@ -28,7 +27,6 @@ stdev/
 | Prisma client           | `src/utils/prisma.ts`                                                                  | Reuses one client during dev hot reload                   |
 | Auth config             | `src/utils/auth.ts` + `src/utils/admin-auth.ts` + `src/app/api/auth/[...all]/route.ts` | Google-only better-auth with Prisma adapter               |
 | Admin UI                | `src/app/(cms)/admin/**`                                                               | DIY CMS forms protected by better-auth                    |
-| Payload migration       | `scripts/migrate-payload-to-prisma.ts`                                                 | Dry-run by default; `--write` persists rows               |
 | Add a public page/route | `src/app/(stdev)/<path>/page.tsx`                                                      | Also update `src/utils/menus.ts` and `src/utils/links.ts` |
 | Shared layout chrome    | `src/components/layout/`                                                               | `basic-layout`, `left-menu-layout`, `navbar`, `footer`    |
 | Markdown rendering      | `src/components/markdown/markdown-view.tsx`                                            | Chakra-mapped react-markdown + remark-gfm                 |
@@ -46,7 +44,6 @@ stdev/
 
 ## ANTI-PATTERNS
 
-- Do not reintroduce Payload CMS packages, generated admin routes, or `payload.config.ts`.
 - Do not edit generated Prisma client output in `node_modules`; change `prisma/schema.prisma` and regenerate.
 - Do not add semicolons.
 - Do not statically render `(stdev)`.
@@ -64,8 +61,6 @@ pnpm prettier:check         # CI-style check
 pnpm db:generate            # Generate Prisma client
 pnpm db:migrate             # Local schema migration
 pnpm db:migrate:deploy      # Production migration deploy
-pnpm migrate:payload        # Dry-run old Payload RDS row counts
-pnpm migrate:payload -- --write # Copy old Payload rows into Prisma tables
 ```
 
 ## NOTES
@@ -73,4 +68,4 @@ pnpm migrate:payload -- --write # Copy old Payload rows into Prisma tables
 - No test suite exists. CI runs build + lint.
 - Docker prod port is 1000.
 - Existing S3 object URLs are preserved as CMS asset URLs; remote host is `stdev-kr.s3.ap-northeast-2.amazonaws.com`.
-- `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `DATABASE_URL` are required for the CMS/auth stack. Set `DATABASE_SSL_REJECT_UNAUTHORIZED=false` only when your managed Postgres requires unverified/self-signed TLS.
+- `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `DATABASE_URL` are required for the CMS/auth stack.

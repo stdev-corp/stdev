@@ -5,7 +5,7 @@ import {
 } from '@aws-sdk/client-s3'
 
 const region = process.env.AWS_REGION ?? 'ap-northeast-2'
-const bucket = process.env.PAYLOAD_S3_TARGET_BUCKET ?? 'stdev-kr'
+const bucket = process.env.S3_BUCKET ?? 'stdev-kr'
 
 function requiredEnv(name: string) {
   const value = process.env[name]
@@ -74,10 +74,7 @@ async function assertImageFile(file: File) {
   }
 }
 
-export async function uploadAsset(
-  file: File,
-  prefix: 'images' | 'files',
-) {
+export async function uploadAsset(file: File, prefix: 'images' | 'files') {
   if (prefix === 'images') {
     await assertImageFile(file)
   }

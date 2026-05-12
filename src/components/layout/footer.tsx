@@ -100,8 +100,7 @@ export default function Footer() {
             </Stack>
           </Flex>
           <Text mt={8} textAlign="center" fontSize="sm">
-            © {dayjs().year()} STDev Nonprofit Corporation. All rights
-            reserved.
+            © {dayjs().year()} STDev Nonprofit Corporation. All rights reserved.
           </Text>
         </Box>
       </Container>

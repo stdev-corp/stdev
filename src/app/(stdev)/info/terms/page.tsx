@@ -21,8 +21,8 @@ export default async function TermsPage() {
       <Heading>사단법인 에스티데브 이용약관</Heading>
       <Box h="1rem" />
       <Text color="gray.500" fontSize="sm">
-        제정/개정일: {toDateString(terms.revisionDate)} |
-        시행일: {toDateString(terms.effectiveDate)}
+        제정/개정일: {toDateString(terms.revisionDate)} | 시행일:{' '}
+        {toDateString(terms.effectiveDate)}
       </Text>
       <Box h="2rem" />
       <MarkdownView content={terms.content} />
