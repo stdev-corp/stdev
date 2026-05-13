@@ -25,6 +25,8 @@
     "test:e2e:install": "playwright install --with-deps chromium"
   },
   "dependencies": {
+    "@aws-sdk/client-cost-explorer": "^3.1045.0",
+    "@aws-sdk/client-organizations": "^3.1045.0",
     "@aws-sdk/client-s3": "^3.1042.0",
     "@chakra-ui/react": "^3.35.0",
     "@channel.io/channel-web-sdk-loader": "^2.0.2",

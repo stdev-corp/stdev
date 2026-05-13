@@ -1,0 +1,10 @@
+node_modules
+.next
+.vercel
+coverage
+test-results
+playwright-report
+.sisyphus
+pnpm-lock.yaml
+*.tsbuildinfo
+.next/**

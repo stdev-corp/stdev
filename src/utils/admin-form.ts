@@ -1,5 +1,8 @@
 export function text(formData: FormData, key: string) {
   const value = formData.get(key)
+  if (value === '[object File]') {
+    return ''
+  }
   return typeof value === 'string' ? value.trim() : ''
 }
 

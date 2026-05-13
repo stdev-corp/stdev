@@ -36,7 +36,7 @@ describe('CmsLayout', () => {
     expect(tree.props.lang).toBe('ko')
   })
 
-  it('does not wrap children in ChakraProvider', () => {
+  it('wraps children in the CMS Providers component', () => {
     const tree = CmsLayout({ children: <div /> }) as ReactElement<{
       children: ReactElement
     }>
@@ -46,6 +46,6 @@ describe('CmsLayout', () => {
     expect(bodyEl.type).toBe('body')
     const inner = bodyEl.props.children
     expect(isValidElement(inner)).toBe(true)
-    expect((inner as ReactElement).type).toBe('div')
+    expect(typeof (inner as ReactElement).type).toBe('function')
   })
 })

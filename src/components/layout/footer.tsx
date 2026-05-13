@@ -99,9 +99,33 @@ export default function Footer() {
               <Logo src="/images/gov/acrc-logo.png" url={Links.acrc} />
             </Stack>
           </Flex>
-          <Text mt={8} textAlign="center" fontSize="sm">
-            © {dayjs().year()} STDev Nonprofit Corporation. All rights reserved.
-          </Text>
+          <Stack
+            mt={8}
+            direction={{ base: 'column', sm: 'row' }}
+            gap={2}
+            align="center"
+            justify="center"
+          >
+            <Text textAlign="center" fontSize="sm">
+              © {dayjs().year()} STDev Nonprofit Corporation. All rights
+              reserved.
+            </Text>
+            <Text
+              fontSize="xs"
+              color="gray.400"
+              display={{ base: 'none', sm: 'inline' }}
+            >
+              ·
+            </Text>
+            <Link
+              href={Links.admin}
+              fontSize="xs"
+              color="gray.400"
+              _hover={{ color: 'white' }}
+            >
+              관리자
+            </Link>
+          </Stack>
         </Box>
       </Container>
     </Box>

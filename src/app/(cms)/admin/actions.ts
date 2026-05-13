@@ -123,10 +123,20 @@ async function maybeDeleteUnreferencedFile(
 
 function uploadedFile(formData: FormData, key: string) {
   const value = formData.get(key)
-  if (!(value instanceof File) || value.size === 0) {
+  if (!isUploadedFile(value) || value.size === 0) {
     return null
   }
   return value
+}
+
+function isUploadedFile(value: FormDataEntryValue | null): value is File {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'name' in value &&
+    'size' in value &&
+    'type' in value
+  )
 }
 
 function requiredUrlOrUpload(
@@ -584,4 +594,44 @@ export async function deleteHistory(formData: FormData) {
     '연혁',
   )
   revalidatePath('/admin')
+}
+
+export async function createAdminSetting(formData: FormData) {
+  await requireAdminActionSession()
+  await withMutationMessage(
+    () =>
+      prisma.adminSettings.create({
+        data: {
+          key: text(formData, 'key'),
+          value: text(formData, 'value'),
+        },
+      }),
+    '설정',
+  )
+  revalidatePath('/admin/settings')
+}
+
+export async function updateAdminSetting(formData: FormData) {
+  await requireAdminActionSession()
+  const newValue = text(formData, 'value')
+  if (newValue.length > 0) {
+    await withMutationMessage(
+      () =>
+        prisma.adminSettings.update({
+          where: { id: recordId(formData) },
+          data: { value: newValue },
+        }),
+      '설정',
+    )
+  }
+  revalidatePath('/admin/settings')
+}
+
+export async function deleteAdminSetting(formData: FormData) {
+  await requireAdminActionSession()
+  await withDeleteMessage(
+    () => prisma.adminSettings.delete({ where: { id: recordId(formData) } }),
+    '설정',
+  )
+  revalidatePath('/admin/settings')
 }
