@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { renderWithChakra, screen } from '@/tests/utils/render'
+import { renderWithChakra, screen, waitFor } from '@/tests/utils/render'
 import { SettingListClient } from './setting-list-client'
 import type { AdminSettingSummary } from './setting-form'
 
@@ -57,6 +57,66 @@ describe('SettingListClient', () => {
     await user.click(screen.getAllByRole('button', { name: '수정' })[0])
     expect(
       screen.getByRole('heading', { name: '설정 수정: AWS_ACCESS_KEY_ID' }),
+    ).toBeInTheDocument()
+  })
+
+  it('keeps page interactive after closing a drawer so the next open succeeds', async () => {
+    const { user } = renderWithChakra(
+      <SettingListClient settings={settings} actions={actions} />,
+    )
+
+    await user.click(screen.getByRole('button', { name: '추가' }))
+    expect(
+      screen.getByRole('heading', { name: '설정 추가' }),
+    ).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: '취소' }))
+    await waitFor(() =>
+      expect(
+        screen.queryByRole('heading', { name: '설정 추가' }),
+      ).not.toBeInTheDocument(),
+    )
+
+    await user.click(screen.getByRole('button', { name: '추가' }))
+    expect(
+      screen.getByRole('heading', { name: '설정 추가' }),
+    ).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: '취소' }))
+    await waitFor(() =>
+      expect(
+        screen.queryByRole('heading', { name: '설정 추가' }),
+      ).not.toBeInTheDocument(),
+    )
+
+    await user.click(screen.getAllByRole('button', { name: '수정' })[0])
+    expect(
+      screen.getByRole('heading', { name: '설정 수정: AWS_ACCESS_KEY_ID' }),
+    ).toBeInTheDocument()
+  })
+
+  it('refreshes form values when switching edit target after exit', async () => {
+    const { user } = renderWithChakra(
+      <SettingListClient settings={settings} actions={actions} />,
+    )
+
+    await user.click(screen.getAllByRole('button', { name: '수정' })[0])
+    expect(
+      screen.getByRole('heading', { name: '설정 수정: AWS_ACCESS_KEY_ID' }),
+    ).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: '취소' }))
+    await waitFor(() =>
+      expect(
+        screen.queryByRole('heading', {
+          name: '설정 수정: AWS_ACCESS_KEY_ID',
+        }),
+      ).not.toBeInTheDocument(),
+    )
+
+    await user.click(screen.getAllByRole('button', { name: '수정' })[1])
+    expect(
+      screen.getByRole('heading', { name: '설정 수정: EMPTY_SETTING' }),
     ).toBeInTheDocument()
   })
 })
