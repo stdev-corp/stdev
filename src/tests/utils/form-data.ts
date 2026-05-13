@@ -6,7 +6,7 @@ export function createFormData(
     if (value === null || value === undefined) {
       continue
     }
-    if (value instanceof File) {
+    if (isFileLike(value)) {
       fd.append(key, value)
       continue
     }
@@ -20,6 +20,16 @@ export function createFormData(
     fd.append(key, String(value))
   }
   return fd
+}
+
+function isFileLike(value: unknown): value is File {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'name' in value &&
+    'size' in value &&
+    'type' in value
+  )
 }
 
 export function createPdfFile(name = 'test.pdf'): File {

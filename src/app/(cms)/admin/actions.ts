@@ -123,10 +123,20 @@ async function maybeDeleteUnreferencedFile(
 
 function uploadedFile(formData: FormData, key: string) {
   const value = formData.get(key)
-  if (!(value instanceof File) || value.size === 0) {
+  if (!isUploadedFile(value) || value.size === 0) {
     return null
   }
   return value
+}
+
+function isUploadedFile(value: FormDataEntryValue | null): value is File {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'name' in value &&
+    'size' in value &&
+    'type' in value
+  )
 }
 
 function requiredUrlOrUpload(
