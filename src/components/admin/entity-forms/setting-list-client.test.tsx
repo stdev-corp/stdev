@@ -104,6 +104,7 @@ describe('SettingListClient', () => {
     expect(
       screen.getByRole('heading', { name: '설정 수정: AWS_ACCESS_KEY_ID' }),
     ).toBeInTheDocument()
+    expect(screen.getByLabelText('키')).toHaveValue('AWS_ACCESS_KEY_ID')
 
     await user.click(screen.getByRole('button', { name: '취소' }))
     await waitFor(() =>
@@ -117,6 +118,57 @@ describe('SettingListClient', () => {
     await user.click(screen.getAllByRole('button', { name: '수정' })[1])
     expect(
       screen.getByRole('heading', { name: '설정 수정: EMPTY_SETTING' }),
+    ).toBeInTheDocument()
+    expect(screen.getByLabelText('키')).toHaveValue('EMPTY_SETTING')
+  })
+
+  it('reopens the create drawer after a successful submit and revalidation', async () => {
+    const createAdminSetting = vi.fn(async () => {})
+    const { user, rerender } = renderWithChakra(
+      <SettingListClient
+        settings={settings}
+        actions={{ ...actions, createAdminSetting }}
+      />,
+    )
+
+    await user.click(screen.getByRole('button', { name: '추가' }))
+    expect(
+      screen.getByRole('heading', { name: '설정 추가' }),
+    ).toBeInTheDocument()
+
+    await user.type(screen.getByLabelText('키'), 'NEW_KEY')
+    await user.type(screen.getByLabelText('값'), 'new-value')
+    await user.click(screen.getByRole('button', { name: '저장' }))
+
+    await waitFor(() => expect(createAdminSetting).toHaveBeenCalledTimes(1))
+
+    const nextSettings: AdminSettingSummary[] = [
+      ...settings,
+      {
+        id: 3,
+        key: 'NEW_KEY',
+        hasValue: true,
+        valueLength: 9,
+        createdAt: new Date('2026-02-01T00:00:00Z'),
+        updatedAt: new Date('2026-02-01T00:00:00Z'),
+      },
+    ]
+    rerender(
+      <SettingListClient
+        settings={nextSettings}
+        actions={{ ...actions, createAdminSetting }}
+      />,
+    )
+
+    await waitFor(() =>
+      expect(
+        screen.queryByRole('heading', { name: '설정 추가' }),
+      ).not.toBeInTheDocument(),
+    )
+
+    await user.click(screen.getByRole('button', { name: '추가' }))
+    expect(
+      screen.getByRole('heading', { name: '설정 추가' }),
     ).toBeInTheDocument()
   })
 })
