@@ -10,8 +10,12 @@ type Props<T extends { id: number }> = {
   items: T[]
   emptyMessage?: string
   renderItem: (item: T) => ReactNode
-  renderCreate: (close: () => void) => ReactNode
-  renderEdit: (item: T, close: () => void) => ReactNode
+  renderCreate: (open: boolean, setOpen: (next: boolean) => void) => ReactNode
+  renderEdit: (
+    item: T | null,
+    open: boolean,
+    closeEdit: () => void,
+  ) => ReactNode
   deleteAction: (formData: FormData) => Promise<void>
   deleteLabel: string
   addLabel?: string
@@ -32,6 +36,10 @@ export function EntityList<T extends { id: number }>({
   const [createOpen, setCreateOpen] = useState(false)
   const [editingId, setEditingId] = useState<number | null>(null)
   const editing = items.find((item) => item.id === editingId) ?? null
+  const [lastEditing, setLastEditing] = useState<T | null>(null)
+  if (editing && editing !== lastEditing) {
+    setLastEditing(editing)
+  }
 
   return (
     <Stack gap={6}>
@@ -98,8 +106,10 @@ export function EntityList<T extends { id: number }>({
         </Stack>
       )}
 
-      {createOpen && renderCreate(() => setCreateOpen(false))}
-      {editing && renderEdit(editing, () => setEditingId(null))}
+      {renderCreate(createOpen, setCreateOpen)}
+      {renderEdit(editing ?? lastEditing, editing !== null, () =>
+        setEditingId(null),
+      )}
     </Stack>
   )
 }

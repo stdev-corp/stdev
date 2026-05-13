@@ -38,22 +38,20 @@ export function ImageListClient({
           </Text>
         </>
       )}
-      renderCreate={(close) => (
+      renderCreate={(open, setOpen) => (
         <ImageFormDrawer
-          open
-          onOpenChange={(next) => {
-            if (!next) close()
-          }}
+          open={open}
+          onOpenChange={setOpen}
           action={actions.createImageAsset}
         />
       )}
-      renderEdit={(image, close) => (
+      renderEdit={(image, open, closeEdit) => (
         <ImageFormDrawer
-          open
+          open={open}
           onOpenChange={(next) => {
-            if (!next) close()
+            if (!next) closeEdit()
           }}
-          image={image}
+          image={image ?? undefined}
           action={actions.updateImageAsset}
         />
       )}

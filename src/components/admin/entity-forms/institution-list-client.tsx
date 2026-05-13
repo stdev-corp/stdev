@@ -37,23 +37,21 @@ export function InstitutionListClient({
           </Text>
         </>
       )}
-      renderCreate={(close) => (
+      renderCreate={(open, setOpen) => (
         <InstitutionFormDrawer
-          open
-          onOpenChange={(next) => {
-            if (!next) close()
-          }}
+          open={open}
+          onOpenChange={setOpen}
           images={images}
           action={actions.createInstitution}
         />
       )}
-      renderEdit={(institution, close) => (
+      renderEdit={(institution, open, closeEdit) => (
         <InstitutionFormDrawer
-          open
+          open={open}
           onOpenChange={(next) => {
-            if (!next) close()
+            if (!next) closeEdit()
           }}
-          institution={institution}
+          institution={institution ?? undefined}
           images={images}
           action={actions.updateInstitution}
         />

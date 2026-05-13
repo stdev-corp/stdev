@@ -38,22 +38,20 @@ export function BusinessListClient({
           </Text>
         </>
       )}
-      renderCreate={(close) => (
+      renderCreate={(open, setOpen) => (
         <BusinessFormDrawer
-          open
-          onOpenChange={(next) => {
-            if (!next) close()
-          }}
+          open={open}
+          onOpenChange={setOpen}
           action={actions.createBusiness}
         />
       )}
-      renderEdit={(business, close) => (
+      renderEdit={(business, open, closeEdit) => (
         <BusinessFormDrawer
-          open
+          open={open}
           onOpenChange={(next) => {
-            if (!next) close()
+            if (!next) closeEdit()
           }}
-          business={business}
+          business={business ?? undefined}
           action={actions.updateBusiness}
         />
       )}

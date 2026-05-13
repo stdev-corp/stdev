@@ -45,22 +45,20 @@ export function MarkdownListClient({
           </Text>
         </>
       )}
-      renderCreate={(close) => (
+      renderCreate={(open, setOpen) => (
         <MarkdownFormDrawer
-          open
-          onOpenChange={(next) => {
-            if (!next) close()
-          }}
+          open={open}
+          onOpenChange={setOpen}
           action={actions.createMarkdown}
         />
       )}
-      renderEdit={(markdown, close) => (
+      renderEdit={(markdown, open, closeEdit) => (
         <MarkdownFormDrawer
-          open
+          open={open}
           onOpenChange={(next) => {
-            if (!next) close()
+            if (!next) closeEdit()
           }}
-          markdown={markdown}
+          markdown={markdown ?? undefined}
           action={actions.updateMarkdown}
         />
       )}

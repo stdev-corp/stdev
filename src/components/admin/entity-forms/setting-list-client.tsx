@@ -41,22 +41,20 @@ export function SettingListClient({
           </Text>
         </>
       )}
-      renderCreate={(close) => (
+      renderCreate={(open, setOpen) => (
         <SettingFormDrawer
-          open
-          onOpenChange={(next) => {
-            if (!next) close()
-          }}
+          open={open}
+          onOpenChange={setOpen}
           action={actions.createAdminSetting}
         />
       )}
-      renderEdit={(setting, close) => (
+      renderEdit={(setting, open, closeEdit) => (
         <SettingFormDrawer
-          open
+          open={open}
           onOpenChange={(next) => {
-            if (!next) close()
+            if (!next) closeEdit()
           }}
-          setting={setting}
+          setting={setting ?? undefined}
           action={actions.updateAdminSetting}
         />
       )}

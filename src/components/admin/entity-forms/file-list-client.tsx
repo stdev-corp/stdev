@@ -35,22 +35,20 @@ export function FileListClient({
           </Text>
         </>
       )}
-      renderCreate={(close) => (
+      renderCreate={(open, setOpen) => (
         <FileFormDrawer
-          open
-          onOpenChange={(next) => {
-            if (!next) close()
-          }}
+          open={open}
+          onOpenChange={setOpen}
           action={actions.createFileAsset}
         />
       )}
-      renderEdit={(file, close) => (
+      renderEdit={(file, open, closeEdit) => (
         <FileFormDrawer
-          open
+          open={open}
           onOpenChange={(next) => {
-            if (!next) close()
+            if (!next) closeEdit()
           }}
-          file={file}
+          file={file ?? undefined}
           action={actions.updateFileAsset}
         />
       )}

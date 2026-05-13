@@ -38,23 +38,21 @@ export function HistoryListClient({
           </Text>
         </>
       )}
-      renderCreate={(close) => (
+      renderCreate={(open, setOpen) => (
         <HistoryFormDrawer
-          open
-          onOpenChange={(next) => {
-            if (!next) close()
-          }}
+          open={open}
+          onOpenChange={setOpen}
           images={images}
           action={actions.createHistory}
         />
       )}
-      renderEdit={(history, close) => (
+      renderEdit={(history, open, closeEdit) => (
         <HistoryFormDrawer
-          open
+          open={open}
           onOpenChange={(next) => {
-            if (!next) close()
+            if (!next) closeEdit()
           }}
-          history={history}
+          history={history ?? undefined}
           images={images}
           action={actions.updateHistory}
         />

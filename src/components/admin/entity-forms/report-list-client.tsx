@@ -43,23 +43,21 @@ export function ReportListClient({
           </Text>
         </>
       )}
-      renderCreate={(close) => (
+      renderCreate={(open, setOpen) => (
         <ReportFormDrawer
-          open
-          onOpenChange={(next) => {
-            if (!next) close()
-          }}
+          open={open}
+          onOpenChange={setOpen}
           files={files}
           action={actions.createReport}
         />
       )}
-      renderEdit={(report, close) => (
+      renderEdit={(report, open, closeEdit) => (
         <ReportFormDrawer
-          open
+          open={open}
           onOpenChange={(next) => {
-            if (!next) close()
+            if (!next) closeEdit()
           }}
-          report={report}
+          report={report ?? undefined}
           files={files}
           action={actions.updateReport}
         />

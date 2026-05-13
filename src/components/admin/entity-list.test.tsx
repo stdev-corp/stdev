@@ -16,13 +16,17 @@ function renderList(items: Item[] = [{ id: 1, name: '첫 항목' }]) {
       items={items}
       emptyMessage="비어 있습니다"
       renderItem={(item) => <span>{item.name}</span>}
-      renderCreate={(close) => {
-        createAction()
-        return <button onClick={close}>생성 닫기</button>
+      renderCreate={(open, setOpen) => {
+        if (open) createAction()
+        return open ? (
+          <button onClick={() => setOpen(false)}>생성 닫기</button>
+        ) : null
       }}
-      renderEdit={(item, close) => {
-        editAction(item)
-        return <button onClick={close}>{item.name} 수정 닫기</button>
+      renderEdit={(item, open, closeEdit) => {
+        if (open && item) editAction(item)
+        return item ? (
+          <button onClick={closeEdit}>{item.name} 수정 닫기</button>
+        ) : null
       }}
       deleteAction={deleteAction}
       deleteLabel="테스트"

@@ -47,23 +47,21 @@ export function WebpageListClient({
           </Text>
         </>
       )}
-      renderCreate={(close) => (
+      renderCreate={(open, setOpen) => (
         <WebpageFormDrawer
-          open
-          onOpenChange={(next) => {
-            if (!next) close()
-          }}
+          open={open}
+          onOpenChange={setOpen}
           businesses={businesses}
           action={actions.createWebpage}
         />
       )}
-      renderEdit={(webpage, close) => (
+      renderEdit={(webpage, open, closeEdit) => (
         <WebpageFormDrawer
-          open
+          open={open}
           onOpenChange={(next) => {
-            if (!next) close()
+            if (!next) closeEdit()
           }}
-          webpage={webpage}
+          webpage={webpage ?? undefined}
           businesses={businesses}
           action={actions.updateWebpage}
         />
