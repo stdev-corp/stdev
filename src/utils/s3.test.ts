@@ -1,4 +1,12 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import {
+  afterAll,
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest'
 import { File as NodeFile, Blob as NodeBlob } from 'node:buffer'
 import {
   DeleteObjectCommand,
@@ -9,8 +17,15 @@ import { mockClient } from 'aws-sdk-client-mock'
 
 // jsdom Blob.slice().arrayBuffer() is unimplemented; use Node's native File/Blob
 // so src/utils/s3.ts byte-sniffing works the same as in Next.js runtime.
+const originalFile = globalThis.File
+const originalBlob = globalThis.Blob
 globalThis.File = NodeFile as unknown as typeof File
 globalThis.Blob = NodeBlob as unknown as typeof Blob
+
+afterAll(() => {
+  globalThis.File = originalFile
+  globalThis.Blob = originalBlob
+})
 
 function makePng(name = 'test.png'): File {
   const pngHeader = new Uint8Array([
