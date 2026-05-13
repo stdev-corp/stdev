@@ -11,6 +11,7 @@ type Props = {
   action: (formData: FormData) => Promise<void>
   children: ReactNode
   successMessage?: string
+  formKey?: string | number
 }
 
 export function FormDrawer({
@@ -20,6 +21,7 @@ export function FormDrawer({
   action,
   children,
   successMessage,
+  formKey,
 }: Props) {
   const [pending, startTransition] = useTransition()
 
@@ -48,6 +50,8 @@ export function FormDrawer({
       onOpenChange={(e) => onOpenChange(e.open)}
       placement="end"
       size="md"
+      lazyMount
+      unmountOnExit
     >
       <Portal>
         <Drawer.Backdrop />
@@ -60,6 +64,7 @@ export function FormDrawer({
               </Drawer.CloseTrigger>
             </Drawer.Header>
             <form
+              key={formKey}
               action={submit}
               style={{ display: 'flex', flexDirection: 'column', flex: 1 }}
             >
