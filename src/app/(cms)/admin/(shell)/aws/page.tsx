@@ -189,7 +189,9 @@ function Dashboard({ data }: { data: AwsDashboardData }) {
                       <Table.Cell color="gray.600">
                         {account.Email ?? '-'}
                       </Table.Cell>
-                      <Table.Cell>{account.Status ?? '-'}</Table.Cell>
+                      <Table.Cell>
+                        {account.State ?? account.Status ?? '-'}
+                      </Table.Cell>
                       <Table.Cell textAlign="end">
                         {formatAmount(current, costs.currency)}
                       </Table.Cell>

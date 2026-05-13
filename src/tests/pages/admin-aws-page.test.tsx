@@ -73,13 +73,14 @@ describe('AwsDashboardPage', () => {
           Id: '333',
           Name: 'Zeta',
           Email: 'zeta@example.com',
-          Status: 'ACTIVE',
+          Status: 'SUSPENDED',
         },
         {
           Id: '222',
           Name: 'Main',
           Email: 'main@example.com',
-          Status: 'ACTIVE',
+          State: 'ACTIVE',
+          Status: 'PENDING_CLOSURE',
         },
       ],
       costs: {
@@ -105,5 +106,8 @@ describe('AwsDashboardPage', () => {
     expect(screen.getByText('$19.75')).toBeInTheDocument()
     expect(screen.getByText('$13.00')).toBeInTheDocument()
     expect(screen.getByText('Zeta')).toBeInTheDocument()
+    expect(screen.getByText('ACTIVE')).toBeInTheDocument()
+    expect(screen.getByText('SUSPENDED')).toBeInTheDocument()
+    expect(screen.queryByText('PENDING_CLOSURE')).not.toBeInTheDocument()
   })
 })
