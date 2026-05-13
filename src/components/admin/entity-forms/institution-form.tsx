@@ -26,6 +26,7 @@ export function InstitutionFormDrawer({
       onOpenChange={onOpenChange}
       title={editing ? `기관 수정 #${institution?.id}` : '기관 추가'}
       action={action}
+      formKey={institution?.id ?? 'create'}
     >
       {editing && <input type="hidden" name="id" value={institution?.id} />}
       <Stack gap={4}>

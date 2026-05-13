@@ -19,6 +19,7 @@ export function FileFormDrawer({ open, onOpenChange, file, action }: Props) {
       onOpenChange={onOpenChange}
       title={editing ? `파일 수정 #${file?.id}` : '파일 추가'}
       action={action}
+      formKey={file?.id ?? 'create'}
     >
       {editing && <input type="hidden" name="id" value={file?.id} />}
       <Stack gap={4}>

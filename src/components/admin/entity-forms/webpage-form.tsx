@@ -27,6 +27,7 @@ export function WebpageFormDrawer({
       onOpenChange={onOpenChange}
       title={editing ? `웹페이지 수정 #${webpage?.id}` : '웹페이지 추가'}
       action={action}
+      formKey={webpage?.id ?? 'create'}
     >
       {editing && <input type="hidden" name="id" value={webpage?.id} />}
       <Stack gap={4}>

@@ -27,6 +27,7 @@ export function HistoryFormDrawer({
       onOpenChange={onOpenChange}
       title={editing ? `연혁 수정 #${history?.id}` : '연혁 추가'}
       action={action}
+      formKey={history?.id ?? 'create'}
     >
       {editing && <input type="hidden" name="id" value={history?.id} />}
       <Stack gap={4}>

@@ -25,6 +25,7 @@ export function MarkdownFormDrawer({
       onOpenChange={onOpenChange}
       title={editing ? `마크다운 수정 #${markdown?.id}` : '마크다운 추가'}
       action={action}
+      formKey={markdown?.id ?? 'create'}
     >
       {editing && <input type="hidden" name="id" value={markdown?.id} />}
       <Stack gap={4}>

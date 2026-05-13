@@ -27,6 +27,7 @@ export function ReportFormDrawer({
       onOpenChange={onOpenChange}
       title={editing ? `보고서 수정 #${report?.id}` : '보고서 추가'}
       action={action}
+      formKey={report?.id ?? 'create'}
     >
       {editing && <input type="hidden" name="id" value={report?.id} />}
       <Stack gap={4}>

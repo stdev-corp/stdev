@@ -19,6 +19,7 @@ export function ImageFormDrawer({ open, onOpenChange, image, action }: Props) {
       onOpenChange={onOpenChange}
       title={editing ? `이미지 수정 #${image?.id}` : '이미지 추가'}
       action={action}
+      formKey={image?.id ?? 'create'}
     >
       {editing && <input type="hidden" name="id" value={image?.id} />}
       <Stack gap={4}>

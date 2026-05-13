@@ -25,6 +25,7 @@ export function BusinessFormDrawer({
       onOpenChange={onOpenChange}
       title={editing ? `사업 수정 #${business?.id}` : '사업 추가'}
       action={action}
+      formKey={business?.id ?? 'create'}
     >
       {editing && <input type="hidden" name="id" value={business?.id} />}
       <Stack gap={4}>

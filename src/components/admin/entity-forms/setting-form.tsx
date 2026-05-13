@@ -32,6 +32,7 @@ export function SettingFormDrawer({
       onOpenChange={onOpenChange}
       title={editing ? `설정 수정: ${setting?.key}` : '설정 추가'}
       action={action}
+      formKey={setting?.id ?? 'create'}
     >
       {editing && <input type="hidden" name="id" value={setting?.id} />}
       <Stack gap={4}>
