@@ -162,6 +162,54 @@ describe('getCurrentAndPreviousMonthCosts', () => {
     expect(summary.currentMonth.costs).toEqual({})
     expect(summary.previousMonth.costs).toEqual({})
   })
+
+  it('paginates Cost Explorer responses via NextPageToken', async () => {
+    const now = dayjs('2026-05-13T00:00:00.000Z')
+    costMock
+      .on(GetCostAndUsageCommand, { NextPageToken: undefined })
+      .resolvesOnce({
+        ResultsByTime: [
+          {
+            TimePeriod: { Start: '2026-05-01', End: '2026-06-01' },
+            Groups: [
+              {
+                Keys: ['111'],
+                Metrics: { UnblendedCost: { Amount: '3', Unit: 'USD' } },
+              },
+            ],
+          },
+        ],
+        NextPageToken: 'page2',
+      })
+    costMock
+      .on(GetCostAndUsageCommand, { NextPageToken: 'page2' })
+      .resolvesOnce({
+        ResultsByTime: [
+          {
+            TimePeriod: { Start: '2026-05-01', End: '2026-06-01' },
+            Groups: [
+              {
+                Keys: ['222'],
+                Metrics: { UnblendedCost: { Amount: '5', Unit: 'USD' } },
+              },
+            ],
+          },
+          {
+            TimePeriod: { Start: '2026-04-01', End: '2026-05-01' },
+            Groups: [
+              {
+                Keys: ['333'],
+                Metrics: { UnblendedCost: { Amount: '8', Unit: 'USD' } },
+              },
+            ],
+          },
+        ],
+      })
+
+    const summary = await getCurrentAndPreviousMonthCosts(credentials, now)
+    expect(summary.currentMonth.costs).toEqual({ '111': 3, '222': 5 })
+    expect(summary.previousMonth.costs).toEqual({ '333': 8 })
+  })
 })
 
 describe('loadAwsDashboardData', () => {

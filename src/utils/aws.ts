@@ -88,15 +88,6 @@ export async function getCurrentAndPreviousMonthCosts(
   const client = makeCostClient(credentials)
   const { previousStart, currentStart, currentEnd } = buildCostTimePeriod(now)
 
-  const response = await client.send(
-    new GetCostAndUsageCommand({
-      TimePeriod: { Start: previousStart, End: currentEnd },
-      Granularity: 'MONTHLY',
-      Metrics: ['UnblendedCost'],
-      GroupBy: [{ Type: 'DIMENSION', Key: 'LINKED_ACCOUNT' }],
-    }),
-  )
-
   let currency = 'USD'
   const currentMonth: MonthRange = {
     start: currentStart,
@@ -109,20 +100,35 @@ export async function getCurrentAndPreviousMonthCosts(
     costs: {},
   }
 
-  for (const result of response.ResultsByTime ?? []) {
-    const isCurrent = result.TimePeriod?.Start === currentStart
-    const target = isCurrent ? currentMonth : previousMonth
+  let nextPageToken: string | undefined
+  do {
+    const response = await client.send(
+      new GetCostAndUsageCommand({
+        TimePeriod: { Start: previousStart, End: currentEnd },
+        Granularity: 'MONTHLY',
+        Metrics: ['UnblendedCost'],
+        GroupBy: [{ Type: 'DIMENSION', Key: 'LINKED_ACCOUNT' }],
+        NextPageToken: nextPageToken,
+      }),
+    )
 
-    for (const group of result.Groups ?? []) {
-      const accountId = group.Keys?.[0]
-      const metric = group.Metrics?.UnblendedCost
-      if (!accountId || !metric) continue
-      target.costs[accountId] = Number(metric.Amount ?? '0')
-      if (metric.Unit) {
-        currency = metric.Unit
+    for (const result of response.ResultsByTime ?? []) {
+      const isCurrent = result.TimePeriod?.Start === currentStart
+      const target = isCurrent ? currentMonth : previousMonth
+
+      for (const group of result.Groups ?? []) {
+        const accountId = group.Keys?.[0]
+        const metric = group.Metrics?.UnblendedCost
+        if (!accountId || !metric) continue
+        target.costs[accountId] = Number(metric.Amount ?? '0')
+        if (metric.Unit) {
+          currency = metric.Unit
+        }
       }
     }
-  }
+
+    nextPageToken = response.NextPageToken
+  } while (nextPageToken)
 
   return { currency, currentMonth, previousMonth }
 }
