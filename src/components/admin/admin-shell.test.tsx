@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import '@/tests/mocks/navigation'
-import { renderWithChakra, screen } from '@/tests/utils/render'
+import { renderWithChakra, screen, waitFor } from '@/tests/utils/render'
 import { resetNavigationMocks, usePathnameMock } from '@/tests/mocks/navigation'
 import { AdminShell } from './admin-shell'
 
@@ -47,6 +47,8 @@ describe('AdminShell', () => {
     expect(screen.getAllByText('STDev CMS')).toHaveLength(2)
 
     await user.click(screen.getAllByText('AWS').at(-1)!)
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    await waitFor(() =>
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
+    )
   })
 })

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { renderWithChakra, screen } from '@/tests/utils/render'
+import { renderWithChakra, screen, waitFor } from '@/tests/utils/render'
 import {
   makeBusiness,
   makeFileAsset,
@@ -45,9 +45,11 @@ describe('asset and content list clients', () => {
       screen.getByRole('heading', { name: '파일 수정 #1' }),
     ).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: '취소' }))
-    expect(
-      screen.queryByRole('heading', { name: '파일 수정 #1' }),
-    ).not.toBeInTheDocument()
+    await waitFor(() =>
+      expect(
+        screen.queryByRole('heading', { name: '파일 수정 #1' }),
+      ).not.toBeInTheDocument(),
+    )
   })
 
   it('renders image list and opens create drawer', async () => {
@@ -74,9 +76,11 @@ describe('asset and content list clients', () => {
       screen.getByRole('heading', { name: '이미지 수정 #1' }),
     ).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: '취소' }))
-    expect(
-      screen.queryByRole('heading', { name: '이미지 수정 #1' }),
-    ).not.toBeInTheDocument()
+    await waitFor(() =>
+      expect(
+        screen.queryByRole('heading', { name: '이미지 수정 #1' }),
+      ).not.toBeInTheDocument(),
+    )
   })
 
   it('renders history list with formatted date and opens drawers', async () => {
@@ -105,9 +109,11 @@ describe('asset and content list clients', () => {
       screen.getByRole('heading', { name: '연혁 수정 #1' }),
     ).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: '취소' }))
-    expect(
-      screen.queryByRole('heading', { name: '연혁 수정 #1' }),
-    ).not.toBeInTheDocument()
+    await waitFor(() =>
+      expect(
+        screen.queryByRole('heading', { name: '연혁 수정 #1' }),
+      ).not.toBeInTheDocument(),
+    )
   })
 
   it('renders institution list metadata and opens drawers', async () => {
@@ -138,9 +144,11 @@ describe('asset and content list clients', () => {
       screen.getByRole('heading', { name: '기관 수정 #1' }),
     ).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: '취소' }))
-    expect(
-      screen.queryByRole('heading', { name: '기관 수정 #1' }),
-    ).not.toBeInTheDocument()
+    await waitFor(() =>
+      expect(
+        screen.queryByRole('heading', { name: '기관 수정 #1' }),
+      ).not.toBeInTheDocument(),
+    )
   })
 
   it('renders all markdown type labels and opens drawers', async () => {
@@ -172,9 +180,11 @@ describe('asset and content list clients', () => {
       screen.getByRole('heading', { name: '마크다운 수정 #1' }),
     ).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: '취소' }))
-    expect(
-      screen.queryByRole('heading', { name: '마크다운 수정 #1' }),
-    ).not.toBeInTheDocument()
+    await waitFor(() =>
+      expect(
+        screen.queryByRole('heading', { name: '마크다운 수정 #1' }),
+      ).not.toBeInTheDocument(),
+    )
   })
 
   it('renders both report type labels and opens drawers', async () => {
@@ -201,9 +211,11 @@ describe('asset and content list clients', () => {
       screen.getByRole('heading', { name: '보고서 수정 #1' }),
     ).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: '취소' }))
-    expect(
-      screen.queryByRole('heading', { name: '보고서 수정 #1' }),
-    ).not.toBeInTheDocument()
+    await waitFor(() =>
+      expect(
+        screen.queryByRole('heading', { name: '보고서 수정 #1' }),
+      ).not.toBeInTheDocument(),
+    )
   })
 
   it('renders all webpage type labels and opens drawers', async () => {
@@ -236,8 +248,10 @@ describe('asset and content list clients', () => {
       screen.getByRole('heading', { name: '웹페이지 수정 #1' }),
     ).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: '취소' }))
-    expect(
-      screen.queryByRole('heading', { name: '웹페이지 수정 #1' }),
-    ).not.toBeInTheDocument()
+    await waitFor(() =>
+      expect(
+        screen.queryByRole('heading', { name: '웹페이지 수정 #1' }),
+      ).not.toBeInTheDocument(),
+    )
   })
 })
