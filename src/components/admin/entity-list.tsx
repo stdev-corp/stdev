@@ -35,10 +35,12 @@ export function EntityList<T extends { id: number }>({
 }: Props<T>) {
   const [createOpen, setCreateOpen] = useState(false)
   const [editingId, setEditingId] = useState<number | null>(null)
+  const [editingSnapshot, setEditingSnapshot] = useState<T | null>(null)
   const editing = items.find((item) => item.id === editingId) ?? null
-  const [lastEditing, setLastEditing] = useState<T | null>(null)
-  if (editing && editing !== lastEditing) {
-    setLastEditing(editing)
+
+  function startEdit(item: T) {
+    setEditingSnapshot(item)
+    setEditingId(item.id)
   }
 
   return (
@@ -91,7 +93,7 @@ export function EntityList<T extends { id: number }>({
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => setEditingId(item.id)}
+                  onClick={() => startEdit(item)}
                 >
                   수정
                 </Button>
@@ -107,7 +109,7 @@ export function EntityList<T extends { id: number }>({
       )}
 
       {renderCreate(createOpen, setCreateOpen)}
-      {renderEdit(editing ?? lastEditing, editing !== null, () =>
+      {renderEdit(editing ?? editingSnapshot, editing !== null, () =>
         setEditingId(null),
       )}
     </Stack>
