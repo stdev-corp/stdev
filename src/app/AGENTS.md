@@ -18,11 +18,17 @@ app/
 │   ├── notices/          # 공지사항    (same pattern)
 │   └── info/             # 안내 및 공시 (same pattern)
 ├── (cms)/                # DIY CMS admin pages
-│   ├── layout.tsx
+│   ├── layout.tsx        # (cms) shell
+│   ├── providers.tsx     # admin client providers
 │   └── admin/
-│       ├── page.tsx
-│       ├── actions.ts
-│       └── sign-in/page.tsx
+│       ├── actions.ts                # server actions shared across admin
+│       ├── sign-in/                  # public OAuth entry (outside the (shell) auth gate)
+│       │   ├── page.tsx
+│       │   └── sign-in-form.tsx
+│       └── (shell)/                  # auth-gated dashboard chrome
+│           ├── layout.tsx            # session guard + sidebar
+│           ├── page.tsx              # /admin landing
+│           └── {aws,businesses,files,histories,images,institutions,markdowns,reports,settings,webpages}/page.tsx
 └── api/auth/[...all]/route.ts # better-auth endpoint
 ```
 
