@@ -18,11 +18,7 @@ export default defineConfig({
     testTimeout: 30_000,
     hookTimeout: 30_000,
     pool: 'forks',
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
+    maxWorkers: 1,
     sequence: {
       concurrent: false,
     },
@@ -34,7 +30,6 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html', 'lcov', 'json-summary', 'json'],
       reportsDirectory: './coverage-db',
-      all: false,
       include: [
         'src/utils/cms.ts',
         'src/utils/prisma.ts',

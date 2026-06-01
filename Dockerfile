@@ -7,7 +7,7 @@ WORKDIR /app
 # Install libc6-compat for sharp on Alpine
 RUN apk add --no-cache libc6-compat
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN corepack enable pnpm && pnpm i --frozen-lockfile
 
 # Stage 2: Build the application
