@@ -26,11 +26,7 @@ export default defineConfig({
       include: [/.+/],
     },
     pool: 'forks',
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
+    maxWorkers: 1,
     clearMocks: true,
     restoreMocks: true,
     mockReset: false,
