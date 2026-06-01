@@ -30,7 +30,6 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html', 'lcov', 'json-summary', 'json'],
       reportsDirectory: './coverage-db',
-      all: false,
       include: [
         'src/utils/cms.ts',
         'src/utils/prisma.ts',

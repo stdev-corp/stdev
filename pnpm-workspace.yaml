@@ -5,3 +5,5 @@ allowBuilds:
   prisma: true
   sharp: true
   unrs-resolver: true
+overrides:
+  kysely: 0.28.17

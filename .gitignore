@@ -51,5 +51,6 @@ next-env.d.ts
 
 certificates
 
-# Sisyphus local notes
-.sisyphus/
+# AI local files
+/.sisyphus/
+/.omo/
