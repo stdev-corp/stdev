@@ -43,7 +43,7 @@
     "react-dom": "^19.2.5",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1",
-    "sharp": "^0.34.5",
+    "sharp": "^0.35.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
