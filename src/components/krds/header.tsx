@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { Links } from '@/utils/links'
 import Menus, { AllMenus, InfoMenu, findMenuSection } from '@/utils/menus'
 
@@ -18,6 +19,9 @@ export default function Header() {
   const openButtonRef = useRef<HTMLButtonElement>(null)
   const drawerRef = useRef<HTMLDivElement>(null)
   const utilityButtonRef = useRef<HTMLButtonElement>(null)
+  // 브레이크포인트가 바뀌는 시점에는 브라우저가 이미 감춰진 요소의 포커스를
+  // 걷어낸 뒤라 activeElement로는 어디에 있었는지 알 수 없다. 직전 위치를 남긴다.
+  const lastFocusedRef = useRef<Element | null>(null)
   const utilityMenuRef = useRef<HTMLDivElement>(null)
   const gnbTriggerRefs = useRef(new Map<string, HTMLButtonElement | null>())
   const gnbPanelRefs = useRef(new Map<string, HTMLDivElement | null>())
@@ -45,10 +49,56 @@ export default function Header() {
   /*
    * KRDS 전환점(1024px)을 넘으면 CSS가 반대편 메뉴를 감춰 버린다. 상태를 그대로
    * 두면 감춰진 서랍의 inert와 스크롤 잠금이 남아 페이지를 조작할 수 없다.
+   *
+   * 감춰지는 영역 안에 포커스가 있었다면 그대로 두면 <body>로 떨어지므로,
+   * 새 레이아웃에서 같은 역할을 하는 컨트롤로 옮긴다. 그 밖의 위치에 있던
+   * 포커스는 리사이즈만으로 빼앗지 않는다.
    */
   useEffect(() => {
+    const onFocusIn = (event: FocusEvent) => {
+      lastFocusedRef.current =
+        event.target instanceof Element ? event.target : null
+    }
+    document.addEventListener('focusin', onFocusIn)
+    return () => document.removeEventListener('focusin', onFocusIn)
+  }, [])
+
+  useEffect(() => {
     const desktop = window.matchMedia('(min-width: 1024px)')
-    const onChange = () => closeAll()
+
+    const onChange = (event: MediaQueryListEvent) => {
+      // 1024px 이상은 서랍과 전체메뉴 버튼을, 미만은 데스크탑 GNB와 유틸리티
+      // 영역을 감춘다.
+      const hiddenByNewLayout = event.matches
+        ? '.krds-main-menu-mobile, .btn-navi.all'
+        : '.krds-main-menu, .header-utility'
+      const active = document.activeElement
+      // 이미 <body>로 떨어졌다면 직전 위치를 기준으로 판단한다.
+      const focused =
+        active instanceof Element && active !== document.body
+          ? active
+          : lastFocusedRef.current
+      const losesFocus = focused?.closest(hiddenByNewLayout) != null
+
+      // 상태와 inert 해제를 먼저 반영해야 새 컨트롤에 포커스가 들어간다.
+      flushSync(() => closeAll())
+
+      if (!losesFocus) {
+        return
+      }
+
+      const header = document.getElementById('krds-header')
+      const target = event.matches
+        ? (header?.querySelector<HTMLElement>(
+            '.krds-main-menu .gnb-main-trigger.is-current',
+          ) ??
+          header?.querySelector<HTMLElement>(
+            '.krds-main-menu .gnb-main-trigger',
+          ))
+        : openButtonRef.current
+      target?.focus()
+    }
+
     desktop.addEventListener('change', onChange)
     return () => desktop.removeEventListener('change', onChange)
   }, [closeAll])

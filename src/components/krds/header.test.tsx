@@ -28,6 +28,35 @@ function toggleWrapOf(trigger: HTMLElement) {
   return trigger.closest('li')?.querySelector('.gnb-toggle-wrap') as HTMLElement
 }
 
+/** matchMedia를 가로채고, 브레이크포인트 변경을 흉내 내는 함수를 돌려준다. */
+function stubBreakpoint() {
+  const listeners = new Set<(event: MediaQueryListEvent) => void>()
+  const matchMediaMock = vi.fn((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addEventListener: (_: string, fn: (e: MediaQueryListEvent) => void) =>
+      listeners.add(fn),
+    removeEventListener: (_: string, fn: (e: MediaQueryListEvent) => void) =>
+      listeners.delete(fn),
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  }))
+  vi.stubGlobal('matchMedia', matchMediaMock)
+
+  return {
+    matchMediaMock,
+    async cross(matches: boolean) {
+      await act(async () => {
+        listeners.forEach((fn) =>
+          fn({ matches } as unknown as MediaQueryListEvent),
+        )
+      })
+    },
+  }
+}
+
 describe('<Header>', () => {
   beforeEach(() => {
     resetNavigationMocks()
@@ -470,20 +499,7 @@ describe('<Header>', () => {
   })
 
   it('데스크탑 폭으로 넓어지면 열려 있던 서랍과 inert를 정리한다', async () => {
-    const listeners = new Set<(event: MediaQueryListEvent) => void>()
-    const matchMediaMock = vi.fn((query: string) => ({
-      matches: false,
-      media: query,
-      onchange: null,
-      addEventListener: (_: string, fn: (e: MediaQueryListEvent) => void) =>
-        listeners.add(fn),
-      removeEventListener: (_: string, fn: (e: MediaQueryListEvent) => void) =>
-        listeners.delete(fn),
-      addListener: vi.fn(),
-      removeListener: vi.fn(),
-      dispatchEvent: vi.fn(),
-    }))
-    vi.stubGlobal('matchMedia', matchMediaMock)
+    const { matchMediaMock, cross } = stubBreakpoint()
 
     const { container, user } = renderWithChakra(<Header />)
     const headerIn = container.querySelector('.header-in') as HTMLElement
@@ -494,15 +510,67 @@ describe('<Header>', () => {
 
     expect(matchMediaMock).toHaveBeenCalledWith('(min-width: 1024px)')
     // 1024px를 넘어서면 CSS가 서랍을 감추므로 상태도 함께 닫혀야 한다.
-    await act(async () => {
-      listeners.forEach((fn) =>
-        fn({ matches: true } as unknown as MediaQueryListEvent),
-      )
-    })
+    await cross(true)
 
     expect(container.querySelector('nav#mobile-nav')).not.toHaveClass('is-open')
     expect(headerIn).not.toHaveAttribute('inert')
     expect(document.body).not.toHaveClass('is-gnb-mobile')
+    vi.unstubAllGlobals()
+  })
+
+  it('데스크탑으로 넓어질 때 서랍 안의 포커스를 GNB 트리거로 옮긴다', async () => {
+    usePathnameMock.mockReturnValue(Links.notices)
+    const { cross } = stubBreakpoint()
+    const { container, user } = renderWithChakra(<Header />)
+
+    const opener = container.querySelector(
+      'button.btn-navi.all',
+    ) as HTMLButtonElement
+    await user.click(opener)
+    const drawer = container.querySelector('.gnb-wrap') as HTMLElement
+    await waitFor(() => expect(document.activeElement).toBe(drawer))
+
+    await cross(true)
+
+    // 전체메뉴 버튼은 데스크탑에서 감춰지므로 현재 구역 트리거로 간다.
+    expect(document.activeElement).toBe(
+      screen.getByRole('button', { name: '공지사항' }),
+    )
+    expect(document.activeElement).not.toBe(document.body)
+    vi.unstubAllGlobals()
+  })
+
+  it('모바일로 좁아질 때 데스크탑 메뉴의 포커스를 전체메뉴 버튼으로 옮긴다', async () => {
+    const { cross } = stubBreakpoint()
+    const { container, user } = renderWithChakra(<Header />)
+
+    const trigger = screen.getByRole('button', { name: '법인소개' })
+    await user.click(trigger)
+    const link = screen.getByRole('link', { name: '연혁' })
+    link.focus()
+    expect(document.activeElement).toBe(link)
+
+    await cross(false)
+
+    expect(document.activeElement).toBe(
+      container.querySelector('button.btn-navi.all'),
+    )
+    vi.unstubAllGlobals()
+  })
+
+  it('감춰지지 않는 곳에 포커스가 있으면 브레이크포인트 변경이 포커스를 옮기지 않는다', async () => {
+    const { cross } = stubBreakpoint()
+    renderWithChakra(<Header />)
+
+    const shop = screen.getByRole('link', { name: '행사 참가하기' })
+    shop.focus()
+    expect(document.activeElement).toBe(shop)
+
+    await cross(true)
+    expect(document.activeElement).toBe(shop)
+
+    await cross(false)
+    expect(document.activeElement).toBe(shop)
     vi.unstubAllGlobals()
   })
 
