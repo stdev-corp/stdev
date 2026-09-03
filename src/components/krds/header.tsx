@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Links } from '@/utils/links'
-import Menus, { InfoMenu } from '@/utils/menus'
+import Menus, { AllMenus, InfoMenu, findMenuSection } from '@/utils/menus'
 
 function anchorId(index: number) {
   return `mGnb-anchor${index + 1}`
@@ -16,6 +16,7 @@ export default function Header() {
   const [utilityOpen, setUtilityOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const openButtonRef = useRef<HTMLButtonElement>(null)
+  const drawerRef = useRef<HTMLDivElement>(null)
 
   const closeAll = useCallback(() => {
     setOpenGnb(null)
@@ -53,12 +54,97 @@ export default function Header() {
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [closeAll])
 
-  const activeSection = Menus.find(
-    (menu) =>
-      pathname === menu.href ||
-      pathname?.startsWith(`${menu.href}/`) ||
-      menu.subMenus.some((subMenu) => subMenu.href === pathname),
-  )
+  // 모바일 서랍이 열리면 KRDS 스크립트와 동일하게 나머지 화면을 inert 처리하고
+  // 포커스를 서랍 안으로 옮긴다. 닫을 때의 포커스 복원은 closeAll이 맡는다.
+  useEffect(() => {
+    if (!mobileOpen) {
+      return
+    }
+
+    const drawer = drawerRef.current
+    const opener = openButtonRef.current
+    const outside = [
+      document.querySelector('#krds-header .header-in'),
+      document.getElementById('container'),
+      document.getElementById('krds-footer'),
+    ].filter(
+      (element): element is HTMLElement => element instanceof HTMLElement,
+    )
+
+    outside.forEach((element) => element.setAttribute('inert', ''))
+
+    /*
+     * 서랍으로 포커스를 옮기는 시점이 까다롭다.
+     * - 같은 틱에 focus()를 부르면 브라우저가 inert 요소의 포커스를 비동기로
+     *   걷어내면서 덮어쓴다.
+     * - KRDS는 visibility까지 0.4초 전환에 묶어 두므로 그 전까지는 서랍이
+     *   visibility:hidden 이라 focus()가 무시된다.
+     * 그래서 KRDS 스크립트와 동일하게 전환이 끝난 뒤 옮기되, 전환이 없는
+     * 환경(reduced motion, 테스트)을 위해 프레임과 타이머로도 시도한다.
+     * 이미 서랍 안에 포커스가 있으면 건드리지 않는다.
+     */
+    const focusDrawer = () => {
+      if (drawer && !drawer.contains(document.activeElement)) {
+        drawer.focus()
+      }
+    }
+    const focusFrame = requestAnimationFrame(focusDrawer)
+    const focusTimer = window.setTimeout(focusDrawer, 500)
+    const nav = drawer?.closest('.krds-main-menu-mobile')
+    nav?.addEventListener('transitionend', focusDrawer)
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key !== 'Tab' || !drawer) {
+        return
+      }
+
+      const focusable = Array.from(
+        drawer.querySelectorAll<HTMLElement>('a[href], button:not(:disabled)'),
+      )
+      if (focusable.length === 0) {
+        return
+      }
+
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      const active = document.activeElement
+
+      // 포커스가 서랍 밖(또는 body)에 있으면 먼저 서랍 안으로 끌어온다.
+      if (!(active instanceof Node) || !drawer.contains(active)) {
+        event.preventDefault()
+        ;(event.shiftKey ? last : first).focus()
+        return
+      }
+
+      if (event.shiftKey && (active === first || active === drawer)) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      cancelAnimationFrame(focusFrame)
+      window.clearTimeout(focusTimer)
+      nav?.removeEventListener('transitionend', focusDrawer)
+      document.removeEventListener('keydown', onKeyDown)
+      // 어떤 경로로 닫히든(닫기 버튼 / Escape / 링크 이동) 포커스를 열었던
+      // 버튼으로 되돌린다. inert를 먼저 걷어내야 focus()가 먹힌다.
+      const hadFocusInside =
+        drawer?.contains(document.activeElement) ||
+        document.activeElement === document.body
+      outside.forEach((element) => element.removeAttribute('inert'))
+      if (hadFocusInside) {
+        opener?.focus()
+      }
+    }
+  }, [mobileOpen])
+
+  // 모바일 서랍은 InfoMenu까지 보여주므로 구역 판별도 같은 집합으로 한다.
+  const activeSection = findMenuSection(pathname)
 
   return (
     <>
@@ -91,7 +177,11 @@ export default function Header() {
                           <ul className="drop-list">
                             {InfoMenu.subMenus.map((subMenu) => (
                               <li key={subMenu.href}>
-                                <Link href={subMenu.href} className="item-link">
+                                <Link
+                                  href={subMenu.href}
+                                  className="item-link"
+                                  onClick={closeAll}
+                                >
                                   {subMenu.label}
                                 </Link>
                               </li>
@@ -143,11 +233,17 @@ export default function Header() {
                     <li key={menu.label}>
                       <button
                         type="button"
-                        className={
-                          open || activeSection?.label === menu.label
-                            ? 'gnb-main-trigger active'
-                            : 'gnb-main-trigger'
-                        }
+                        className={[
+                          'gnb-main-trigger',
+                          // KRDS의 active는 화살표를 180도 돌리므로 펼침 상태에만 쓴다.
+                          open ? 'active' : '',
+                          // 현재 구역 밑줄은 별도 클래스로 표시한다.
+                          activeSection?.label === menu.label
+                            ? 'is-current'
+                            : '',
+                        ]
+                          .filter(Boolean)
+                          .join(' ')}
                         aria-expanded={open}
                         onClick={() =>
                           setOpenGnb((current) =>
@@ -170,6 +266,7 @@ export default function Header() {
                                 <Link
                                   href={menu.href}
                                   className="krds-btn link basic small"
+                                  onClick={closeAll}
                                 >
                                   <span className="underline">바로가기</span>
                                   <i
@@ -188,6 +285,7 @@ export default function Header() {
                                           ? 'active'
                                           : undefined
                                       }
+                                      onClick={closeAll}
                                     >
                                       {subMenu.label}
                                     </Link>
@@ -217,7 +315,7 @@ export default function Header() {
           aria-label="전체 메뉴"
           aria-hidden={!mobileOpen}
         >
-          <div className="gnb-wrap">
+          <div className="gnb-wrap" ref={drawerRef} tabIndex={-1}>
             <div className="gnb-header">
               <div className="gnb-utils">
                 <ul className="utility-list">
@@ -228,6 +326,7 @@ export default function Header() {
                       target="_blank"
                       rel="noopener noreferrer"
                       title="새 창 열림"
+                      onClick={closeAll}
                     >
                       행사 참가하기
                     </a>
@@ -240,7 +339,7 @@ export default function Header() {
               <div className="gnb-menu">
                 <div className="menu-wrap">
                   <ul>
-                    {[...Menus, InfoMenu].map((menu, index) => (
+                    {AllMenus.map((menu, index) => (
                       <li key={menu.label}>
                         <a
                           href={`#${anchorId(index)}`}
@@ -258,7 +357,7 @@ export default function Header() {
                   </ul>
                 </div>
                 <div className="submenu-wrap">
-                  {[...Menus, InfoMenu].map((menu, index) => (
+                  {AllMenus.map((menu, index) => (
                     <div
                       className="gnb-sub-list"
                       id={anchorId(index)}
@@ -275,6 +374,7 @@ export default function Header() {
                                   ? 'gnb-sub-trigger selected'
                                   : 'gnb-sub-trigger'
                               }
+                              onClick={closeAll}
                             >
                               {menu.label} 전체보기
                             </Link>
@@ -289,6 +389,7 @@ export default function Header() {
                                   ? 'gnb-sub-trigger selected'
                                   : 'gnb-sub-trigger'
                               }
+                              onClick={closeAll}
                             >
                               {subMenu.label}
                             </Link>
@@ -305,10 +406,7 @@ export default function Header() {
               type="button"
               className="krds-btn medium icon"
               id="close-nav"
-              onClick={() => {
-                setMobileOpen(false)
-                openButtonRef.current?.focus()
-              }}
+              onClick={closeAll}
             >
               <span className="sr-only">전체메뉴 닫기</span>
               <i className="svg-icon ico-popup-close" aria-hidden="true" />

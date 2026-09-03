@@ -11,8 +11,8 @@ export default async function ChartPage() {
             <Image
               src="/images/intro/chart.png"
               alt="사단법인 에스티데브 조직도"
-              width={800}
-              height={800}
+              width={3112}
+              height={2540}
               sizes="(max-width: 832px) calc(100vw - 32px), 800px"
               style={{ width: '100%', maxWidth: '800px', height: 'auto' }}
             />

@@ -128,15 +128,28 @@ describe('<Footer>', () => {
     const govLogos = container.querySelector('.f-btm .f-gov-logos')
     expect(govLogos).not.toBeNull()
 
-    const expected: [string, string, string][] = [
-      ['과학기술정보통신부', Links.msit, '/images/gov/msit-logo.png'],
-      ['국세청', Links.nts, '/images/gov/nts-logo.png'],
-      ['국민권익위원회', Links.acrc, '/images/gov/acrc-logo.png'],
+    // width/height는 원본 크기여야 로드 전후 레이아웃이 흔들리지 않는다.
+    const expected: [string, string, string, string, string][] = [
+      [
+        '과학기술정보통신부',
+        Links.msit,
+        '/images/gov/msit-logo.png',
+        '2452',
+        '458',
+      ],
+      ['국세청', Links.nts, '/images/gov/nts-logo.png', '1655', '458'],
+      [
+        '국민권익위원회',
+        Links.acrc,
+        '/images/gov/acrc-logo.png',
+        '2490',
+        '458',
+      ],
     ]
     const links = Array.from(govLogos?.querySelectorAll('a') ?? [])
     expect(links.length).toBe(expected.length)
     links.forEach((link, index) => {
-      const [alt, url, src] = expected[index]
+      const [alt, url, src, width, height] = expected[index]
       expect(link).toHaveAttribute('href', url)
       expect(link).toHaveAttribute('target', '_blank')
       expect(link).toHaveAttribute('rel', 'noopener noreferrer')
@@ -144,8 +157,8 @@ describe('<Footer>', () => {
       const image = link.querySelector('img')
       expect(image).toHaveAttribute('alt', alt)
       expect(image).toHaveAttribute('src', src)
-      expect(image).toHaveAttribute('width', '224')
-      expect(image).toHaveAttribute('height', '48')
+      expect(image).toHaveAttribute('width', width)
+      expect(image).toHaveAttribute('height', height)
     })
   })
 

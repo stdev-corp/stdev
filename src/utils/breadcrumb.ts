@@ -1,23 +1,9 @@
 import { Links } from '@/utils/links'
-import { BusinessMenu, InfoMenu, IntroMenu, NoticesMenu } from '@/utils/menus'
-import type { Menu } from '@/utils/menus'
+import { findMenuSection } from '@/utils/menus'
 
 export type Crumb = {
   label: string
   href?: string
-}
-
-const Sections: Menu[] = [IntroMenu, BusinessMenu, NoticesMenu, InfoMenu]
-
-function matchesSection(menu: Menu, pathname: string): boolean {
-  // '/introduction'이 '/intro' 구역으로 잡히지 않도록 경로 구분자까지 확인한다.
-  if (
-    menu.href !== Links.root &&
-    (pathname === menu.href || pathname.startsWith(`${menu.href}/`))
-  ) {
-    return true
-  }
-  return menu.subMenus.some((subMenu) => subMenu.href === pathname)
 }
 
 /**
@@ -31,7 +17,7 @@ export function resolveBreadcrumb(pathname: string): Crumb[] {
     return [{ label: '홈' }]
   }
 
-  const section = Sections.find((menu) => matchesSection(menu, pathname))
+  const section = findMenuSection(pathname)
   if (!section) {
     return [home]
   }

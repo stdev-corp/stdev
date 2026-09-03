@@ -49,8 +49,8 @@ export default function HackathonPage() {
           <div className="g-img-wrap">
             <Image
               src="/images/business/hackathon-list.png"
-              width={800}
-              height={400}
+              width={4004}
+              height={16233}
               sizes="(max-width: 832px) calc(100vw - 32px), 800px"
               alt="STDev가 진행해온 해커톤 목록"
               style={{ width: '100%', maxWidth: '800px', height: 'auto' }}

@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import Menus, {
-  IntroMenu,
+  AllMenus,
   BusinessMenu,
-  NoticesMenu,
   InfoMenu,
+  IntroMenu,
+  NoticesMenu,
+  findMenuSection,
 } from '@/utils/menus'
 import { Links } from '@/utils/links'
 
@@ -161,6 +163,45 @@ describe('menus', () => {
           expect(sub.href.startsWith('/')).toBe(true)
         })
       })
+    })
+  })
+
+  describe('AllMenus', () => {
+    it('is the three nav menus plus InfoMenu', () => {
+      expect(AllMenus).toEqual([...Menus, InfoMenu])
+    })
+  })
+
+  describe('findMenuSection', () => {
+    it('matches a section index path', () => {
+      expect(findMenuSection(Links.intro)).toBe(IntroMenu)
+      expect(findMenuSection(Links.business)).toBe(BusinessMenu)
+      expect(findMenuSection(Links.notices)).toBe(NoticesMenu)
+    })
+
+    it('matches a path nested under a section', () => {
+      expect(findMenuSection(Links.introHistory)).toBe(IntroMenu)
+      expect(findMenuSection('/business/hackathon/2026')).toBe(BusinessMenu)
+    })
+
+    it('matches InfoMenu through its sub menus even though its href is the root', () => {
+      expect(findMenuSection(Links.infoPrivacy)).toBe(InfoMenu)
+      expect(findMenuSection(Links.infoTerms)).toBe(InfoMenu)
+      expect(findMenuSection(Links.infoSitemap)).toBe(InfoMenu)
+    })
+
+    it('does not treat the root path as a section', () => {
+      expect(findMenuSection(Links.root)).toBeUndefined()
+    })
+
+    it('does not match a path that merely shares a section prefix', () => {
+      expect(findMenuSection('/introduction')).toBeUndefined()
+    })
+
+    it('returns undefined for an unknown or missing path', () => {
+      expect(findMenuSection('/nope')).toBeUndefined()
+      expect(findMenuSection(null)).toBeUndefined()
+      expect(findMenuSection(undefined)).toBeUndefined()
     })
   })
 })

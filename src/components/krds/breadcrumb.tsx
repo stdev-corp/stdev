@@ -22,7 +22,12 @@ export default function Breadcrumb() {
                 {crumb.label}
               </Link>
             ) : (
-              <span className="txt" aria-current="page">
+              // 링크 없는 중간 구역(안내 및 공시)도 있으므로 현재 페이지 표시는
+              // 마지막 항목에만 붙인다.
+              <span
+                className="txt"
+                aria-current={index === crumbs.length - 1 ? 'page' : undefined}
+              >
                 {crumb.label}
               </span>
             )}

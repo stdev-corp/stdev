@@ -57,7 +57,7 @@ stdev/
 - **Server vs client**: Pages are async server components by default. Client components declare `'use client'`.
 - **Rendering**: `(stdev)/layout.tsx` sets `export const dynamic = 'force-dynamic'` for request-time CMS reads.
 - **Locale**: `<html lang="ko">` + Korean UI strings; dates format as `YYYY년 M월 D일`.
-- **Styling (public)**: KRDS class names on plain HTML (`krds-btn`, `krds-table-wrap`, `krds-side-navigation`, …). Page-level layout that the kit does not ship lives in `src/styles/krds/stdev-krds.css` and must be written with KRDS design tokens (`var(--krds-*)`), never hard-coded values. The KRDS breakpoint is 1024px.
+- **Styling (public)**: KRDS class names on plain HTML (`krds-btn`, `krds-table-wrap`, `krds-side-navigation`, …). Page-level layout that the kit does not ship lives in `src/styles/krds/stdev-krds.css`. Use a KRDS design token (`var(--krds-*)`) wherever one exists — spacing/sizes map to `--krds-number-*` (0 → 9.6rem) and `--krds-size-height-*`, borders to `--krds-light-border-width-static-*`, colors to `--krds-light-color-*`. Hard-code a dimension only when the token scale does not cover it (component sizes above 9.6rem, viewport or `em` units) and leave a comment saying why. The KRDS breakpoint is 1024px.
 - **Styling (admin)**: Chakra v3 in `(cms)`; leave it alone.
 - **KRDS assets**: `(stdev)/layout.tsx` imports `src/styles/krds/{krds-fonts,krds.min,stdev-krds}.css` in that order; import order is cascade order, so the site layer always wins. Icons and fonts stay in `public/krds/` because the CSS references them by absolute `/krds/...` URL.
 - **Env enforcement**: Required public envs are thrown on missing in layout/providers.
@@ -72,6 +72,7 @@ stdev/
 - Do not hand-edit `src/styles/krds/krds.min.css`, `public/krds/img/**` or `public/krds/fonts/**` — they are vendored verbatim from <https://github.com/KRDS-uiux/krds-uiux> (the one applied change is rewriting the icon `url()`s from `krds.go.kr` absolute URLs to `/krds/img/`). Put site-specific CSS in `src/styles/krds/stdev-krds.css`; see `src/styles/krds/README.md` for the update procedure.
 - Do not add the KRDS government identity components (`#krds-masthead`, `.krds-identifier`, 정부상징) — STDev is a private nonprofit and those would misrepresent it as a government body.
 - Do not remove the 공공누리 제1유형 attribution in the footer; it is a condition of the KRDS licence.
+- Do not reuse KRDS's `.active` on `.gnb-main-trigger` to mean "current section" — it also rotates the chevron 180°, which contradicts `aria-expanded="false"` on a closed panel. `.active` is for the expanded state; the current section uses `.is-current`.
 - Do not put a `.sr-only` element inside `.krds-table-wrap`. `.sr-only` is `position:absolute` and its containing block is `<html>`, so it escapes the wrapper's `overflow-x:auto` and widens the document on mobile. Use `aria-label` instead.
 - Do not touch `pnpm-workspace.yaml` (`overrides`, `allowBuilds`, `minimumReleaseAgeExclude`) without also COPYing it in the `deps` stage of `Dockerfile`. `pnpm i --frozen-lockfile` validates the lockfile against the workspace config and fails with `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH` if absent.
 

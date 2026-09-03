@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import '@/tests/mocks/navigation'
 import { resetNavigationMocks, usePathnameMock } from '@/tests/mocks/navigation'
-import { renderWithChakra, screen } from '@/tests/utils/render'
+import { renderWithChakra, screen, waitFor } from '@/tests/utils/render'
 import { Links } from '@/utils/links'
 import { InfoMenu } from '@/utils/menus'
 import Header from './header'
@@ -122,40 +122,57 @@ describe('<Header>', () => {
     expect(screen.queryByRole('button', { name: '메뉴 닫기' })).toBeNull()
   })
 
-  it('현재 경로가 속한 구역의 트리거에 active 클래스를 부여한다', () => {
+  it('현재 경로가 속한 구역의 트리거에 is-current를 부여하고 active는 붙이지 않는다', () => {
     usePathnameMock.mockReturnValue(Links.businessHackathon)
     renderWithChakra(<Header />)
 
-    expect(screen.getByRole('button', { name: '행사&프로그램' })).toHaveClass(
-      'active',
-    )
+    const current = screen.getByRole('button', { name: '행사&프로그램' })
+    expect(current).toHaveClass('is-current')
+    // KRDS의 active는 화살표를 뒤집으므로 닫힌 패널에는 붙으면 안 된다.
+    expect(current).not.toHaveClass('active')
+    expect(current).toHaveAttribute('aria-expanded', 'false')
+
     expect(screen.getByRole('button', { name: '법인소개' })).not.toHaveClass(
-      'active',
+      'is-current',
     )
     expect(screen.getByRole('button', { name: '공지사항' })).not.toHaveClass(
-      'active',
+      'is-current',
     )
   })
 
-  it('구역 최상위 경로에서도 해당 트리거가 active가 된다', () => {
+  it('구역 최상위 경로에서도 해당 트리거가 is-current가 된다', () => {
     usePathnameMock.mockReturnValue(Links.notices)
     renderWithChakra(<Header />)
 
     expect(screen.getByRole('button', { name: '공지사항' })).toHaveClass(
-      'active',
+      'is-current',
     )
     expect(
       screen.getByRole('button', { name: '행사&프로그램' }),
-    ).not.toHaveClass('active')
+    ).not.toHaveClass('is-current')
   })
 
-  it('경로가 없으면 어떤 트리거도 active가 아니다', () => {
+  it('현재 구역의 트리거를 펼치면 is-current와 active를 함께 갖는다', async () => {
+    usePathnameMock.mockReturnValue(Links.notices)
+    const { user } = renderWithChakra(<Header />)
+
+    const trigger = screen.getByRole('button', { name: '공지사항' })
+    await user.click(trigger)
+
+    expect(trigger).toHaveClass('gnb-main-trigger', 'active', 'is-current')
+    expect(trigger).toHaveAttribute('aria-expanded', 'true')
+  })
+
+  it('경로가 없으면 어떤 트리거도 강조되지 않는다', () => {
     usePathnameMock.mockReturnValue(null as unknown as string)
     renderWithChakra(<Header />)
 
     for (const label of ['법인소개', '행사&프로그램', '공지사항']) {
       expect(screen.getByRole('button', { name: label })).not.toHaveClass(
         'active',
+      )
+      expect(screen.getByRole('button', { name: label })).not.toHaveClass(
+        'is-current',
       )
     }
   })
@@ -330,8 +347,125 @@ describe('<Header>', () => {
     expect(document.body).not.toHaveClass('is-gnb-web')
     expect(document.body).not.toHaveClass('is-gnb-mobile')
     expect(screen.getByRole('button', { name: '공지사항' })).toHaveClass(
-      'active',
+      'is-current',
     )
+  })
+
+  it('안내 및 공시 경로에서도 해당 구역을 활성으로 표시한다', () => {
+    usePathnameMock.mockReturnValue(Links.infoSitemap)
+    const { container } = renderWithChakra(<Header />)
+
+    const mobileTriggers = Array.from(
+      container.querySelectorAll('.menu-wrap .gnb-main-trigger'),
+    )
+    const info = mobileTriggers.find(
+      (trigger) => trigger.textContent === InfoMenu.label,
+    )!
+    expect(info).toHaveClass('active')
+    expect(
+      mobileTriggers.filter((trigger) => trigger.classList.contains('active')),
+    ).toHaveLength(1)
+  })
+
+  it('홈에서는 안내 및 공시가 활성 구역이 되지 않는다', () => {
+    usePathnameMock.mockReturnValue(Links.root)
+    const { container } = renderWithChakra(<Header />)
+
+    const active = container.querySelectorAll(
+      '.menu-wrap .gnb-main-trigger.active',
+    )
+    expect(active).toHaveLength(0)
+  })
+
+  it('현재 페이지의 링크를 다시 눌러도 모바일 서랍이 닫힌다', async () => {
+    usePathnameMock.mockReturnValue(Links.infoSitemap)
+    const { container, user } = renderWithChakra(<Header />)
+
+    const nav = container.querySelector('nav#mobile-nav') as HTMLElement
+    await user.click(container.querySelector('button.btn-navi.all')!)
+    expect(nav).toHaveClass('is-open')
+    expect(document.body).toHaveClass('is-gnb-mobile')
+
+    // 경로가 그대로여도(선택된 링크 재클릭) 서랍과 스크롤 잠금이 풀려야 한다.
+    const current = nav.querySelector(
+      `a.gnb-sub-trigger.selected[href="${Links.infoSitemap}"]`,
+    ) as HTMLElement
+    expect(current).not.toBeNull()
+    await user.click(current)
+
+    expect(nav).not.toHaveClass('is-open')
+    expect(document.body).not.toHaveClass('is-gnb-mobile')
+  })
+
+  it('데스크탑 GNB의 하위 링크를 누르면 메뉴가 닫힌다', async () => {
+    const { container, user } = renderWithChakra(<Header />)
+
+    const trigger = screen.getByRole('button', { name: '법인소개' })
+    await user.click(trigger)
+    const wrap = toggleWrapOf(trigger)
+    expect(wrap).toHaveClass('is-open')
+
+    await user.click(wrap.querySelector(`a[href="${Links.introHistory}"]`)!)
+
+    expect(wrap).not.toHaveClass('is-open')
+    expect(document.body).not.toHaveClass('is-gnb-web')
+    expect(container.querySelector('.gnb-backdrop')).toBeNull()
+  })
+
+  it('모바일 서랍을 열면 포커스를 서랍으로 옮기고 나머지 화면을 inert 처리한다', async () => {
+    const { container, user } = renderWithChakra(<Header />)
+
+    const opener = container.querySelector(
+      'button.btn-navi.all',
+    ) as HTMLButtonElement
+    const drawer = container.querySelector('.gnb-wrap') as HTMLElement
+    const headerIn = container.querySelector('.header-in') as HTMLElement
+
+    await user.click(opener)
+
+    expect(headerIn).toHaveAttribute('inert')
+    // 포커스 이동은 전환이 끝난 뒤(프레임 이후)에 일어난다.
+    await waitFor(() => expect(document.activeElement).toBe(drawer))
+
+    await user.click(screen.getByRole('button', { name: '전체메뉴 닫기' }))
+
+    expect(headerIn).not.toHaveAttribute('inert')
+    expect(document.activeElement).toBe(opener)
+  })
+
+  it('Escape로 서랍을 닫아도 포커스가 열었던 버튼으로 돌아온다', async () => {
+    const { container, user } = renderWithChakra(<Header />)
+
+    const opener = container.querySelector(
+      'button.btn-navi.all',
+    ) as HTMLButtonElement
+    await user.click(opener)
+    await waitFor(() => expect(document.activeElement).not.toBe(opener))
+
+    await user.keyboard('{Escape}')
+
+    expect(container.querySelector('nav#mobile-nav')).not.toHaveClass('is-open')
+    expect(document.activeElement).toBe(opener)
+  })
+
+  it('서랍 안에서 Tab 포커스가 순환한다', async () => {
+    const { container, user } = renderWithChakra(<Header />)
+
+    await user.click(container.querySelector('button.btn-navi.all')!)
+    const drawer = container.querySelector('.gnb-wrap') as HTMLElement
+    await waitFor(() => expect(document.activeElement).toBe(drawer))
+    const focusable = Array.from(
+      drawer.querySelectorAll<HTMLElement>('a[href], button:not(:disabled)'),
+    )
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+
+    // 서랍 컨테이너에서 Shift+Tab 하면 마지막 요소로 감싼다.
+    await user.keyboard('{Shift>}{Tab}{/Shift}')
+    expect(document.activeElement).toBe(last)
+
+    await user.keyboard('{Tab}')
+    expect(document.activeElement).toBe(first)
   })
 
   it('언마운트되면 body의 상태 클래스를 정리한다', async () => {

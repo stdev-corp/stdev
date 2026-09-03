@@ -5,7 +5,9 @@
  *
  * KRDS HTML 컴포넌트 킷(krds.min.css)이 제공하지 않는 페이지 레이아웃
  * (본문 단 구성, 페이지 타이틀, 본문 타이포그래피)과 STDev 고유 요소를
- * KRDS 디자인 토큰만 사용해 정의한다. 값은 직접 쓰지 않고 항상 토큰을 참조한다.
+ * 정의한다. 치수는 대응하는 KRDS 디자인 토큰(var(--krds-*))을 쓰고, 토큰
+ * 스케일(number 토큰은 최대 9.6rem)을 벗어나는 사이트 고유 치수만 직접 적되
+ * 이유를 주석으로 남긴다.
  */
 
 /* ------------------------------------------------------------------ *
@@ -199,7 +201,7 @@
 .g-tit-line::before {
   flex: 0 0 auto;
   align-self: stretch;
-  width: 0.4rem;
+  width: var(--krds-number-3);
   min-height: var(--krds-size-height-4);
   border-radius: var(--krds-radius-max);
   background-color: var(--krds-light-color-element-primary);
@@ -207,13 +209,16 @@
 }
 
 /* 본문 안내 문구 */
+/* min-height 12rem: KRDS number 토큰 스케일(최대 9.6rem) 밖이라 직접 지정한다. */
 .g-empty {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 12rem;
-  border-top: 0.1rem solid var(--krds-light-color-divider-gray-dark);
-  border-bottom: 0.1rem solid var(--krds-light-color-divider-gray);
+  border-top: var(--krds-light-border-width-static-regular) solid
+    var(--krds-light-color-divider-gray-dark);
+  border-bottom: var(--krds-light-border-width-static-regular) solid
+    var(--krds-light-color-divider-gray);
   color: var(--krds-light-color-text-subtle);
   font-size: var(--krds-pc-font-size-body-medium);
 }
@@ -241,6 +246,15 @@
   top: 0;
   z-index: 70;
   background-color: var(--krds-light-color-surface-white);
+}
+
+/*
+ * KRDS의 .active는 밑줄과 함께 화살표를 180도 돌리므로 펼침 상태 전용이다.
+ * 현재 구역 표시는 밑줄만 필요하므로 별도 클래스로 그린다.
+ */
+#krds-header .krds-main-menu .gnb-menu .gnb-main-trigger.is-current::before {
+  left: 0;
+  width: 100%;
 }
 
 #krds-header .header-container .header-branding .logo {
@@ -305,7 +319,7 @@
 #krds-footer .f-gov-logos img {
   display: block;
   width: auto;
-  height: 2.8rem;
+  height: var(--krds-number-11);
 }
 
 /* 공공누리 출처 표기 */
@@ -389,6 +403,7 @@
   animation-play-state: paused;
 }
 
+/* 로고 슬롯 18x9rem: 토큰 스케일 밖의 사이트 고유 치수. */
 .logo-marquee .marquee-item {
   position: relative;
   flex: 0 0 auto;
@@ -423,7 +438,8 @@
 .g-timeline > li {
   position: relative;
   padding: 0 0 var(--krds-padding-9) var(--krds-padding-9);
-  border-left: 0.2rem solid var(--krds-light-color-divider-primary-light);
+  border-left: var(--krds-light-border-width-static-medium) solid
+    var(--krds-light-color-divider-primary-light);
 }
 
 .g-timeline > li:last-child {
@@ -433,10 +449,13 @@
 
 .g-timeline > li::before {
   position: absolute;
-  top: 0.4rem;
-  left: -0.7rem;
-  width: 1.2rem;
-  height: 1.2rem;
+  top: var(--krds-number-3);
+  /* 점(1.2rem)을 0.2rem 세로선 위에 중앙 정렬한다. */
+  left: calc(
+    (var(--krds-number-7) + var(--krds-light-border-width-static-medium)) / -2
+  );
+  width: var(--krds-number-7);
+  height: var(--krds-number-7);
   border-radius: var(--krds-radius-max);
   background-color: var(--krds-light-color-element-primary);
   content: '';
@@ -490,6 +509,7 @@
 /* ------------------------------------------------------------------ *
  * 사이트맵
  * ------------------------------------------------------------------ */
+/* 22rem: 토큰 스케일 밖의 그리드 최소 열 너비. */
 .sitemap-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
@@ -523,6 +543,7 @@
   padding: var(--krds-padding-9) var(--krds-padding-6);
 }
 
+/* 52rem: 토큰 스케일 밖의 결과 화면 최대 너비. */
 .g-result-page .result-box {
   width: 100%;
   max-width: 52rem;
@@ -623,7 +644,8 @@
 .markdown-body blockquote {
   margin: 0;
   padding: var(--krds-padding-5) var(--krds-padding-6);
-  border-left: 0.4rem solid var(--krds-light-color-divider-primary);
+  border-left: var(--krds-number-3) solid
+    var(--krds-light-color-divider-primary);
   background-color: var(--krds-light-color-surface-gray-subtler);
   color: var(--krds-light-color-text-subtle);
 }
@@ -659,11 +681,13 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 0.2rem solid var(--krds-light-color-divider-gray-darker);
+  border-top: var(--krds-light-border-width-static-medium) solid
+    var(--krds-light-color-divider-gray-darker);
 }
 
 .link-list > li {
-  border-bottom: 0.1rem solid var(--krds-light-color-divider-gray);
+  border-bottom: var(--krds-light-border-width-static-regular) solid
+    var(--krds-light-color-divider-gray);
 }
 
 .link-list > li > a {

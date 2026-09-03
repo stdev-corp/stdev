@@ -109,6 +109,22 @@ describe('<Breadcrumb>', () => {
     expect(items[1].firstElementChild).toHaveAttribute('aria-current', 'page')
   })
 
+  it('marks only the last crumb as the current page when a middle crumb has no link', () => {
+    const { container } = renderAt('/info/sitemap')
+    const items = crumbItems(container)
+
+    expect(items.map((item) => item.textContent)).toEqual([
+      '홈',
+      '안내 및 공시',
+      '사이트맵',
+    ])
+    // 안내 및 공시는 링크가 없지만 현재 페이지가 아니다.
+    expect(items[1].firstElementChild!.tagName).toBe('SPAN')
+    expect(items[1].firstElementChild).not.toHaveAttribute('aria-current')
+    expect(items[2].firstElementChild).toHaveAttribute('aria-current', 'page')
+    expect(container.querySelectorAll('[aria-current="page"]')).toHaveLength(1)
+  })
+
   it('does not link a section that has no index page', () => {
     const { container } = renderAt('/info/privacy')
     const items = crumbItems(container)

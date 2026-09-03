@@ -10,14 +10,29 @@ import SnsLink, {
 } from '@/components/layout/sns-link'
 import { Links } from '@/utils/links'
 
+// width/height는 실제 원본 크기여야 로드 전후로 레이아웃이 흔들리지 않는다.
 const GovLogos = [
   {
     src: '/images/gov/msit-logo.png',
     url: Links.msit,
     alt: '과학기술정보통신부',
+    width: 2452,
+    height: 458,
   },
-  { src: '/images/gov/nts-logo.png', url: Links.nts, alt: '국세청' },
-  { src: '/images/gov/acrc-logo.png', url: Links.acrc, alt: '국민권익위원회' },
+  {
+    src: '/images/gov/nts-logo.png',
+    url: Links.nts,
+    alt: '국세청',
+    width: 1655,
+    height: 458,
+  },
+  {
+    src: '/images/gov/acrc-logo.png',
+    url: Links.acrc,
+    alt: '국민권익위원회',
+    width: 2490,
+    height: 458,
+  },
 ]
 
 export default function Footer() {
@@ -108,8 +123,8 @@ export default function Footer() {
                 <Image
                   src={logo.src}
                   alt={logo.alt}
-                  width={224}
-                  height={48}
+                  width={logo.width}
+                  height={logo.height}
                   sizes="224px"
                 />
               </a>
