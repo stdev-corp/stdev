@@ -8,3 +8,7 @@ playwright-report
 pnpm-lock.yaml
 *.tsbuildinfo
 .next/**
+
+# Vendored KRDS component kit (do not reformat)
+src/styles/krds/krds.min.css
+public/krds

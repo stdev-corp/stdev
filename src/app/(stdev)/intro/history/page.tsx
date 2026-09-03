@@ -1,5 +1,5 @@
-import { Box, Timeline, Text, Heading } from '@chakra-ui/react'
 import Image from 'next/image'
+import PageTitle from '@/components/krds/page-title'
 import { queryHistories } from '@/utils/cms'
 import { toDateString } from '@/utils/datetime'
 
@@ -8,46 +8,40 @@ export default async function HistoryPage() {
 
   return (
     <>
-      <Heading>연혁</Heading>
-      <Box h="2rem" />
-      <Timeline.Root size="lg">
-        {histories.map((history) => (
-          <Timeline.Item key={history.id}>
-            <Timeline.Connector>
-              <Timeline.Separator />
-              <Timeline.Indicator />
-            </Timeline.Connector>
-            <Timeline.Content pb="8">
-              <Timeline.Title>
-                <Text fontWeight="bold" fontSize="lg">
-                  {history.title}
-                </Text>
-              </Timeline.Title>
-              <Timeline.Description>
-                <Text color="gray.500" fontSize="sm">
-                  {toDateString(history.date)}
-                </Text>
-              </Timeline.Description>
-              {history.content && (
-                <Text mt="2" color="gray.600" whiteSpace="pre-line">
-                  {history.content}
-                </Text>
-              )}
-              {history.imageUrl && (
-                <Box mt="4">
-                  <Image
-                    src={history.imageUrl}
-                    alt={history.imageAlt || history.title}
-                    width={400}
-                    height={300}
-                    style={{ borderRadius: '8px', objectFit: 'cover' }}
-                  />
-                </Box>
-              )}
-            </Timeline.Content>
-          </Timeline.Item>
-        ))}
-      </Timeline.Root>
+      <PageTitle title="연혁" />
+      <div className="conts-area">
+        <div className="g-conts-area">
+          {histories.length === 0 ? (
+            <p className="g-empty">자료가 존재하지 않습니다.</p>
+          ) : (
+            <ol className="g-timeline">
+              {histories.map((history) => (
+                <li key={history.id}>
+                  <span className="timeline-date">
+                    {toDateString(history.date)}
+                  </span>
+                  <h2 className="timeline-tit">{history.title}</h2>
+                  {history.content && (
+                    <p className="timeline-desc">{history.content}</p>
+                  )}
+                  {history.imageUrl && (
+                    <div className="timeline-img">
+                      <Image
+                        src={history.imageUrl}
+                        alt={history.imageAlt || history.title}
+                        width={400}
+                        height={300}
+                        sizes="400px"
+                        style={{ objectFit: 'cover' }}
+                      />
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ol>
+          )}
+        </div>
+      </div>
     </>
   )
 }

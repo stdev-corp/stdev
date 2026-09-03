@@ -13,6 +13,7 @@ import {
   makeWebpageWithBusiness,
   makeReportWithFile,
 } from '@/tests/utils/fixtures'
+import { NoticesMenu } from '@/utils/menus'
 
 vi.mock('next/link', () => ({
   default: ({
@@ -38,9 +39,17 @@ describe('NoticesPage', () => {
     ).toBeInTheDocument()
   })
 
-  it('shows empty record list message', async () => {
+  it('lists links to every notices sub menu', async () => {
     await renderAsyncServerComponent(() => NoticesPage())
-    expect(screen.getByText('자료가 존재하지 않습니다.')).toBeInTheDocument()
+    for (const subMenu of NoticesMenu.subMenus) {
+      expect(screen.getByRole('link', { name: subMenu.label })).toHaveAttribute(
+        'href',
+        subMenu.href,
+      )
+    }
+    expect(screen.getAllByRole('link')).toHaveLength(
+      NoticesMenu.subMenus.length,
+    )
   })
 })
 

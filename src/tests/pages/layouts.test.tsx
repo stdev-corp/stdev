@@ -7,7 +7,13 @@ import IntroLayout from '@/app/(stdev)/intro/layout'
 import BusinessLayout from '@/app/(stdev)/business/layout'
 import NoticesLayout from '@/app/(stdev)/notices/layout'
 import InfoLayout from '@/app/(stdev)/info/layout'
-import { BusinessMenu, IntroMenu, NoticesMenu, type Menu } from '@/utils/menus'
+import {
+  BusinessMenu,
+  InfoMenu,
+  IntroMenu,
+  NoticesMenu,
+  type Menu,
+} from '@/utils/menus'
 
 vi.mock('@next/third-parties/google', () => ({
   GoogleTagManager: () => null,
@@ -26,17 +32,11 @@ vi.mock('@channel.io/channel-web-sdk-loader', () => ({
   shutdown: vi.fn(),
 }))
 
-vi.mock('@/components/layout/navbar', () => ({
-  default: () => <nav data-testid="navbar" />,
-}))
-
-vi.mock('@/components/layout/footer', () => ({
-  default: () => <footer data-testid="footer" />,
-}))
-
-vi.mock('@/components/layout/left-menu-layout', () => ({
-  default: ({ menu, children }: { menu: Menu; children: ReactNode }) => (
-    <div data-testid="left-menu-layout" data-menu={menu.label}>
+// KRDS 공통 셸(SkipLink/Header/LNB/Breadcrumb/Footer)은 SiteLayout이 담당한다.
+// 구역 레이아웃 테스트에서는 셸을 대체하고 넘겨받은 menu만 노출시킨다.
+vi.mock('@/components/krds/site-layout', () => ({
+  default: ({ menu, children }: { menu?: Menu; children: ReactNode }) => (
+    <div data-testid="site-layout" data-menu={menu?.label}>
       {children}
     </div>
   ),
@@ -152,91 +152,97 @@ describe('Providers (stdev/providers.tsx)', () => {
 })
 
 describe('IntroLayout', () => {
-  it('renders Navigation and Footer around children', () => {
+  it('renders the KRDS site chrome around children', () => {
     renderWithChakra(
       <IntroLayout>
         <p data-testid="intro-child">안녕</p>
       </IntroLayout>,
     )
-    expect(screen.getByTestId('navbar')).toBeInTheDocument()
-    expect(screen.getByTestId('footer')).toBeInTheDocument()
+    const shell = screen.getByTestId('site-layout')
+    expect(shell).toBeInTheDocument()
+    expect(shell).toContainElement(screen.getByTestId('intro-child'))
     expect(screen.getByTestId('intro-child')).toHaveTextContent('안녕')
   })
 
-  it('wraps children in LeftMenuLayout with IntroMenu', () => {
+  it('wraps children in SiteLayout with IntroMenu', () => {
     renderWithChakra(
       <IntroLayout>
         <p data-testid="intro-child">X</p>
       </IntroLayout>,
     )
-    const wrapper = screen.getByTestId('left-menu-layout')
+    const wrapper = screen.getByTestId('site-layout')
     expect(wrapper.getAttribute('data-menu')).toBe(IntroMenu.label)
     expect(wrapper).toContainElement(screen.getByTestId('intro-child'))
   })
 })
 
 describe('BusinessLayout', () => {
-  it('renders Navigation and Footer around children', () => {
+  it('renders the KRDS site chrome around children', () => {
     renderWithChakra(
       <BusinessLayout>
         <p data-testid="business-child">X</p>
       </BusinessLayout>,
     )
-    expect(screen.getByTestId('navbar')).toBeInTheDocument()
-    expect(screen.getByTestId('footer')).toBeInTheDocument()
+    const shell = screen.getByTestId('site-layout')
+    expect(shell).toBeInTheDocument()
+    expect(shell).toContainElement(screen.getByTestId('business-child'))
   })
 
-  it('wraps children in LeftMenuLayout with BusinessMenu', () => {
+  it('wraps children in SiteLayout with BusinessMenu', () => {
     renderWithChakra(
       <BusinessLayout>
         <p data-testid="business-child">X</p>
       </BusinessLayout>,
     )
-    const wrapper = screen.getByTestId('left-menu-layout')
+    const wrapper = screen.getByTestId('site-layout')
     expect(wrapper.getAttribute('data-menu')).toBe(BusinessMenu.label)
     expect(wrapper).toContainElement(screen.getByTestId('business-child'))
   })
 })
 
 describe('NoticesLayout', () => {
-  it('renders Navigation and Footer around children', () => {
+  it('renders the KRDS site chrome around children', () => {
     renderWithChakra(
       <NoticesLayout>
         <p data-testid="notices-child">X</p>
       </NoticesLayout>,
     )
-    expect(screen.getByTestId('navbar')).toBeInTheDocument()
-    expect(screen.getByTestId('footer')).toBeInTheDocument()
+    const shell = screen.getByTestId('site-layout')
+    expect(shell).toBeInTheDocument()
+    expect(shell).toContainElement(screen.getByTestId('notices-child'))
   })
 
-  it('wraps children in LeftMenuLayout with NoticesMenu', () => {
+  it('wraps children in SiteLayout with NoticesMenu', () => {
     renderWithChakra(
       <NoticesLayout>
         <p data-testid="notices-child">X</p>
       </NoticesLayout>,
     )
-    const wrapper = screen.getByTestId('left-menu-layout')
+    const wrapper = screen.getByTestId('site-layout')
     expect(wrapper.getAttribute('data-menu')).toBe(NoticesMenu.label)
     expect(wrapper).toContainElement(screen.getByTestId('notices-child'))
   })
 })
 
 describe('InfoLayout', () => {
-  it('renders children inside Navigation/Footer chrome', async () => {
+  it('renders children inside the KRDS site chrome', async () => {
     const element = await InfoLayout({
       children: <p data-testid="info-child">hello</p>,
     })
     renderWithChakra(element)
-    expect(screen.getByTestId('navbar')).toBeInTheDocument()
-    expect(screen.getByTestId('footer')).toBeInTheDocument()
+    const shell = screen.getByTestId('site-layout')
+    expect(shell).toBeInTheDocument()
+    expect(shell).toContainElement(screen.getByTestId('info-child'))
     expect(screen.getByTestId('info-child')).toHaveTextContent('hello')
   })
 
-  it('does not use LeftMenuLayout wrapper', async () => {
+  it('wraps children in SiteLayout with InfoMenu', async () => {
     const element = await InfoLayout({
       children: <p data-testid="info-child">X</p>,
     })
     renderWithChakra(element)
-    expect(screen.queryByTestId('left-menu-layout')).not.toBeInTheDocument()
+    const wrapper = screen.getByTestId('site-layout')
+    expect(wrapper.getAttribute('data-menu')).toBe(InfoMenu.label)
+    expect(wrapper).toContainElement(screen.getByTestId('info-child'))
   })
 })

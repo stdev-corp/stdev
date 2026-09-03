@@ -1,8 +1,5 @@
-'use client'
 import type { ReportWithFile } from '@/utils/cms-types'
 import { toDateString } from '@/utils/datetime'
-import { Box, Button, Separator, Stack, Text, Flex } from '@chakra-ui/react'
-import Link from 'next/link'
 
 type Props = {
   reports: ReportWithFile[]
@@ -10,38 +7,51 @@ type Props = {
 
 export default function RecordList(props: Props) {
   if (props.reports.length === 0) {
-    return (
-      <Stack gap={4}>
-        <Separator />
-        <Text minH="3rem" display="flex" alignItems="center">
-          자료가 존재하지 않습니다.
-        </Text>
-        <Separator />
-      </Stack>
-    )
+    return <p className="g-empty">자료가 존재하지 않습니다.</p>
   }
 
   return (
-    <Stack gap={0}>
-      <Separator />
-      {props.reports.map((record) => (
-        <Box key={record.id}>
-          <Flex minH="3rem" gap={4} align="center">
-            <Text flex="1">{record.title}</Text>
-            <Text>{toDateString(record.publishedDate)}</Text>
-            <Button variant="outline" asChild size="sm">
-              <Link
-                href={record.file_url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                PDF
-              </Link>
-            </Button>
-          </Flex>
-          <Separator />
-        </Box>
-      ))}
-    </Stack>
+    <div className="krds-table-wrap">
+      <table className="tbl col data">
+        <caption>
+          공시 자료 목록으로 제목, 발행일, 첨부파일로 구성되어 있습니다.
+        </caption>
+        <colgroup>
+          <col />
+          <col style={{ width: '20%' }} />
+          <col style={{ width: '15%' }} />
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col">제목</th>
+            <th scope="col">발행일</th>
+            <th scope="col">첨부파일</th>
+          </tr>
+        </thead>
+        <tbody>
+          {props.reports.map((record) => (
+            <tr key={record.id}>
+              <th scope="row">{record.title}</th>
+              <td className="cell-date">
+                {toDateString(record.publishedDate)}
+              </td>
+              <td className="cell-actions">
+                <a
+                  href={record.file_url}
+                  className="krds-btn xsmall secondary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="새 창 열림"
+                  aria-label={`${record.title} PDF 새 창으로 열기`}
+                >
+                  <i className="svg-icon ico-file" aria-hidden="true" />
+                  PDF
+                </a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   )
 }

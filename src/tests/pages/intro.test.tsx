@@ -63,23 +63,30 @@ const makeHistoryEntry = (
 })
 
 describe('IntroPage (intro landing)', () => {
-  it('renders the main greeting heading', async () => {
+  it('renders the 법인소개 page title heading', async () => {
     await renderAsyncServerComponent(() => IntroPage())
     expect(
-      screen.getByRole('heading', {
-        name: '안녕하세요, 사단법인 STDev입니다!',
-      }),
+      screen.getByRole('heading', { name: '법인소개', level: 1 }),
+    ).toBeInTheDocument()
+  })
+
+  it('renders the main greeting as the page description', async () => {
+    await renderAsyncServerComponent(() => IntroPage())
+    expect(
+      screen.getByText('안녕하세요, 사단법인 STDev입니다!'),
     ).toBeInTheDocument()
   })
 
   it('renders the title image', async () => {
     await renderAsyncServerComponent(() => IntroPage())
-    expect(screen.getByAltText('title')).toBeInTheDocument()
+    expect(screen.getByAltText('STDev 소개 이미지')).toBeInTheDocument()
   })
 
   it('renders the 3w1h image', async () => {
     await renderAsyncServerComponent(() => IntroPage())
-    expect(screen.getByAltText('3w1h')).toBeInTheDocument()
+    expect(
+      screen.getByAltText('STDev의 What, Why, Who, How 소개'),
+    ).toBeInTheDocument()
   })
 
   it('renders introductory paragraph text', async () => {
@@ -248,7 +255,7 @@ describe('ChartPage', () => {
 
   it('renders the organization chart image', async () => {
     await renderAsyncServerComponent(() => ChartPage())
-    const img = screen.getByAltText('Organization Chart')
+    const img = screen.getByAltText('사단법인 에스티데브 조직도')
     expect(img).toBeInTheDocument()
     expect(img).toHaveAttribute('src', '/images/intro/chart.png')
   })

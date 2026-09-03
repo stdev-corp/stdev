@@ -1,29 +1,14 @@
-import type { ReactNode } from 'react'
-import { describe, expect, it, vi } from 'vitest'
-import { renderWithChakra, screen } from '@/tests/utils/render'
+import { describe, expect, it } from 'vitest'
+import { renderWithChakra, screen, within } from '@/tests/utils/render'
 import RecordList from '@/components/record-list'
 import type { ReportWithFile } from '@/utils/cms-types'
-
-vi.mock('next/link', () => ({
-  default: ({
-    href,
-    children,
-    ...rest
-  }: {
-    href: string | { pathname: string }
-    children: ReactNode
-  }) => (
-    <a href={typeof href === 'string' ? href : '#'} {...rest}>
-      {children}
-    </a>
-  ),
-}))
 
 describe('<RecordList>', () => {
   it('renders empty-state message when no reports provided', () => {
     const { container } = renderWithChakra(<RecordList reports={[]} />)
     expect(screen.getByText('자료가 존재하지 않습니다.')).toBeInTheDocument()
     expect(container.querySelectorAll('a').length).toBe(0)
+    expect(screen.queryByRole('table')).not.toBeInTheDocument()
   })
 
   it('renders a single report with title, date, and PDF download link', () => {
@@ -37,9 +22,14 @@ describe('<RecordList>', () => {
       },
     ]
     renderWithChakra(<RecordList reports={reports} />)
-    expect(screen.getByText('2026 Q1 Report')).toBeInTheDocument()
+    expect(
+      screen.getByRole('rowheader', { name: '2026 Q1 Report' }),
+    ).toBeInTheDocument()
     expect(screen.getByText('2026년 4월 1일')).toBeInTheDocument()
-    const link = screen.getByRole('link', { name: 'PDF' })
+    const link = screen.getByRole('link', {
+      name: '2026 Q1 Report PDF 새 창으로 열기',
+    })
+    expect(link).toHaveTextContent('PDF')
     expect(link).toHaveAttribute(
       'href',
       'https://stdev-kr.s3.ap-northeast-2.amazonaws.com/files/q1.pdf',
@@ -64,11 +54,17 @@ describe('<RecordList>', () => {
       },
     ]
     renderWithChakra(<RecordList reports={reports} />)
-    expect(screen.getByText('Report A')).toBeInTheDocument()
-    expect(screen.getByText('Report B')).toBeInTheDocument()
-    const links = screen.getAllByRole('link', { name: 'PDF' })
+    expect(
+      screen.getByRole('rowheader', { name: 'Report A' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('rowheader', { name: 'Report B' }),
+    ).toBeInTheDocument()
+    const links = screen.getAllByRole('link', { name: /PDF 새 창으로 열기$/ })
     expect(links.length).toBe(2)
+    expect(links[0]).toHaveAccessibleName('Report A PDF 새 창으로 열기')
     expect(links[0]).toHaveAttribute('href', 'https://example.com/a.pdf')
+    expect(links[1]).toHaveAccessibleName('Report B PDF 새 창으로 열기')
     expect(links[1]).toHaveAttribute('href', 'https://example.com/b.pdf')
   })
 
@@ -82,7 +78,9 @@ describe('<RecordList>', () => {
       },
     ]
     renderWithChakra(<RecordList reports={reports} />)
-    const link = screen.getByRole('link', { name: 'PDF' })
+    const link = screen.getByRole('link', {
+      name: 'Only Report PDF 새 창으로 열기',
+    })
     expect(link).toHaveAttribute('target', '_blank')
     expect(link).toHaveAttribute('rel', 'noopener noreferrer')
     expect(link).toHaveAttribute('href', 'https://example.com/only.pdf')
@@ -98,6 +96,9 @@ describe('<RecordList>', () => {
       },
     ]
     renderWithChakra(<RecordList reports={reports} />)
-    expect(screen.getByText('2026년 5월 7일')).toBeInTheDocument()
+    const row = screen.getByRole('rowheader', {
+      name: 'Boundary Report',
+    }).parentElement as HTMLElement
+    expect(within(row).getByText('2026년 5월 7일')).toBeInTheDocument()
   })
 })

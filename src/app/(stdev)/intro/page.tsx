@@ -1,52 +1,51 @@
-import { Box, Heading } from '@chakra-ui/react'
 import Image from 'next/image'
+import PageTitle from '@/components/krds/page-title'
 
 export default function IntroPage() {
   return (
-    <Box>
-      <Heading as="h1" size="xl" mb={8}>
-        안녕하세요, 사단법인 STDev입니다!
-      </Heading>
-      <Box h="40px" />
-      <Image
-        src="/images/intro/title.png"
-        alt="title"
-        width={4960}
-        height={844}
-        sizes="(max-width: 672px) calc(100vw - 32px), 600px"
-        style={{ width: '100%', maxWidth: '600px', height: 'auto' }}
+    <>
+      <PageTitle
+        title="법인소개"
+        description="안녕하세요, 사단법인 STDev입니다!"
       />
-      <Box h="40px" />
-      <p>
-        KAIST 총학생회 산하 개발 자치단체 하에서 3년간 여섯 차례의 해커톤, 한
-        차례의 컨퍼런스를 성공적으로 개최한 기획팀은 앞으로 더 넓은 네트워크의
-        구축을 꿈 꿉니다. 개발자의 시각에서, 개발자에게 가장 필요하고 와닿는
-        형태로 커뮤니티를 구축하고자 합니다.
-      </p>
-      <Box h="40px" />
-      <p>
-        KAIST 총학생회 산하의 학생단체를 벗어나 전국의 개발자, 창업가, 학생,
-        청년과 교류하고 협력하기 위해 우리는 과학기술정보통신부 산하의 비영리
-        사단법인을 설립했습니다. 2025년 2월, 그 시작을 STDev Conference를 통해
-        여러분과 함께 하고자 합니다.
-      </p>
-      <Box h="120px" />
-      <Image
-        src="/images/intro/3w1h.png"
-        alt="3w1h"
-        width={6672}
-        height={3160}
-        sizes="(max-width: 832px) calc(100vw - 32px), 800px"
-        style={{ width: '100%', maxWidth: '800px', height: 'auto' }}
-      />
-      <Box h="120px" />
-      {/* <Image
-        src="/images/intro/history.png"
-        alt="history"
-        width={800}
-        height={800}
-      /> */}
-      <Box h="120px" />
-    </Box>
+      <div className="conts-area">
+        <div className="g-conts-area">
+          <div className="g-img-wrap">
+            <Image
+              src="/images/intro/title.png"
+              alt="STDev 소개 이미지"
+              width={4960}
+              height={844}
+              sizes="(max-width: 672px) calc(100vw - 32px), 600px"
+              style={{ width: '100%', maxWidth: '600px', height: 'auto' }}
+            />
+          </div>
+          <p>
+            KAIST 총학생회 산하 개발 자치단체 하에서 3년간 여섯 차례의 해커톤,
+            한 차례의 컨퍼런스를 성공적으로 개최한 기획팀은 앞으로 더 넓은
+            네트워크의 구축을 꿈 꿉니다. 개발자의 시각에서, 개발자에게 가장
+            필요하고 와닿는 형태로 커뮤니티를 구축하고자 합니다.
+          </p>
+          <p>
+            KAIST 총학생회 산하의 학생단체를 벗어나 전국의 개발자, 창업가, 학생,
+            청년과 교류하고 협력하기 위해 우리는 과학기술정보통신부 산하의
+            비영리 사단법인을 설립했습니다. 2025년 2월, 그 시작을 STDev
+            Conference를 통해 여러분과 함께 하고자 합니다.
+          </p>
+        </div>
+        <div className="g-conts-area">
+          <div className="g-img-wrap">
+            <Image
+              src="/images/intro/3w1h.png"
+              alt="STDev의 What, Why, Who, How 소개"
+              width={6672}
+              height={3160}
+              sizes="(max-width: 832px) calc(100vw - 32px), 800px"
+              style={{ width: '100%', maxWidth: '800px', height: 'auto' }}
+            />
+          </div>
+        </div>
+      </div>
+    </>
   )
 }

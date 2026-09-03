@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { queryInstitutionsMock, resetCmsMocks } from '@/tests/mocks/cms'
 import { renderAsyncServerComponent, screen } from '@/tests/utils/render'
@@ -5,8 +6,13 @@ import HomePage from '@/app/(stdev)/page'
 
 vi.mock('next/image', () => ({
   default: (props: Record<string, unknown>) => {
-    const { fetchPriority: _fp, ...rest } = props as {
+    const {
+      fetchPriority: _fp,
+      fill: _fill,
+      ...rest
+    } = props as {
       fetchPriority?: string
+      fill?: boolean
       [key: string]: unknown
     }
     return <img {...rest} />
@@ -29,12 +35,10 @@ vi.mock('next/link', () => ({
   ),
 }))
 
-vi.mock('@/components/layout/navbar', () => ({
-  default: () => <nav data-testid="navbar" />,
-}))
-
-vi.mock('@/components/layout/footer', () => ({
-  default: () => <footer data-testid="footer" />,
+vi.mock('@/components/krds/main-layout', () => ({
+  default: ({ children }: { children: ReactNode }) => (
+    <div data-testid="main-layout">{children}</div>
+  ),
 }))
 
 describe('HomePage', () => {
@@ -43,23 +47,33 @@ describe('HomePage', () => {
   it('renders heading for partner institutions', async () => {
     queryInstitutionsMock.mockResolvedValue([])
     await renderAsyncServerComponent(() => HomePage())
-    expect(
-      screen.getByRole('heading', { name: '함께하는 기관' }),
-    ).toBeInTheDocument()
+    const heading = screen.getByRole('heading', {
+      name: '함께하는 기관',
+      level: 2,
+    })
+    expect(heading).toBeInTheDocument()
+    expect(heading).toHaveClass('section-tit')
   })
 
   it('renders title image', async () => {
     queryInstitutionsMock.mockResolvedValue([])
     await renderAsyncServerComponent(() => HomePage())
-    const titleImg = screen.getByAltText('title')
+    const titleImg = screen.getByAltText(
+      'STDev - 개발자를 위한 커뮤니티를 만듭니다',
+    )
     expect(titleImg).toBeInTheDocument()
+    expect(titleImg).toHaveAttribute('src', '/images/intro/title.png')
   })
 
   it('renders with empty institutions without crashing', async () => {
     queryInstitutionsMock.mockResolvedValue([])
     await renderAsyncServerComponent(() => HomePage())
-    expect(screen.getByTestId('navbar')).toBeInTheDocument()
-    expect(screen.getByTestId('footer')).toBeInTheDocument()
+    const layout = screen.getByTestId('main-layout')
+    expect(layout).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: '사단법인 STDev', level: 1 }),
+    ).toBeInTheDocument()
+    expect(layout.querySelector('.logo-marquee')).toBeNull()
   })
 
   it('renders with populated institutions', async () => {
@@ -77,8 +91,10 @@ describe('HomePage', () => {
     ])
     await renderAsyncServerComponent(() => HomePage())
     expect(
-      screen.getByRole('heading', { name: '함께하는 기관' }),
+      screen.getByRole('heading', { name: '함께하는 기관', level: 2 }),
     ).toBeInTheDocument()
+    expect(screen.getAllByAltText('기관1').length).toBeGreaterThan(0)
+    expect(screen.getAllByAltText('기관2').length).toBeGreaterThan(0)
   })
 
   it('calls queryInstitutions exactly once', async () => {

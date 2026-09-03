@@ -1,22 +1,20 @@
 import { queryInstitutions } from '@/utils/cms'
 import NextImage from 'next/image'
-import Navigation from '@/components/layout/navbar'
-import Footer from '@/components/layout/footer'
+import MainLayout from '@/components/krds/main-layout'
 import ScrollingLogos from '@/components/scrolling-logos'
-import { Box, Heading } from '@chakra-ui/react'
 
 export default async function Page() {
   const institutions = await queryInstitutions()
 
   return (
-    <Box display="flex" flexDirection="column" minH="100vh">
-      <Navigation />
-      <Box flex="1">
-        <Box maxW="5xl" mx="auto" p={4}>
-          <Box h="120px" />
+    <MainLayout>
+      <h1 className="sr-only">사단법인 STDev</h1>
+
+      <section className="main-visual">
+        <div className="inner">
           <NextImage
             src="/images/intro/title.png"
-            alt="title"
+            alt="STDev - 개발자를 위한 커뮤니티를 만듭니다"
             width={4960}
             height={844}
             sizes="(max-width: 672px) calc(100vw - 32px), 600px"
@@ -24,33 +22,36 @@ export default async function Page() {
             fetchPriority="high"
             style={{ width: '100%', maxWidth: '600px', height: 'auto' }}
           />
-          <Box h="120px" />
+        </div>
+      </section>
+
+      <section className="main-section">
+        <div className="inner">
+          <h2 className="section-tit">STDev는 이렇게 일합니다</h2>
           <NextImage
             src="/images/intro/3w1h.png"
-            alt="3w1h"
+            alt="STDev의 What, Why, Who, How 소개"
             width={6672}
             height={3160}
             sizes="(max-width: 832px) calc(100vw - 32px), 800px"
             loading="eager"
-            style={{ width: '100%', maxWidth: '800px', height: 'auto' }}
+            style={{
+              display: 'block',
+              margin: '0 auto',
+              width: '100%',
+              maxWidth: '800px',
+              height: 'auto',
+            }}
           />
-          <Box h="120px" />
-          <Box py={12}>
-            <Heading
-              as="h2"
-              size="lg"
-              textAlign="center"
-              color="gray.800"
-              mb={10}
-            >
-              함께하는 기관
-            </Heading>
-            <ScrollingLogos institutions={institutions} />
-          </Box>
-          <Box h="120px" />
-        </Box>
-      </Box>
-      <Footer />
-    </Box>
+        </div>
+      </section>
+
+      <section className="main-section">
+        <div className="inner">
+          <h2 className="section-tit">함께하는 기관</h2>
+          <ScrollingLogos institutions={institutions} />
+        </div>
+      </section>
+    </MainLayout>
   )
 }
