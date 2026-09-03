@@ -413,9 +413,7 @@ export async function createWebpage(formData: FormData) {
           publishedDate: date(formData, 'publishedDate'),
           businessId: optionalNumber(formData, 'businessId'),
           type: text(formData, 'type') as
-            | 'blog_post'
-            | 'news_article'
-            | 'press_release',
+            'blog_post' | 'news_article' | 'press_release',
         },
       }),
     '웹페이지',
@@ -436,9 +434,7 @@ export async function updateWebpage(formData: FormData) {
           publishedDate: date(formData, 'publishedDate'),
           businessId: optionalNumber(formData, 'businessId'),
           type: text(formData, 'type') as
-            | 'blog_post'
-            | 'news_article'
-            | 'press_release',
+            'blog_post' | 'news_article' | 'press_release',
         },
       }),
     '웹페이지',

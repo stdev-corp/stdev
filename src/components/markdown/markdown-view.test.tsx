@@ -97,12 +97,16 @@ describe('<MarkdownView>', () => {
     )
     const ul = container.querySelector('ul')
     expect(ul).not.toBeNull()
-    expect(ul).toHaveStyle({ listStyleType: 'disc', marginLeft: '1rem' })
+    // jsdom >=30 resolves rem to px in getComputedStyle, so assert the
+    // inline declaration for the length instead of the computed value.
+    expect(ul).toHaveStyle({ listStyleType: 'disc' })
+    expect(ul?.style.marginLeft).toBe('1rem')
     const items = ul?.querySelectorAll('li') ?? []
     expect(items.length).toBe(2)
     expect(items[0].textContent).toBe('item A')
     expect(items[1].textContent).toBe('item B')
-    expect(items[0]).toHaveStyle({ listStyleType: 'disc', marginLeft: '1rem' })
+    expect(items[0]).toHaveStyle({ listStyleType: 'disc' })
+    expect(items[0].style.marginLeft).toBe('1rem')
   })
 
   it('renders ordered list with custom li styling', async () => {

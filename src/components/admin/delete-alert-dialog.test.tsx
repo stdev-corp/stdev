@@ -12,7 +12,7 @@ vi.mock('./toaster', () => ({
 
 describe('DeleteAlertDialog', () => {
   it('opens and closes a destructive confirmation dialog', async () => {
-    const action = vi.fn(async () => {})
+    const action = vi.fn<(formData: FormData) => Promise<void>>(async () => {})
     const { user } = renderWithChakra(
       <DeleteAlertDialog action={action} recordId={7} label="사업" />,
     )
@@ -31,7 +31,7 @@ describe('DeleteAlertDialog', () => {
   })
 
   it('submits record id through FormData and shows success toast', async () => {
-    const action = vi.fn(async () => {})
+    const action = vi.fn<(formData: FormData) => Promise<void>>(async () => {})
     const { user } = renderWithChakra(
       <DeleteAlertDialog action={action} recordId={42} label="설정" />,
     )
@@ -40,7 +40,7 @@ describe('DeleteAlertDialog', () => {
     await user.click(screen.getAllByRole('button', { name: '삭제' }).at(-1)!)
 
     await waitFor(() => expect(action).toHaveBeenCalledTimes(1))
-    const formData = action.mock.calls[0][0] as FormData
+    const formData = action.mock.calls[0][0]
     expect(formData.get('id')).toBe('42')
     expect(toaster.create).toHaveBeenCalledWith({
       title: '설정 항목을 삭제했습니다.',

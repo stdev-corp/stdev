@@ -10,7 +10,7 @@ STDev Corp. (사단법인 에스티데브) Korean nonprofit homepage. Next.js 16
 stdev/
 ├── prisma/schema.prisma            # CMS/auth data model
 ├── prisma.config.ts                # Prisma config; reads DATABASE_URL
-├── pnpm-workspace.yaml             # pnpm overrides + allowBuilds (must COPY into Dockerfile deps)
+├── pnpm-workspace.yaml             # pnpm allowBuilds (must COPY into Dockerfile deps)
 ├── vitest.config.ts                # Unit / component / mocked-integration (jsdom)
 ├── vitest.config.integration.ts    # Real-DB integration suite (src/tests/db/**)
 ├── playwright.config.ts            # E2E (real Postgres + MinIO via docker-compose.test.yml)
@@ -28,23 +28,23 @@ stdev/
 
 ## WHERE TO LOOK
 
-| Task                    | Location                                                                               | Notes                                                     |
-| ----------------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| Change CMS schema       | `prisma/schema.prisma`                                                                 | Then run `pnpm db:generate` and create/apply a migration  |
-| Public CMS query        | `src/utils/cms.ts`                                                                     | Server-only helpers used by async pages                   |
-| Prisma client           | `src/utils/prisma.ts`                                                                  | Reuses one client during dev hot reload                   |
-| Auth config             | `src/utils/auth.ts` + `src/utils/admin-auth.ts` + `src/app/api/auth/[...all]/route.ts` | Google-only better-auth with Prisma adapter               |
-| Admin UI                | `src/app/(cms)/admin/**`                                                               | DIY CMS forms protected by better-auth                    |
-| Add a public page/route | `src/app/(stdev)/<path>/page.tsx`                                                      | Also update `src/utils/menus.ts` and `src/utils/links.ts` |
-| Shared layout chrome    | `src/components/layout/`                                                               | `basic-layout`, `left-menu-layout`, `navbar`, `footer`    |
-| Markdown rendering      | `src/components/markdown/markdown-view.tsx`                                            | Chakra-mapped react-markdown + remark-gfm                 |
-| Add/adjust unit test    | Colocated `*.test.{ts,tsx}` next to source, or under `src/tests/{actions,pages,utils,mocks}/` | Picked up by `vitest.config.ts`                           |
-| Add E2E spec            | `src/e2e/**.spec.ts` (+ fixtures in `src/e2e/fixtures/`)                               | Runs against Postgres+MinIO from `docker-compose.test.yml` |
-| Docker image change     | `Dockerfile`                                                                           | If editing `deps` stage, also re-check the `COPY` list — workspace yaml must be present for `--frozen-lockfile` |
+| Task                    | Location                                                                                      | Notes                                                                                                           |
+| ----------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Change CMS schema       | `prisma/schema.prisma`                                                                        | Then run `pnpm db:generate` and create/apply a migration                                                        |
+| Public CMS query        | `src/utils/cms.ts`                                                                            | Server-only helpers used by async pages                                                                         |
+| Prisma client           | `src/utils/prisma.ts`                                                                         | Reuses one client during dev hot reload                                                                         |
+| Auth config             | `src/utils/auth.ts` + `src/utils/admin-auth.ts` + `src/app/api/auth/[...all]/route.ts`        | Google-only better-auth with Prisma adapter                                                                     |
+| Admin UI                | `src/app/(cms)/admin/**`                                                                      | DIY CMS forms protected by better-auth                                                                          |
+| Add a public page/route | `src/app/(stdev)/<path>/page.tsx`                                                             | Also update `src/utils/menus.ts` and `src/utils/links.ts`                                                       |
+| Shared layout chrome    | `src/components/layout/`                                                                      | `basic-layout`, `left-menu-layout`, `navbar`, `footer`                                                          |
+| Markdown rendering      | `src/components/markdown/markdown-view.tsx`                                                   | Chakra-mapped react-markdown + remark-gfm                                                                       |
+| Add/adjust unit test    | Colocated `*.test.{ts,tsx}` next to source, or under `src/tests/{actions,pages,utils,mocks}/` | Picked up by `vitest.config.ts`                                                                                 |
+| Add E2E spec            | `src/e2e/**.spec.ts` (+ fixtures in `src/e2e/fixtures/`)                                      | Runs against Postgres+MinIO from `docker-compose.test.yml`                                                      |
+| Docker image change     | `Dockerfile`                                                                                  | If editing `deps` stage, also re-check the `COPY` list — workspace yaml must be present for `--frozen-lockfile` |
 
 ## CONVENTIONS
 
-- **Package manager**: pnpm@11.5.0 only (pinned in `packageManager`). Never commit a non-pnpm lockfile. pnpm 11 enforces a 7-day `minimumReleaseAge` gate by default; do not bump deps to a release younger than that without a real reason, otherwise pnpm will rewrite `pnpm-workspace.yaml` with a `minimumReleaseAgeExclude` block.
+- **Package manager**: pnpm@11.25.0 only (pinned in `packageManager`). Never commit a non-pnpm lockfile. pnpm ≥11 enforces a 1-day (1440 min) `minimumReleaseAge` gate by default; do not bump deps to a release younger than that without a real reason, otherwise pnpm will rewrite `pnpm-workspace.yaml` with a `minimumReleaseAgeExclude` block.
 - **Prettier**: `semi: false`, `singleQuote: true`, `trailingComma: 'all'`, `tabWidth: 2`.
 - **Import alias**: `@/*` → `./src/*`.
 - **Server vs client**: Pages are async server components by default. Client components declare `'use client'`.
@@ -60,7 +60,6 @@ stdev/
 - Do not statically render `(stdev)`.
 - Do not add new image remote hosts without updating `next.config.ts` `images.remotePatterns`.
 - Do not touch `pnpm-workspace.yaml` (`overrides`, `allowBuilds`, `minimumReleaseAgeExclude`) without also COPYing it in the `deps` stage of `Dockerfile`. `pnpm i --frozen-lockfile` validates the lockfile against the workspace config and fails with `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH` if absent.
-- Do not bypass the kysely pin (`overrides.kysely`); `@better-auth/kysely-adapter` is pulled in transitively even though the project uses `prismaAdapter`, and it breaks against kysely ≥0.29 until better-auth ships a fix.
 
 ## COMMANDS
 

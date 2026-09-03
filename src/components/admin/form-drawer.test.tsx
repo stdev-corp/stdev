@@ -36,7 +36,7 @@ describe('FormDrawer', () => {
   })
 
   it('submits FormData, shows success toast, and closes drawer', async () => {
-    const action = vi.fn(async () => {})
+    const action = vi.fn<(formData: FormData) => Promise<void>>(async () => {})
     const onOpenChange = vi.fn()
     const { user } = renderWithChakra(
       <FormDrawer
@@ -53,7 +53,7 @@ describe('FormDrawer', () => {
     await user.click(screen.getByRole('button', { name: '저장' }))
 
     await waitFor(() => expect(action).toHaveBeenCalledTimes(1))
-    const formData = action.mock.calls[0][0] as FormData
+    const formData = action.mock.calls[0][0]
     expect(formData.get('key')).toBe('AWS_ACCESS_KEY_ID')
     expect(toaster.create).toHaveBeenCalledWith({
       title: '완료',
@@ -91,7 +91,7 @@ describe('FormDrawer', () => {
   })
 
   it('uses the default success message when no custom message is provided', async () => {
-    const action = vi.fn(async () => {})
+    const action = vi.fn<(formData: FormData) => Promise<void>>(async () => {})
     const { user } = renderWithChakra(
       <FormDrawer open onOpenChange={vi.fn()} title="저장" action={action}>
         <Input name="name" aria-label="이름" defaultValue="테스트" />
