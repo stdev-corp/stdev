@@ -28,6 +28,9 @@ export default function Header() {
   // 모바일 서랍에서 지금 보고 있는 패널. null이면 현재 경로의 구역을 따른다.
   const [mobileSection, setMobileSection] = useState<string | null>(null)
 
+  // 모바일 서랍은 InfoMenu까지 보여주므로 구역 판별도 같은 집합으로 한다.
+  const activeSection = findMenuSection(pathname)
+
   const closeAll = useCallback(() => {
     setOpenGnb(null)
     setUtilityOpen(false)
@@ -63,6 +66,8 @@ export default function Header() {
     return () => document.removeEventListener('focusin', onFocusIn)
   }, [])
 
+  const sectionLabel = activeSection?.label ?? null
+
   useEffect(() => {
     const desktop = window.matchMedia('(min-width: 1024px)')
 
@@ -87,21 +92,25 @@ export default function Header() {
         return
       }
 
-      const header = document.getElementById('krds-header')
+      /*
+       * 데스크탑에서 각 구역을 담당하는 컨트롤로 보낸다.
+       * 안내 및 공시는 데스크탑 GNB에 없고 헤더 유틸리티 드롭다운이 대신하므로
+       * 그 버튼으로 가야 한다. 현재 구역이 없으면(홈) 주 메뉴의 첫 트리거로 간다.
+       */
       const target = event.matches
-        ? (header?.querySelector<HTMLElement>(
-            '.krds-main-menu .gnb-main-trigger.is-current',
-          ) ??
-          header?.querySelector<HTMLElement>(
-            '.krds-main-menu .gnb-main-trigger',
-          ))
+        ? sectionLabel === InfoMenu.label
+          ? utilityButtonRef.current
+          : ((sectionLabel ? gnbTriggerRefs.current.get(sectionLabel) : null) ??
+            document.querySelector<HTMLElement>(
+              '#krds-header .krds-main-menu .gnb-main-trigger',
+            ))
         : openButtonRef.current
       target?.focus()
     }
 
     desktop.addEventListener('change', onChange)
     return () => desktop.removeEventListener('change', onChange)
-  }, [closeAll])
+  }, [closeAll, sectionLabel])
 
   // KRDS 스크립트와 동일하게 body에 상태 클래스를 붙여 배경 스크롤을 잠근다.
   useEffect(() => {
@@ -262,8 +271,6 @@ export default function Header() {
    * 계산하면 방금 누른 구역이 아닌 앞 구역이 강조되어 클릭과 어긋난다.
    * 그래서 클릭한 구역을 그대로 유지한다.
    */
-  // 모바일 서랍은 InfoMenu까지 보여주므로 구역 판별도 같은 집합으로 한다.
-  const activeSection = findMenuSection(pathname)
   // 서랍을 조작하기 전에는 현재 경로의 구역을 가리킨다.
   const currentMobileSection = mobileSection ?? activeSection?.label ?? null
 

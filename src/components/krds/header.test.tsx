@@ -540,6 +540,44 @@ describe('<Header>', () => {
     vi.unstubAllGlobals()
   })
 
+  it('안내 및 공시 경로에서는 데스크탑으로 넓어질 때 유틸리티 버튼으로 옮긴다', async () => {
+    // InfoMenu는 데스크탑 GNB에 없고 헤더 유틸리티 드롭다운이 대신한다.
+    usePathnameMock.mockReturnValue(Links.infoSitemap)
+    const { cross } = stubBreakpoint()
+    const { container, user } = renderWithChakra(<Header />)
+
+    await user.click(container.querySelector('button.btn-navi.all')!)
+    const drawer = container.querySelector('.gnb-wrap') as HTMLElement
+    await waitFor(() => expect(document.activeElement).toBe(drawer))
+
+    await cross(true)
+
+    const dropButton = screen.getByRole('button', { name: InfoMenu.label })
+    expect(document.activeElement).toBe(dropButton)
+    // 무관한 첫 GNB 트리거로 가면 안 된다.
+    expect(document.activeElement).not.toBe(
+      screen.getByRole('button', { name: '법인소개' }),
+    )
+    vi.unstubAllGlobals()
+  })
+
+  it('현재 구역이 없으면 데스크탑으로 넓어질 때 주 메뉴 첫 트리거로 옮긴다', async () => {
+    usePathnameMock.mockReturnValue(Links.root)
+    const { cross } = stubBreakpoint()
+    const { container, user } = renderWithChakra(<Header />)
+
+    await user.click(container.querySelector('button.btn-navi.all')!)
+    const drawer = container.querySelector('.gnb-wrap') as HTMLElement
+    await waitFor(() => expect(document.activeElement).toBe(drawer))
+
+    await cross(true)
+
+    expect(document.activeElement).toBe(
+      screen.getByRole('button', { name: '법인소개' }),
+    )
+    vi.unstubAllGlobals()
+  })
+
   it('모바일로 좁아질 때 데스크탑 메뉴의 포커스를 전체메뉴 버튼으로 옮긴다', async () => {
     const { cross } = stubBreakpoint()
     const { container, user } = renderWithChakra(<Header />)
