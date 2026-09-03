@@ -67,6 +67,12 @@ export default function Header() {
   }, [])
 
   const sectionLabel = activeSection?.label ?? null
+  /*
+   * 사용자가 지금 다루고 있는 구역. 서랍에서 다른 구역을 골라 둘러보는 중이면
+   * URL이 아니라 그 구역이 기준이 된다. 좌측 목록의 강조와 브레이크포인트
+   * 전환 시 포커스 대상이 같은 값을 본다.
+   */
+  const currentMobileSection = mobileSection ?? sectionLabel
 
   useEffect(() => {
     const desktop = window.matchMedia('(min-width: 1024px)')
@@ -93,14 +99,17 @@ export default function Header() {
       }
 
       /*
-       * 데스크탑에서 각 구역을 담당하는 컨트롤로 보낸다.
+       * 데스크탑에서 그 구역을 담당하는 컨트롤로 보낸다.
        * 안내 및 공시는 데스크탑 GNB에 없고 헤더 유틸리티 드롭다운이 대신하므로
-       * 그 버튼으로 가야 한다. 현재 구역이 없으면(홈) 주 메뉴의 첫 트리거로 간다.
+       * 그 버튼으로 가야 한다. 기준 구역이 없으면(홈) 주 메뉴의 첫 트리거로 간다.
        */
+      // closeAll()이 mobileSection을 비우므로, 캡처해 둔 값으로 판단한다.
       const target = event.matches
-        ? sectionLabel === InfoMenu.label
+        ? currentMobileSection === InfoMenu.label
           ? utilityButtonRef.current
-          : ((sectionLabel ? gnbTriggerRefs.current.get(sectionLabel) : null) ??
+          : ((currentMobileSection
+              ? gnbTriggerRefs.current.get(currentMobileSection)
+              : null) ??
             document.querySelector<HTMLElement>(
               '#krds-header .krds-main-menu .gnb-main-trigger',
             ))
@@ -110,7 +119,7 @@ export default function Header() {
 
     desktop.addEventListener('change', onChange)
     return () => desktop.removeEventListener('change', onChange)
-  }, [closeAll, sectionLabel])
+  }, [closeAll, currentMobileSection])
 
   // KRDS 스크립트와 동일하게 body에 상태 클래스를 붙여 배경 스크롤을 잠근다.
   useEffect(() => {
@@ -271,8 +280,6 @@ export default function Header() {
    * 계산하면 방금 누른 구역이 아닌 앞 구역이 강조되어 클릭과 어긋난다.
    * 그래서 클릭한 구역을 그대로 유지한다.
    */
-  // 서랍을 조작하기 전에는 현재 경로의 구역을 가리킨다.
-  const currentMobileSection = mobileSection ?? activeSection?.label ?? null
 
   return (
     <>

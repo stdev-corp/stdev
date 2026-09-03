@@ -561,6 +561,55 @@ describe('<Header>', () => {
     vi.unstubAllGlobals()
   })
 
+  it('서랍에서 다른 구역을 둘러보던 중이면 그 구역의 트리거로 옮긴다', async () => {
+    // 경로는 /intro 지만 서랍에서 공지사항을 펼쳐 보고 있던 상황.
+    usePathnameMock.mockReturnValue(Links.intro)
+    const { cross } = stubBreakpoint()
+    const { container, user } = renderWithChakra(<Header />)
+
+    await user.click(container.querySelector('button.btn-navi.all')!)
+    const drawer = container.querySelector('.gnb-wrap') as HTMLElement
+    await waitFor(() => expect(document.activeElement).toBe(drawer))
+
+    const anchors = Array.from(
+      container.querySelectorAll<HTMLElement>('.menu-wrap .gnb-main-trigger'),
+    )
+    await user.click(anchors.find((a) => a.textContent === '공지사항')!)
+
+    await cross(true)
+
+    expect(document.activeElement).toBe(
+      screen.getByRole('button', { name: '공지사항' }),
+    )
+    // URL이 가리키는 구역으로 가면 안 된다.
+    expect(document.activeElement).not.toBe(
+      screen.getByRole('button', { name: '법인소개' }),
+    )
+    vi.unstubAllGlobals()
+  })
+
+  it('서랍에서 안내 및 공시를 둘러보던 중이면 유틸리티 버튼으로 옮긴다', async () => {
+    usePathnameMock.mockReturnValue(Links.intro)
+    const { cross } = stubBreakpoint()
+    const { container, user } = renderWithChakra(<Header />)
+
+    await user.click(container.querySelector('button.btn-navi.all')!)
+    const drawer = container.querySelector('.gnb-wrap') as HTMLElement
+    await waitFor(() => expect(document.activeElement).toBe(drawer))
+
+    const anchors = Array.from(
+      container.querySelectorAll<HTMLElement>('.menu-wrap .gnb-main-trigger'),
+    )
+    await user.click(anchors.find((a) => a.textContent === InfoMenu.label)!)
+
+    await cross(true)
+
+    expect(document.activeElement).toBe(
+      screen.getByRole('button', { name: InfoMenu.label }),
+    )
+    vi.unstubAllGlobals()
+  })
+
   it('현재 구역이 없으면 데스크탑으로 넓어질 때 주 메뉴 첫 트리거로 옮긴다', async () => {
     usePathnameMock.mockReturnValue(Links.root)
     const { cross } = stubBreakpoint()
