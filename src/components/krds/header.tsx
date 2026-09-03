@@ -17,11 +17,18 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const openButtonRef = useRef<HTMLButtonElement>(null)
   const drawerRef = useRef<HTMLDivElement>(null)
+  const utilityButtonRef = useRef<HTMLButtonElement>(null)
+  const utilityMenuRef = useRef<HTMLDivElement>(null)
+  const gnbTriggerRefs = useRef(new Map<string, HTMLButtonElement | null>())
+  const gnbPanelRefs = useRef(new Map<string, HTMLDivElement | null>())
+  // 모바일 서랍에서 지금 보고 있는 패널. null이면 현재 경로의 구역을 따른다.
+  const [mobileSection, setMobileSection] = useState<string | null>(null)
 
   const closeAll = useCallback(() => {
     setOpenGnb(null)
     setUtilityOpen(false)
     setMobileOpen(false)
+    setMobileSection(null)
   }, [])
 
   // 경로가 바뀌면 열려 있던 메뉴를 모두 닫는다. 이펙트 대신 렌더 중에
@@ -32,7 +39,19 @@ export default function Header() {
     setOpenGnb(null)
     setUtilityOpen(false)
     setMobileOpen(false)
+    setMobileSection(null)
   }
+
+  /*
+   * KRDS 전환점(1024px)을 넘으면 CSS가 반대편 메뉴를 감춰 버린다. 상태를 그대로
+   * 두면 감춰진 서랍의 inert와 스크롤 잠금이 남아 페이지를 조작할 수 없다.
+   */
+  useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 1024px)')
+    const onChange = () => closeAll()
+    desktop.addEventListener('change', onChange)
+    return () => desktop.removeEventListener('change', onChange)
+  }, [closeAll])
 
   // KRDS 스크립트와 동일하게 body에 상태 클래스를 붙여 배경 스크롤을 잠근다.
   useEffect(() => {
@@ -54,6 +73,43 @@ export default function Header() {
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [closeAll])
 
+  // 데스크탑 GNB 패널이 닫힐 때, 포커스가 그 안에 있었다면 트리거로 되돌린다.
+  useEffect(() => {
+    if (openGnb === null) {
+      return
+    }
+    const label = openGnb
+    // Map 인스턴스 자체는 바뀌지 않지만, 정리 시점에 참조하도록 지역에 담는다.
+    const panels = gnbPanelRefs.current
+    const triggers = gnbTriggerRefs.current
+    return () => {
+      const panel = panels.get(label)
+      if (
+        panel?.contains(document.activeElement) ||
+        document.activeElement === document.body
+      ) {
+        triggers.get(label)?.focus()
+      }
+    }
+  }, [openGnb])
+
+  // 유틸리티 드롭다운도 동일하게 처리한다.
+  useEffect(() => {
+    if (!utilityOpen) {
+      return
+    }
+    const menu = utilityMenuRef.current
+    const button = utilityButtonRef.current
+    return () => {
+      if (
+        menu?.contains(document.activeElement) ||
+        document.activeElement === document.body
+      ) {
+        button?.focus()
+      }
+    }
+  }, [utilityOpen])
+
   // 모바일 서랍이 열리면 KRDS 스크립트와 동일하게 나머지 화면을 inert 처리하고
   // 포커스를 서랍 안으로 옮긴다. 닫을 때의 포커스 복원은 closeAll이 맡는다.
   useEffect(() => {
@@ -63,12 +119,17 @@ export default function Header() {
 
     const drawer = drawerRef.current
     const opener = openButtonRef.current
+    // 서랍은 <header> 안에 있으므로, 헤더의 나머지(.header-in)와 #wrap의
+    // 형제 영역(스킵 링크 / 본문 / 푸터)을 모두 격리한다. 목록을 열거하지 않고
+    // 훑어서, 나중에 형제가 늘어도 빠지지 않게 한다.
+    const header = document.getElementById('krds-header')
+    const wrap = document.getElementById('wrap')
     const outside = [
+      ...(wrap ? Array.from(wrap.children) : []),
       document.querySelector('#krds-header .header-in'),
-      document.getElementById('container'),
-      document.getElementById('krds-footer'),
     ].filter(
-      (element): element is HTMLElement => element instanceof HTMLElement,
+      (element): element is HTMLElement =>
+        element instanceof HTMLElement && element !== header,
     )
 
     outside.forEach((element) => element.setAttribute('inert', ''))
@@ -143,8 +204,18 @@ export default function Header() {
     }
   }, [mobileOpen])
 
+  /*
+   * 좌측 1Depth 목록의 active는 사용자가 고른 패널을 가리킨다.
+   *
+   * KRDS 스크립트는 스크롤 위치로 동기화하지만, 서랍의 스크롤 여유가 짧아
+   * 뒤쪽 구역은 앵커로 이동해도 맨 위에 닿지 못한다. 그 상태에서 스크롤 기준으로
+   * 계산하면 방금 누른 구역이 아닌 앞 구역이 강조되어 클릭과 어긋난다.
+   * 그래서 클릭한 구역을 그대로 유지한다.
+   */
   // 모바일 서랍은 InfoMenu까지 보여주므로 구역 판별도 같은 집합으로 한다.
   const activeSection = findMenuSection(pathname)
+  // 서랍을 조작하기 전에는 현재 경로의 구역을 가리킨다.
+  const currentMobileSection = mobileSection ?? activeSection?.label ?? null
 
   return (
     <>
@@ -158,6 +229,7 @@ export default function Header() {
                     <div className="krds-drop-wrap drop-right">
                       <button
                         type="button"
+                        ref={utilityButtonRef}
                         className={
                           utilityOpen
                             ? 'krds-btn small text drop-btn active'
@@ -171,6 +243,7 @@ export default function Header() {
                       </button>
                       <div
                         className="drop-menu"
+                        ref={utilityMenuRef}
                         style={{ display: utilityOpen ? 'block' : 'none' }}
                       >
                         <div className="drop-in">
@@ -179,7 +252,16 @@ export default function Header() {
                               <li key={subMenu.href}>
                                 <Link
                                   href={subMenu.href}
-                                  className="item-link"
+                                  className={
+                                    pathname === subMenu.href
+                                      ? 'item-link active'
+                                      : 'item-link'
+                                  }
+                                  aria-current={
+                                    pathname === subMenu.href
+                                      ? 'page'
+                                      : undefined
+                                  }
                                   onClick={closeAll}
                                 >
                                   {subMenu.label}
@@ -233,6 +315,9 @@ export default function Header() {
                     <li key={menu.label}>
                       <button
                         type="button"
+                        ref={(node) => {
+                          gnbTriggerRefs.current.set(menu.label, node)
+                        }}
                         className={[
                           'gnb-main-trigger',
                           // KRDS의 active는 화살표를 180도 돌리므로 펼침 상태에만 쓴다.
@@ -254,6 +339,9 @@ export default function Header() {
                         {menu.label}
                       </button>
                       <div
+                        ref={(node) => {
+                          gnbPanelRefs.current.set(menu.label, node)
+                        }}
                         className={
                           open ? 'gnb-toggle-wrap is-open' : 'gnb-toggle-wrap'
                         }
@@ -266,6 +354,9 @@ export default function Header() {
                                 <Link
                                   href={menu.href}
                                   className="krds-btn link basic small"
+                                  aria-current={
+                                    pathname === menu.href ? 'page' : undefined
+                                  }
                                   onClick={closeAll}
                                 >
                                   <span className="underline">바로가기</span>
@@ -283,6 +374,11 @@ export default function Header() {
                                       className={
                                         pathname === subMenu.href
                                           ? 'active'
+                                          : undefined
+                                      }
+                                      aria-current={
+                                        pathname === subMenu.href
+                                          ? 'page'
                                           : undefined
                                       }
                                       onClick={closeAll}
@@ -344,11 +440,12 @@ export default function Header() {
                         <a
                           href={`#${anchorId(index)}`}
                           className={
-                            activeSection?.label === menu.label
+                            currentMobileSection === menu.label
                               ? 'gnb-main-trigger active'
                               : 'gnb-main-trigger'
                           }
                           aria-controls={anchorId(index)}
+                          onClick={() => setMobileSection(menu.label)}
                         >
                           {menu.label}
                         </a>
@@ -374,6 +471,9 @@ export default function Header() {
                                   ? 'gnb-sub-trigger selected'
                                   : 'gnb-sub-trigger'
                               }
+                              aria-current={
+                                pathname === menu.href ? 'page' : undefined
+                              }
                               onClick={closeAll}
                             >
                               {menu.label} 전체보기
@@ -388,6 +488,9 @@ export default function Header() {
                                 pathname === subMenu.href
                                   ? 'gnb-sub-trigger selected'
                                   : 'gnb-sub-trigger'
+                              }
+                              aria-current={
+                                pathname === subMenu.href ? 'page' : undefined
                               }
                               onClick={closeAll}
                             >

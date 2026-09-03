@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { act } from 'react'
 import '@/tests/mocks/navigation'
 import { resetNavigationMocks, usePathnameMock } from '@/tests/mocks/navigation'
 import { renderWithChakra, screen, waitFor } from '@/tests/utils/render'
@@ -466,6 +467,140 @@ describe('<Header>', () => {
 
     await user.keyboard('{Tab}')
     expect(document.activeElement).toBe(first)
+  })
+
+  it('데스크탑 폭으로 넓어지면 열려 있던 서랍과 inert를 정리한다', async () => {
+    const listeners = new Set<(event: MediaQueryListEvent) => void>()
+    const matchMediaMock = vi.fn((query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: (_: string, fn: (e: MediaQueryListEvent) => void) =>
+        listeners.add(fn),
+      removeEventListener: (_: string, fn: (e: MediaQueryListEvent) => void) =>
+        listeners.delete(fn),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }))
+    vi.stubGlobal('matchMedia', matchMediaMock)
+
+    const { container, user } = renderWithChakra(<Header />)
+    const headerIn = container.querySelector('.header-in') as HTMLElement
+
+    await user.click(container.querySelector('button.btn-navi.all')!)
+    expect(container.querySelector('nav#mobile-nav')).toHaveClass('is-open')
+    expect(headerIn).toHaveAttribute('inert')
+
+    expect(matchMediaMock).toHaveBeenCalledWith('(min-width: 1024px)')
+    // 1024px를 넘어서면 CSS가 서랍을 감추므로 상태도 함께 닫혀야 한다.
+    await act(async () => {
+      listeners.forEach((fn) =>
+        fn({ matches: true } as unknown as MediaQueryListEvent),
+      )
+    })
+
+    expect(container.querySelector('nav#mobile-nav')).not.toHaveClass('is-open')
+    expect(headerIn).not.toHaveAttribute('inert')
+    expect(document.body).not.toHaveClass('is-gnb-mobile')
+    vi.unstubAllGlobals()
+  })
+
+  it('서랍을 열면 스킵 링크를 포함한 형제 영역을 모두 inert 처리한다', async () => {
+    // 스킵 링크와 본문/푸터는 SiteLayout이 그리므로 같은 골격을 만들어 확인한다.
+    const { container, user } = renderWithChakra(
+      <div id="wrap" className="g-wrap">
+        <div id="krds-skip-link">
+          <a href="#krds-content">본문 바로가기</a>
+        </div>
+        <Header />
+        <div id="container" />
+        <footer id="krds-footer" />
+      </div>,
+    )
+
+    await user.click(container.querySelector('button.btn-navi.all')!)
+
+    for (const selector of [
+      '#krds-skip-link',
+      '#container',
+      '#krds-footer',
+      '#krds-header .header-in',
+    ]) {
+      expect(container.querySelector(selector)).toHaveAttribute('inert')
+    }
+    // 서랍이 들어 있는 header 자체는 격리하면 안 된다.
+    expect(container.querySelector('#krds-header')).not.toHaveAttribute('inert')
+
+    await user.click(screen.getByRole('button', { name: '전체메뉴 닫기' }))
+
+    for (const selector of ['#krds-skip-link', '#container', '#krds-footer']) {
+      expect(container.querySelector(selector)).not.toHaveAttribute('inert')
+    }
+  })
+
+  it('데스크탑 GNB를 Escape로 닫으면 포커스가 트리거로 돌아온다', async () => {
+    const { user } = renderWithChakra(<Header />)
+
+    const trigger = screen.getByRole('button', { name: '법인소개' })
+    await user.click(trigger)
+    const panelLink = screen.getByRole('link', { name: '연혁' })
+    panelLink.focus()
+    expect(document.activeElement).toBe(panelLink)
+
+    await user.keyboard('{Escape}')
+
+    expect(document.activeElement).toBe(trigger)
+  })
+
+  it('유틸리티 드롭다운을 Escape로 닫으면 포커스가 드롭 버튼으로 돌아온다', async () => {
+    const { user } = renderWithChakra(<Header />)
+
+    const dropBtn = screen.getByRole('button', { name: InfoMenu.label })
+    await user.click(dropBtn)
+    const item = screen.getByRole('link', { name: '사이트맵' })
+    item.focus()
+
+    await user.keyboard('{Escape}')
+
+    expect(document.activeElement).toBe(dropBtn)
+  })
+
+  it('모바일 좌측 목록의 active를 클릭한 패널에 맞춘다', async () => {
+    usePathnameMock.mockReturnValue(Links.intro)
+    const { container, user } = renderWithChakra(<Header />)
+
+    await user.click(container.querySelector('button.btn-navi.all')!)
+    const anchors = Array.from(
+      container.querySelectorAll<HTMLElement>('.menu-wrap .gnb-main-trigger'),
+    )
+    const intro = anchors.find((a) => a.textContent === '법인소개')!
+    const notices = anchors.find((a) => a.textContent === '공지사항')!
+
+    expect(intro).toHaveClass('active')
+    expect(notices).not.toHaveClass('active')
+
+    await user.click(notices)
+
+    expect(notices).toHaveClass('active')
+    expect(intro).not.toHaveClass('active')
+  })
+
+  it('현재 경로의 링크에 aria-current를 부여한다', () => {
+    usePathnameMock.mockReturnValue(Links.introHistory)
+    const { container } = renderWithChakra(<Header />)
+
+    const current = Array.from(
+      container.querySelectorAll(`a[href="${Links.introHistory}"]`),
+    )
+    expect(current.length).toBeGreaterThan(0)
+    current.forEach((link) =>
+      expect(link).toHaveAttribute('aria-current', 'page'),
+    )
+
+    container
+      .querySelectorAll(`a[href="${Links.introChart}"]`)
+      .forEach((link) => expect(link).not.toHaveAttribute('aria-current'))
   })
 
   it('언마운트되면 body의 상태 클래스를 정리한다', async () => {

@@ -37,6 +37,12 @@ sed 's|https://www\.krds\.go\.kr/resources/img/|/krds/img/|g' \
 ## 규칙
 
 - `krds.min.css`, `public/krds/img/**`, `public/krds/fonts/**`는 직접 수정하지 않는다. 사이트 고유 스타일은 `stdev-krds.css`에 쓴다.
-- `stdev-krds.css`의 값은 항상 KRDS 디자인 토큰(`var(--krds-*)`)을 참조한다. 토큰 1,818개가 `krds.min.css`에 모두 들어 있다.
+- `stdev-krds.css`의 치수는 대응하는 KRDS 디자인 토큰(`var(--krds-*)`)이 있으면 반드시 그것을 쓴다.
+  간격·크기는 `--krds-number-*`(0 ~ 9.6rem)와 `--krds-size-height-*`, 테두리는
+  `--krds-light-border-width-static-*`, 색은 `--krds-light-color-*`에 대응한다.
+  토큰 1,818개가 `krds.min.css`에 모두 들어 있다.
+- 토큰 스케일이 덮지 못하는 값(9.6rem을 넘는 컴포넌트 치수, `vh`·`em` 단위)만
+  직접 적되 이유를 주석으로 남긴다. 자세한 정책은 저장소 루트 `AGENTS.md`의
+  **Styling (public)** 항목을 따른다.
 - 정부 아이덴티티 컴포넌트(`#krds-masthead`, `.krds-identifier`, 정부상징)는 사용하지 않는다.
   STDev는 민간 사단법인이므로 정부기관으로 오인될 수 있다.

@@ -33,6 +33,7 @@
 #wrap.g-wrap {
   display: flex;
   flex-direction: column;
+  /* 100vh: 내용이 짧아도 푸터를 화면 아래로 밀기 위한 뷰포트 기준값. */
   min-height: 100vh;
 }
 
@@ -165,7 +166,7 @@
   margin: 0;
   font-size: var(--krds-pc-font-size-heading-small);
   font-weight: var(--krds-font-weight-bold);
-  line-height: 1.5;
+  line-height: var(--krds-line-height-base);
   color: var(--krds-light-color-text-bolder);
   word-break: keep-all;
 }
@@ -539,6 +540,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* 60vh: 헤더·푸터를 남긴 채 화면 중앙에 두기 위한 뷰포트 기준값. */
   min-height: 60vh;
   padding: var(--krds-padding-9) var(--krds-padding-6);
 }
@@ -567,6 +569,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* 60vh: 로딩 표시를 화면 중앙에 두기 위한 뷰포트 기준값. */
   min-height: 60vh;
 }
 
@@ -654,6 +657,7 @@
   padding: 0 var(--krds-padding-2);
   border-radius: var(--krds-radius-small1);
   background-color: var(--krds-light-color-surface-gray-subtle);
+  /* 0.94em: 본문 글자 크기에 비례해 줄여야 하므로 고정 토큰을 쓸 수 없다. */
   font-size: 0.94em;
 }
 
