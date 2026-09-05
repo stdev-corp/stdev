@@ -114,16 +114,22 @@ services:
       S3_BUCKET: stdev-kr
 ```
 
-컨테이너를 올리기 전에 Prisma 스키마 마이그레이션을 먼저 적용합니다.
+컨테이너를 올리기 전에 Prisma 스키마 마이그레이션을 먼저 적용합니다. 배포 이미지에 Prisma CLI와 마이그레이션 파일이 함께 들어 있으므로, 서버에 레포지토리를 체크아웃하거나 Node.js를 설치하지 않고 이미지만으로 실행할 수 있습니다. `DATABASE_URL`은 위 `docker-compose.yml`의 `environment`에서 그대로 주입됩니다.
 
 ```bash
-pnpm db:migrate:deploy
+docker compose run --rm stdev pnpm db:migrate:deploy
 ```
 
 그 다음 아래 명령을 실행합니다.
 
 ```bash
 docker compose up -d
+```
+
+이미 떠 있는 컨테이너에 마이그레이션을 적용하려면 아래 명령을 사용합니다.
+
+```bash
+docker compose exec stdev pnpm db:migrate:deploy
 ```
 
 Port `1000` 번에 Reverse Proxy를 붙입니다.

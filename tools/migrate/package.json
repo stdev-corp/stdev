@@ -1,0 +1,10 @@
+{
+  "name": "@stdev/migrate",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Dependency manifest for the Prisma CLI shipped into the Docker runner stage. Keep the versions in sync with the root package.json.",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "prisma": "^7.10.0"
+  }
+}
