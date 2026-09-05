@@ -1,0 +1,734 @@
+@charset "utf-8";
+
+/*
+ * STDev 공개 사이트 - KRDS 적용 레이어
+ *
+ * KRDS HTML 컴포넌트 킷(krds.min.css)이 제공하지 않는 페이지 레이아웃
+ * (본문 단 구성, 페이지 타이틀, 본문 타이포그래피)과 STDev 고유 요소를
+ * 정의한다. 치수는 대응하는 KRDS 디자인 토큰(var(--krds-*))을 쓰고, 토큰
+ * 스케일(number 토큰은 최대 9.6rem)을 벗어나는 사이트 고유 치수만 직접 적되
+ * 이유를 주석으로 남긴다.
+ */
+
+/* ------------------------------------------------------------------ *
+ * 기본 글꼴 - KRDS 토큰에 대체 글꼴 스택을 더한다
+ * ------------------------------------------------------------------ */
+:root {
+  --krds-typo-font-type:
+    'Pretendard GOV', Pretendard, -apple-system, BlinkMacSystemFont,
+    'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+
+  --stdev-contents-gap: var(--krds-pc-gap-layout-h2-h2);
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --stdev-contents-gap: var(--krds-mobile-gap-layout-h2-h2);
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * 전체 골격
+ * ------------------------------------------------------------------ */
+#wrap.g-wrap {
+  display: flex;
+  flex-direction: column;
+  /* 100vh: 내용이 짧아도 푸터를 화면 아래로 밀기 위한 뷰포트 기준값. */
+  min-height: 100vh;
+}
+
+#container {
+  flex: 1 0 auto;
+  padding-top: var(--krds-pc-gap-layout-header-breadcrumb);
+  padding-bottom: var(--krds-pc-gap-layout-contents-footer);
+}
+
+@media (max-width: 1023px) {
+  #container {
+    padding-top: var(--krds-mobile-gap-layout-header-breadcrumb);
+    padding-bottom: var(--krds-mobile-gap-layout-contents-footer);
+  }
+}
+
+#container.main-container {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+#container > .inner {
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* 좌측 LNB + 본문 2단 구성 */
+#container > .inner.in-between {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--krds-pc-gap-layout-left-contents);
+}
+
+/*
+ * KRDS 누리집과 동일하게 태블릿 이하에서는 좌측 LNB를 감춘다.
+ * 하위 메뉴 이동은 헤더의 전체메뉴와 브레드크럼이 담당한다.
+ */
+@media (max-width: 1023px) {
+  #container > .inner.in-between {
+    display: block;
+  }
+
+  .krds-side-navigation {
+    display: none;
+  }
+}
+
+.contents {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* ------------------------------------------------------------------ *
+ * 페이지 타이틀
+ * ------------------------------------------------------------------ */
+.page-title-wrap {
+  margin-top: var(--krds-pc-gap-layout-breadcrumb-h1);
+  margin-bottom: var(--krds-pc-gap-layout-h1-h2);
+}
+
+.page-title-wrap .h-tit {
+  margin: 0;
+  font-size: var(--krds-pc-font-size-heading-large);
+  font-weight: var(--krds-font-weight-bold);
+  line-height: 1.4;
+  color: var(--krds-light-color-text-bolder);
+  word-break: keep-all;
+}
+
+.page-title-wrap .g-info-box {
+  margin-top: var(--krds-pc-gap-layout-title-body-medium);
+}
+
+.page-title-wrap .g-desc {
+  margin: 0;
+  font-size: var(--krds-pc-font-size-body-large);
+  color: var(--krds-light-color-text-subtle);
+  word-break: keep-all;
+}
+
+@media (max-width: 1023px) {
+  .page-title-wrap {
+    margin-top: var(--krds-mobile-gap-layout-breadcrumb-h1);
+    margin-bottom: var(--krds-mobile-gap-layout-h1-h2);
+  }
+
+  .page-title-wrap .h-tit {
+    font-size: var(--krds-mobile-font-size-heading-large);
+  }
+
+  .page-title-wrap .g-info-box {
+    margin-top: var(--krds-mobile-gap-layout-title-body-medium);
+  }
+
+  .page-title-wrap .g-desc {
+    font-size: var(--krds-mobile-font-size-body-medium);
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * 본문 영역
+ * ------------------------------------------------------------------ */
+.conts-area {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stdev-contents-gap);
+}
+
+.g-conts-area > * + * {
+  margin-top: var(--krds-pc-gap-layout-text-text-medium);
+}
+
+@media (max-width: 1023px) {
+  .g-conts-area > * + * {
+    margin-top: var(--krds-mobile-gap-layout-text-text-medium);
+  }
+}
+
+.g-conts-area > h2,
+.conts-area > h2 {
+  margin: 0;
+  font-size: var(--krds-pc-font-size-heading-medium);
+  font-weight: var(--krds-font-weight-bold);
+  line-height: 1.4;
+  color: var(--krds-light-color-text-bolder);
+  word-break: keep-all;
+}
+
+.g-conts-area > h3 {
+  margin: 0;
+  font-size: var(--krds-pc-font-size-heading-small);
+  font-weight: var(--krds-font-weight-bold);
+  line-height: var(--krds-line-height-base);
+  color: var(--krds-light-color-text-bolder);
+  word-break: keep-all;
+}
+
+@media (max-width: 1023px) {
+  .g-conts-area > h2,
+  .conts-area > h2 {
+    font-size: var(--krds-mobile-font-size-heading-medium);
+  }
+}
+
+.g-conts-area p {
+  margin: 0;
+  font-size: var(--krds-pc-font-size-body-medium);
+  line-height: 1.7;
+  color: var(--krds-light-color-text-basic);
+  word-break: keep-all;
+}
+
+@media (max-width: 1023px) {
+  .g-conts-area p {
+    font-size: var(--krds-mobile-font-size-body-medium);
+  }
+}
+
+/* 제목 좌측 강조 바 (WithLine) */
+.g-tit-line {
+  display: flex;
+  align-items: center;
+  gap: var(--krds-gap-4);
+}
+
+.g-tit-line::before {
+  flex: 0 0 auto;
+  align-self: stretch;
+  width: var(--krds-number-3);
+  min-height: var(--krds-size-height-4);
+  border-radius: var(--krds-radius-max);
+  background-color: var(--krds-light-color-element-primary);
+  content: '';
+}
+
+/* 본문 안내 문구 */
+/* min-height 12rem: KRDS number 토큰 스케일(최대 9.6rem) 밖이라 직접 지정한다. */
+.g-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 12rem;
+  border-top: var(--krds-light-border-width-static-regular) solid
+    var(--krds-light-color-divider-gray-dark);
+  border-bottom: var(--krds-light-border-width-static-regular) solid
+    var(--krds-light-color-divider-gray);
+  color: var(--krds-light-color-text-subtle);
+  font-size: var(--krds-pc-font-size-body-medium);
+}
+
+/* 본문 이미지 */
+.g-img-wrap {
+  margin: 0;
+}
+
+.g-img-wrap img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ------------------------------------------------------------------ *
+ * 헤더 - STDev 워드마크
+ * ------------------------------------------------------------------ */
+/*
+ * 킷 CSS에는 헤더의 쌓임 순서가 없다. KRDS 누리집과 동일하게 sticky + z-index 70을
+ * 주어야 GNB 배경 딤(.gnb-backdrop, z-index 60) 위로 메뉴가 올라온다.
+ */
+#krds-header {
+  position: sticky;
+  top: 0;
+  z-index: 70;
+  background-color: var(--krds-light-color-surface-white);
+}
+
+/*
+ * KRDS의 .active는 밑줄과 함께 화살표를 180도 돌리므로 펼침 상태 전용이다.
+ * 현재 구역 표시는 밑줄만 필요하므로 별도 클래스로 그린다.
+ */
+#krds-header .krds-main-menu .gnb-menu .gnb-main-trigger.is-current::before {
+  left: 0;
+  width: 100%;
+}
+
+#krds-header .header-container .header-branding .logo {
+  display: inline-flex;
+  width: auto;
+  height: auto;
+}
+
+#krds-header .header-container .header-branding .logo a {
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  height: auto;
+  background-image: none;
+  font-size: var(--krds-pc-font-size-heading-small);
+  font-weight: var(--krds-font-weight-bold);
+  line-height: 1.2;
+  color: var(--krds-light-color-text-bolder);
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  #krds-header .header-container .header-branding .logo a {
+    font-size: var(--krds-mobile-font-size-heading-xxsmall);
+  }
+}
+
+#krds-header .header-container .header-branding .logo a:hover,
+#krds-header .header-container .header-branding .logo a:focus {
+  color: var(--krds-light-color-text-primary);
+}
+
+/* ------------------------------------------------------------------ *
+ * 푸터 - KRDS 로고 배경을 STDev 워드마크로 교체
+ * ------------------------------------------------------------------ */
+#krds-footer .f-logo {
+  width: auto;
+  height: auto;
+  background-image: none;
+  font-size: var(--krds-pc-font-size-heading-medium);
+  font-weight: var(--krds-font-weight-bold);
+  color: var(--krds-light-color-text-bolder);
+}
+
+#krds-footer .f-info .info-addr + .info-addr {
+  margin-top: var(--krds-gap-2);
+}
+
+#krds-footer .link-sns .krds-btn svg {
+  width: var(--krds-icon--size-medium);
+  height: var(--krds-icon--size-medium);
+  fill: currentColor;
+}
+
+#krds-footer .f-gov-logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--krds-gap-5);
+}
+
+#krds-footer .f-gov-logos img {
+  display: block;
+  width: auto;
+  height: var(--krds-number-11);
+}
+
+/* 공공누리 출처 표기 */
+#krds-footer .f-attribution {
+  font-size: var(--krds-pc-font-size-body-xsmall);
+  line-height: 1.6;
+  color: var(--krds-light-color-text-subtle);
+  word-break: keep-all;
+}
+
+#krds-footer .f-attribution a {
+  text-decoration: underline;
+  text-underline-offset: var(--krds-font-underline-offset);
+}
+
+/* ------------------------------------------------------------------ *
+ * 메인 - 히어로 / 함께하는 기관
+ * ------------------------------------------------------------------ */
+.main-visual {
+  padding: var(--krds-pc-gap-layout-h2-h2) 0;
+  background-color: var(--krds-light-color-surface-primary-subtler);
+}
+
+.main-visual .inner {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.main-visual img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
+
+.main-section {
+  padding: var(--krds-pc-gap-layout-h2-h2) 0;
+}
+
+.main-section > .inner {
+  margin: 0 auto;
+}
+
+.main-section .section-tit {
+  margin: 0 0 var(--krds-pc-gap-layout-h1-h2);
+  font-size: var(--krds-pc-font-size-heading-large);
+  font-weight: var(--krds-font-weight-bold);
+  line-height: 1.4;
+  text-align: center;
+  color: var(--krds-light-color-text-bolder);
+}
+
+@media (max-width: 1023px) {
+  .main-visual,
+  .main-section {
+    padding: var(--krds-mobile-gap-layout-h2-h2) 0;
+  }
+
+  .main-section .section-tit {
+    font-size: var(--krds-mobile-font-size-heading-large);
+    margin-bottom: var(--krds-mobile-gap-layout-h1-h2);
+  }
+}
+
+/* 기관 로고 흐름 */
+.logo-marquee {
+  width: 100%;
+  overflow: hidden;
+}
+
+.logo-marquee .marquee-track {
+  display: flex;
+  align-items: center;
+  gap: var(--krds-gap-12);
+  width: max-content;
+  animation: stdev-marquee 30s linear infinite;
+}
+
+.logo-marquee:hover .marquee-track,
+.logo-marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+/* 로고 슬롯 18x9rem: 토큰 스케일 밖의 사이트 고유 치수. */
+.logo-marquee .marquee-item {
+  position: relative;
+  flex: 0 0 auto;
+  width: 18rem;
+  height: 9rem;
+}
+
+@keyframes stdev-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-marquee .marquee-track {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * 연혁 타임라인
+ * ------------------------------------------------------------------ */
+.g-timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.g-timeline > li {
+  position: relative;
+  padding: 0 0 var(--krds-padding-9) var(--krds-padding-9);
+  border-left: var(--krds-light-border-width-static-medium) solid
+    var(--krds-light-color-divider-primary-light);
+}
+
+.g-timeline > li:last-child {
+  border-left-color: transparent;
+  padding-bottom: 0;
+}
+
+.g-timeline > li::before {
+  position: absolute;
+  top: var(--krds-number-3);
+  /* 점(1.2rem)을 0.2rem 세로선 위에 중앙 정렬한다. */
+  left: calc(
+    (var(--krds-number-7) + var(--krds-light-border-width-static-medium)) / -2
+  );
+  width: var(--krds-number-7);
+  height: var(--krds-number-7);
+  border-radius: var(--krds-radius-max);
+  background-color: var(--krds-light-color-element-primary);
+  content: '';
+}
+
+.g-timeline .timeline-date {
+  display: block;
+  margin-bottom: var(--krds-gap-1);
+  font-size: var(--krds-pc-font-size-label-small);
+  color: var(--krds-light-color-text-subtle);
+}
+
+.g-timeline .timeline-tit {
+  margin: 0;
+  font-size: var(--krds-pc-font-size-heading-small);
+  font-weight: var(--krds-font-weight-bold);
+  color: var(--krds-light-color-text-bolder);
+  word-break: keep-all;
+}
+
+.g-timeline .timeline-desc {
+  margin: var(--krds-gap-3) 0 0;
+  white-space: pre-line;
+  color: var(--krds-light-color-text-basic);
+  word-break: keep-all;
+}
+
+.g-timeline .timeline-img {
+  margin-top: var(--krds-gap-4);
+}
+
+.g-timeline .timeline-img img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--krds-radius-medium2);
+}
+
+/* ------------------------------------------------------------------ *
+ * 자료 목록 - 표 안의 링크/버튼 정렬
+ * ------------------------------------------------------------------ */
+.krds-table-wrap .tbl .cell-actions {
+  white-space: nowrap;
+  text-align: center;
+}
+
+.krds-table-wrap .tbl .cell-date {
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------------ *
+ * 사이트맵
+ * ------------------------------------------------------------------ */
+/* 22rem: 토큰 스케일 밖의 그리드 최소 열 너비. */
+.sitemap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  gap: var(--krds-gap-10);
+}
+
+.sitemap-grid .sitemap-col > h2 {
+  margin: 0 0 var(--krds-gap-4);
+  font-size: var(--krds-pc-font-size-heading-small);
+  font-weight: var(--krds-font-weight-bold);
+}
+
+.sitemap-grid .sitemap-col ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sitemap-grid .sitemap-col li + li {
+  margin-top: var(--krds-gap-2);
+}
+
+/* ------------------------------------------------------------------ *
+ * 오류/로딩 화면
+ * ------------------------------------------------------------------ */
+.g-result-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 60vh: 헤더·푸터를 남긴 채 화면 중앙에 두기 위한 뷰포트 기준값. */
+  min-height: 60vh;
+  padding: var(--krds-padding-9) var(--krds-padding-6);
+}
+
+/* 52rem: 토큰 스케일 밖의 결과 화면 최대 너비. */
+.g-result-page .result-box {
+  width: 100%;
+  max-width: 52rem;
+  text-align: center;
+}
+
+.g-result-page .result-tit {
+  margin: 0 0 var(--krds-gap-5);
+  font-size: var(--krds-pc-font-size-heading-large);
+  font-weight: var(--krds-font-weight-bold);
+  color: var(--krds-light-color-text-bolder);
+}
+
+.g-result-page .result-desc {
+  margin: 0 0 var(--krds-gap-8);
+  color: var(--krds-light-color-text-subtle);
+  word-break: keep-all;
+}
+
+.g-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 60vh: 로딩 표시를 화면 중앙에 두기 위한 뷰포트 기준값. */
+  min-height: 60vh;
+}
+
+/* ------------------------------------------------------------------ *
+ * 마크다운 본문
+ * ------------------------------------------------------------------ */
+.markdown-body {
+  color: var(--krds-light-color-text-basic);
+  font-size: var(--krds-pc-font-size-body-medium);
+  line-height: 1.7;
+  word-break: keep-all;
+}
+
+.markdown-body > * + * {
+  margin-top: var(--krds-pc-gap-layout-text-text-medium);
+}
+
+/*
+ * markdown-view가 CMS 마크다운의 제목을 한 단계씩 내리므로(# → h2)
+ * h2가 본문 최상위 제목이 된다.
+ */
+.markdown-body h2 {
+  margin: var(--krds-pc-gap-layout-h2-h2) 0 var(--krds-gap-5);
+  font-size: var(--krds-pc-font-size-heading-medium);
+  font-weight: var(--krds-font-weight-bold);
+}
+
+.markdown-body h3 {
+  margin: var(--krds-pc-gap-layout-h2-h3) 0 var(--krds-gap-4);
+  font-size: var(--krds-pc-font-size-heading-small);
+  font-weight: var(--krds-font-weight-bold);
+}
+
+.markdown-body h4 {
+  margin: var(--krds-pc-gap-layout-h3-h4) 0 var(--krds-gap-3);
+  font-size: var(--krds-pc-font-size-heading-xsmall);
+  font-weight: var(--krds-font-weight-bold);
+}
+
+.markdown-body h5,
+.markdown-body h6 {
+  margin: var(--krds-pc-gap-layout-h4-h5) 0 var(--krds-gap-2);
+  font-size: var(--krds-pc-font-size-heading-xxsmall);
+  font-weight: var(--krds-font-weight-bold);
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  margin-left: var(--krds-padding-7);
+  padding: 0;
+}
+
+.markdown-body ul {
+  list-style: disc;
+}
+
+.markdown-body ol {
+  list-style: decimal;
+}
+
+.markdown-body li + li {
+  margin-top: var(--krds-gap-1);
+}
+
+.markdown-body a {
+  color: var(--krds-light-color-link-default);
+  text-decoration: underline;
+  text-underline-offset: var(--krds-font-underline-offset);
+}
+
+.markdown-body a:hover {
+  color: var(--krds-light-color-link-hover);
+}
+
+.markdown-body blockquote {
+  margin: 0;
+  padding: var(--krds-padding-5) var(--krds-padding-6);
+  border-left: var(--krds-number-3) solid
+    var(--krds-light-color-divider-primary);
+  background-color: var(--krds-light-color-surface-gray-subtler);
+  color: var(--krds-light-color-text-subtle);
+}
+
+.markdown-body code {
+  padding: 0 var(--krds-padding-2);
+  border-radius: var(--krds-radius-small1);
+  background-color: var(--krds-light-color-surface-gray-subtle);
+  /* 0.94em: 본문 글자 크기에 비례해 줄여야 하므로 고정 토큰을 쓸 수 없다. */
+  font-size: 0.94em;
+}
+
+.markdown-body pre {
+  overflow-x: auto;
+  padding: var(--krds-padding-6);
+  border-radius: var(--krds-radius-medium2);
+  background-color: var(--krds-light-color-surface-gray-subtle);
+}
+
+.markdown-body pre code {
+  padding: 0;
+  background: none;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ------------------------------------------------------------------ *
+ * 본문 링크 목록 (보도자료/뉴스/후기)
+ * ------------------------------------------------------------------ */
+.link-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: var(--krds-light-border-width-static-medium) solid
+    var(--krds-light-color-divider-gray-darker);
+}
+
+.link-list > li {
+  border-bottom: var(--krds-light-border-width-static-regular) solid
+    var(--krds-light-color-divider-gray);
+}
+
+.link-list > li > a {
+  display: block;
+  padding: var(--krds-padding-7) var(--krds-padding-3);
+}
+
+.link-list > li > a:hover,
+.link-list > li > a:focus {
+  background-color: var(--krds-light-color-surface-gray-subtler);
+}
+
+.link-list .item-tit {
+  display: flex;
+  align-items: center;
+  gap: var(--krds-gap-2);
+  font-size: var(--krds-pc-font-size-heading-xxsmall);
+  font-weight: var(--krds-font-weight-bold);
+  color: var(--krds-light-color-text-bolder);
+  word-break: keep-all;
+}
+
+.link-list .item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--krds-gap-2) var(--krds-gap-5);
+  margin-top: var(--krds-gap-3);
+  font-size: var(--krds-pc-font-size-body-small);
+  color: var(--krds-light-color-text-subtle);
+}
+
+.link-list .item-meta .meta-source {
+  margin-left: auto;
+}
+
+@media (max-width: 1023px) {
+  .link-list .item-meta .meta-source {
+    margin-left: 0;
+  }
+}

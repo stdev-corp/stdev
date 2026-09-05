@@ -53,4 +53,27 @@ export const InfoMenu: Menu = {
 
 const Menus: Menu[] = [IntroMenu, BusinessMenu, NoticesMenu]
 
+/** 주 메뉴에 InfoMenu까지 더한, 사이트의 모든 구역. */
+export const AllMenus: Menu[] = [...Menus, InfoMenu]
+
+/**
+ * 경로가 속한 구역을 찾는다.
+ *
+ * - '/introduction'이 '/intro' 구역으로 잡히지 않도록 경로 구분자까지 확인한다.
+ * - InfoMenu처럼 href가 루트인 구역은 하위 메뉴로만 판별해, 홈에서 잘못
+ *   선택되지 않게 한다.
+ */
+export function findMenuSection(pathname: string | null | undefined) {
+  if (!pathname) {
+    return undefined
+  }
+
+  return AllMenus.find(
+    (menu) =>
+      (menu.href !== Links.root &&
+        (pathname === menu.href || pathname.startsWith(`${menu.href}/`))) ||
+      menu.subMenus.some((subMenu) => subMenu.href === pathname),
+  )
+}
+
 export default Menus

@@ -32,12 +32,17 @@ describe('<ScrollingLogos>', () => {
     const institutions: InstitutionLogo[] = [
       { imageUrl: 'https://cdn.example/one.png', imageAlt: 'Institution One' },
     ]
-    renderWithChakra(<ScrollingLogos institutions={institutions} />)
+    const { container } = renderWithChakra(
+      <ScrollingLogos institutions={institutions} />,
+    )
     const images = screen.getAllByAltText('Institution One')
     expect(images.length).toBe(2)
     images.forEach((img) => {
       expect(img).toHaveAttribute('src', 'https://cdn.example/one.png')
     })
+    const track = container.querySelector('.logo-marquee > .marquee-track')
+    expect(track).not.toBeNull()
+    expect(track?.querySelectorAll('.marquee-item').length).toBe(2)
   })
 
   it('renders multiple institutions doubled', () => {
@@ -100,7 +105,7 @@ describe('<ScrollingLogos>', () => {
     })
   })
 
-  it('falls back to generic Logo N alt when imageAlt is null, using modulo index', () => {
+  it('falls back to generic 함께하는 기관 로고 N alt when imageAlt is null, using modulo index', () => {
     const institutions: InstitutionLogo[] = [
       { imageUrl: 'url1', imageAlt: null },
       { imageUrl: 'url2', imageAlt: null },
@@ -110,9 +115,9 @@ describe('<ScrollingLogos>', () => {
     )
     const images = Array.from(container.querySelectorAll('img'))
     expect(images.length).toBe(4)
-    expect(images[0]).toHaveAttribute('alt', 'Logo 1')
-    expect(images[1]).toHaveAttribute('alt', 'Logo 2')
-    expect(images[2]).toHaveAttribute('alt', 'Logo 1')
-    expect(images[3]).toHaveAttribute('alt', 'Logo 2')
+    expect(images[0]).toHaveAttribute('alt', '함께하는 기관 로고 1')
+    expect(images[1]).toHaveAttribute('alt', '함께하는 기관 로고 2')
+    expect(images[2]).toHaveAttribute('alt', '함께하는 기관 로고 1')
+    expect(images[3]).toHaveAttribute('alt', '함께하는 기관 로고 2')
   })
 })

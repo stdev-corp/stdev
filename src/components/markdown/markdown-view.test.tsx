@@ -11,49 +11,62 @@ describe('<MarkdownView>', () => {
     expect(container.querySelectorAll('h1, h2, h3, h4, h5, h6').length).toBe(0)
   })
 
-  it('renders h1 markdown as a heading', async () => {
-    await renderAsyncServerComponent(() =>
+  it('demotes h1 markdown to level 2 so the page keeps one h1', async () => {
+    const { container } = await renderAsyncServerComponent(() =>
       MarkdownView({ content: '# H1 Title' }),
     )
-    expect(
-      screen.getByRole('heading', { name: 'H1 Title' }),
-    ).toBeInTheDocument()
+    const heading = screen.getByRole('heading', { name: 'H1 Title', level: 2 })
+    expect(heading).toBeInTheDocument()
+    expect(heading.tagName).toBe('H2')
+    expect(container.querySelector('h1')).toBeNull()
   })
 
-  it('renders h2 markdown as a heading', async () => {
-    await renderAsyncServerComponent(() =>
+  it('demotes h2 markdown to level 3 so the page keeps one h1', async () => {
+    const { container } = await renderAsyncServerComponent(() =>
       MarkdownView({ content: '## H2 Title' }),
     )
-    expect(
-      screen.getByRole('heading', { name: 'H2 Title' }),
-    ).toBeInTheDocument()
+    const heading = screen.getByRole('heading', { name: 'H2 Title', level: 3 })
+    expect(heading).toBeInTheDocument()
+    expect(heading.tagName).toBe('H3')
+    expect(container.querySelector('h1')).toBeNull()
   })
 
-  it('renders h3 markdown as a heading', async () => {
-    await renderAsyncServerComponent(() =>
+  it('demotes h3 markdown to level 4 so the page keeps one h1', async () => {
+    const { container } = await renderAsyncServerComponent(() =>
       MarkdownView({ content: '### H3 Title' }),
     )
-    expect(
-      screen.getByRole('heading', { name: 'H3 Title' }),
-    ).toBeInTheDocument()
+    const heading = screen.getByRole('heading', { name: 'H3 Title', level: 4 })
+    expect(heading).toBeInTheDocument()
+    expect(heading.tagName).toBe('H4')
+    expect(container.querySelector('h1')).toBeNull()
   })
 
-  it('renders h4 markdown as a heading', async () => {
-    await renderAsyncServerComponent(() =>
+  it('demotes h4 markdown to level 5 so the page keeps one h1', async () => {
+    const { container } = await renderAsyncServerComponent(() =>
       MarkdownView({ content: '#### H4 Title' }),
     )
-    expect(
-      screen.getByRole('heading', { name: 'H4 Title' }),
-    ).toBeInTheDocument()
+    const heading = screen.getByRole('heading', { name: 'H4 Title', level: 5 })
+    expect(heading).toBeInTheDocument()
+    expect(heading.tagName).toBe('H5')
+    expect(container.querySelector('h1')).toBeNull()
   })
 
-  it('renders h5 markdown as a heading', async () => {
-    await renderAsyncServerComponent(() =>
+  it('demotes h5 markdown to level 6 so the page keeps one h1', async () => {
+    const { container } = await renderAsyncServerComponent(() =>
       MarkdownView({ content: '##### H5 Title' }),
     )
-    expect(
-      screen.getByRole('heading', { name: 'H5 Title' }),
-    ).toBeInTheDocument()
+    const heading = screen.getByRole('heading', { name: 'H5 Title', level: 6 })
+    expect(heading).toBeInTheDocument()
+    expect(heading.tagName).toBe('H6')
+    expect(container.querySelector('h1')).toBeNull()
+  })
+
+  it('keeps h6 markdown at level 6', async () => {
+    await renderAsyncServerComponent(() =>
+      MarkdownView({ content: '###### H6 Title' }),
+    )
+    const heading = screen.getByRole('heading', { name: 'H6 Title', level: 6 })
+    expect(heading.tagName).toBe('H6')
   })
 
   it('renders paragraph text', async () => {
@@ -91,67 +104,71 @@ describe('<MarkdownView>', () => {
     expect(link).toHaveAttribute('rel', 'noopener noreferrer')
   })
 
-  it('renders unordered list via custom ul and li components', async () => {
+  it('renders unordered list as plain ul/li elements styled by KRDS css', async () => {
     const { container } = await renderAsyncServerComponent(() =>
       MarkdownView({ content: '- item A\n- item B' }),
     )
     const ul = container.querySelector('ul')
     expect(ul).not.toBeNull()
-    // jsdom >=30 resolves rem to px in getComputedStyle, so assert the
-    // inline declaration for the length instead of the computed value.
-    expect(ul).toHaveStyle({ listStyleType: 'disc' })
-    expect(ul?.style.marginLeft).toBe('1rem')
+    // ul/li are no longer custom-mapped: KRDS stylesheets own the bullets and
+    // indentation, so the markup must stay free of inline style overrides.
+    expect(ul?.getAttribute('style')).toBeNull()
+    expect(screen.getByRole('list')).toBe(ul)
     const items = ul?.querySelectorAll('li') ?? []
     expect(items.length).toBe(2)
     expect(items[0].textContent).toBe('item A')
     expect(items[1].textContent).toBe('item B')
-    expect(items[0]).toHaveStyle({ listStyleType: 'disc' })
-    expect(items[0].style.marginLeft).toBe('1rem')
+    expect(items[0].getAttribute('style')).toBeNull()
+    expect(items[1].getAttribute('style')).toBeNull()
+    expect(screen.getAllByRole('listitem')).toHaveLength(2)
   })
 
-  it('renders ordered list with custom li styling', async () => {
+  it('renders ordered list as plain ol/li elements styled by KRDS css', async () => {
     const { container } = await renderAsyncServerComponent(() =>
       MarkdownView({ content: '1. first\n2. second' }),
     )
     const ol = container.querySelector('ol')
     expect(ol).not.toBeNull()
+    expect(ol?.getAttribute('style')).toBeNull()
     const items = ol?.querySelectorAll('li') ?? []
     expect(items.length).toBe(2)
     expect(items[0].textContent).toBe('first')
     expect(items[1].textContent).toBe('second')
+    expect(items[0].getAttribute('style')).toBeNull()
   })
 
-  it('renders GFM tables with custom table, thead, th, tr, td', async () => {
+  it('renders GFM tables wrapped in .krds-table-wrap with the KRDS table class', async () => {
     const table = '| a | b |\n|---|---|\n| 1 | 2 |'
     const { container } = await renderAsyncServerComponent(() =>
       MarkdownView({ content: table }),
     )
     const tableEl = container.querySelector('table')
     expect(tableEl).not.toBeNull()
-    expect(tableEl).toHaveStyle({
-      width: '100%',
-      borderCollapse: 'collapse',
-    })
+    // The only remaining table override wraps the table and swaps the old
+    // inline styles for the KRDS table classes.
+    expect(tableEl?.parentElement).toHaveClass('krds-table-wrap')
+    expect(tableEl?.className).toBe('tbl col data')
+    expect(tableEl?.getAttribute('style')).toBeNull()
 
     const thead = container.querySelector('thead')
     expect(thead).not.toBeNull()
-    expect(thead).toHaveStyle({ backgroundColor: '#e5e7eb' })
+    expect(thead?.getAttribute('style')).toBeNull()
 
     const ths = tableEl?.querySelectorAll('th') ?? []
     expect(ths.length).toBe(2)
     expect(ths[0].textContent).toBe('a')
     expect(ths[1].textContent).toBe('b')
-    expect(ths[0]).toHaveStyle({ border: '1px solid #d1d5db' })
+    expect(ths[0].getAttribute('style')).toBeNull()
 
     const bodyTr = container.querySelector('tbody tr')
     expect(bodyTr).not.toBeNull()
-    expect(bodyTr).toHaveStyle({ backgroundColor: '#f5f5f5' })
+    expect(bodyTr?.getAttribute('style')).toBeNull()
 
     const tds = tableEl?.querySelectorAll('td') ?? []
     expect(tds.length).toBe(2)
     expect(tds[0].textContent).toBe('1')
     expect(tds[1].textContent).toBe('2')
-    expect(tds[0]).toHaveStyle({ border: '1px solid #d1d5db' })
+    expect(tds[0].getAttribute('style')).toBeNull()
   })
 
   it('renders fenced code block', async () => {

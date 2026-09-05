@@ -1,10 +1,9 @@
-'use client'
-import { Center, Spinner } from '@chakra-ui/react'
-
 export default function Loading() {
   return (
-    <Center h="100vh">
-      <Spinner size="lg" />
-    </Center>
+    <div className="g-loading">
+      <div className="krds-spinner">
+        <span className="sr-only">불러오는 중입니다.</span>
+      </div>
+    </div>
   )
 }

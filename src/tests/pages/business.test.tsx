@@ -7,6 +7,7 @@ import NewsPage from '@/app/(stdev)/business/news/page'
 import HackathonPage from '@/app/(stdev)/business/hackathon/page'
 import ConferencePage from '@/app/(stdev)/business/conference/page'
 import { makeWebpageWithBusiness } from '@/tests/utils/fixtures'
+import { BusinessMenu } from '@/utils/menus'
 
 vi.mock('next/image', () => ({
   default: (props: Record<string, unknown>) => <img {...props} />,
@@ -29,11 +30,21 @@ vi.mock('next/link', () => ({
 }))
 
 describe('BusinessPage', () => {
-  it('renders Business Page heading', async () => {
+  it('renders 행사&프로그램 heading', async () => {
     await renderAsyncServerComponent(() => BusinessPage())
     expect(
-      screen.getByRole('heading', { name: 'Business Page' }),
+      screen.getByRole('heading', { name: '행사&프로그램' }),
     ).toBeInTheDocument()
+  })
+
+  it('renders a link for every business sub menu', async () => {
+    await renderAsyncServerComponent(() => BusinessPage())
+    for (const subMenu of BusinessMenu.subMenus) {
+      expect(screen.getByRole('link', { name: subMenu.label })).toHaveAttribute(
+        'href',
+        subMenu.href,
+      )
+    }
   })
 })
 
@@ -103,11 +114,14 @@ describe('HackathonPage', () => {
     expect(screen.getByRole('heading', { name: '해커톤' })).toBeInTheDocument()
   })
 
-  it('renders STDev Hackathon Vision with-line', async () => {
+  it('renders STDev Hackathon Vision section heading', async () => {
     await renderAsyncServerComponent(() => HackathonPage())
     expect(
-      screen.getAllByRole('heading', { name: 'STDev Hackathon Vision' }),
-    ).toHaveLength(2)
+      screen.getByRole('heading', {
+        level: 2,
+        name: 'STDev Hackathon Vision',
+      }),
+    ).toHaveClass('g-tit-line')
   })
 
   it('renders 지속 가능성 subheading', async () => {
@@ -119,7 +133,9 @@ describe('HackathonPage', () => {
 
   it('renders hackathon image', async () => {
     await renderAsyncServerComponent(() => HackathonPage())
-    expect(screen.getByAltText('해커톤')).toBeInTheDocument()
+    expect(
+      screen.getByAltText('STDev가 진행해온 해커톤 목록'),
+    ).toBeInTheDocument()
   })
 })
 
@@ -131,15 +147,20 @@ describe('ConferencePage', () => {
     ).toBeInTheDocument()
   })
 
-  it('renders conference with-line section', async () => {
+  it('renders conference section heading', async () => {
     await renderAsyncServerComponent(() => ConferencePage())
     expect(
-      screen.getByRole('heading', { name: 'STDev가 진행해온 컨퍼런스' }),
-    ).toBeInTheDocument()
+      screen.getByRole('heading', {
+        level: 2,
+        name: 'STDev가 진행해온 컨퍼런스',
+      }),
+    ).toHaveClass('g-tit-line')
   })
 
   it('renders conference image', async () => {
     await renderAsyncServerComponent(() => ConferencePage())
-    expect(screen.getByAltText('해커톤')).toBeInTheDocument()
+    expect(
+      screen.getByAltText('STDev가 진행해온 컨퍼런스 목록'),
+    ).toBeInTheDocument()
   })
 })
