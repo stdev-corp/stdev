@@ -4,7 +4,7 @@
 .env
 .env.*
 !.env.example
-node_modules
+**/node_modules
 eslint.config.mjs
 prettier.config.mjs
 .gitignore
