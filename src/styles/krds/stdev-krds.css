@@ -68,6 +68,17 @@
 }
 
 /*
+ * 킷은 LNB 너비를 정하지 않아 flex 축소로 min-content까지 줄어들고, 본문이
+ * 길면 "행사&프로그램" 같은 제목이 두 줄로 꺾인다. KRDS 누리집(.g-wrap)과
+ * 같은 고정 너비를 주고 축소를 막는다. 24.8rem: number 토큰 상한(9.6rem)을
+ * 넘는 레이아웃 치수.
+ */
+#container > .inner.in-between > .krds-side-navigation {
+  flex-shrink: 0;
+  width: 24.8rem;
+}
+
+/*
  * KRDS 누리집과 동일하게 태블릿 이하에서는 좌측 LNB를 감춘다.
  * 하위 메뉴 이동은 헤더의 전체메뉴와 브레드크럼이 담당한다.
  */
