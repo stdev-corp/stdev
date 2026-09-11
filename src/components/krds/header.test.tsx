@@ -24,9 +24,14 @@ vi.mock('next/link', () => ({
   ),
 }))
 
+/** 트리거가 aria-controls로 가리키는 데스크탑 GNB 패널. 세 트리거가 같은 패널을 공유한다. */
 function toggleWrapOf(trigger: HTMLElement) {
-  return trigger.closest('li')?.querySelector('.gnb-toggle-wrap') as HTMLElement
+  return document.getElementById(
+    trigger.getAttribute('aria-controls')!,
+  ) as HTMLElement
 }
+
+const DESKTOP_SECTIONS = ['법인소개', '행사&프로그램', '공지사항']
 
 /** matchMedia를 가로채고, 브레이크포인트 변경을 흉내 내는 함수를 돌려준다. */
 function stubBreakpoint() {
@@ -96,12 +101,68 @@ describe('<Header>', () => {
 
     const intro = screen.getByRole('button', { name: '법인소개' })
     const wrap = toggleWrapOf(intro)
+    expect(wrap).toHaveClass('gnb-toggle-wrap')
     expect(wrap.querySelector('a[href="/intro"]')).toHaveTextContent('바로가기')
     expect(
-      Array.from(wrap.querySelectorAll('.gnb-sub-content > ul a')).map(
-        (link) => link.textContent,
-      ),
+      Array.from(
+        wrap.querySelectorAll(
+          '.gnb-sub-list:first-child .gnb-sub-content > ul a',
+        ),
+      ).map((link) => link.textContent),
     ).toEqual(['연혁', '조직도', '리더십', '정관'])
+  })
+
+  it('데스크탑 GNB 패널은 하나뿐이며 세 트리거가 모두 그 패널을 가리킨다', () => {
+    const { container } = renderWithChakra(<Header />)
+
+    const panels = container.querySelectorAll(
+      '.krds-main-menu .gnb-toggle-wrap',
+    )
+    expect(panels).toHaveLength(1)
+    for (const label of DESKTOP_SECTIONS) {
+      expect(toggleWrapOf(screen.getByRole('button', { name: label }))).toBe(
+        panels[0],
+      )
+    }
+  })
+
+  it('어느 트리거를 열어도 패널에 세 구역이 모두 나온다', async () => {
+    const { user } = renderWithChakra(<Header />)
+
+    for (const label of DESKTOP_SECTIONS) {
+      const trigger = screen.getByRole('button', { name: label })
+      await user.click(trigger)
+      const wrap = toggleWrapOf(trigger)
+      expect(wrap).toHaveClass('is-open')
+
+      const sections = Array.from(wrap.querySelectorAll('.gnb-sub-list'))
+      expect(
+        sections.map(
+          (section) =>
+            section.querySelector('.sub-title')?.firstChild?.textContent,
+        ),
+      ).toEqual(DESKTOP_SECTIONS)
+      expect(
+        sections.map((section) =>
+          section.querySelector('.sub-title a')?.getAttribute('href'),
+        ),
+      ).toEqual([Links.intro, Links.business, Links.notices])
+      expect(
+        sections.map((section) =>
+          Array.from(section.querySelectorAll('ul a')).map(
+            (link) => link.textContent,
+          ),
+        ),
+      ).toEqual([
+        ['연혁', '조직도', '리더십', '정관'],
+        ['해커톤', '컨퍼런스', '뉴스 기사', '참여후기'],
+        ['보도자료', '연간 기부금 모금액 및 활용실적', '총회 및 이사회'],
+      ])
+
+      // 다음 반복을 위해 닫는다.
+      await user.click(trigger)
+      expect(wrap).not.toHaveClass('is-open')
+    }
   })
 
   it('gnb-main-trigger를 클릭하면 gnb-toggle-wrap에 is-open이 붙고 다시 클릭하면 닫힌다', async () => {
@@ -124,19 +185,48 @@ describe('<Header>', () => {
     expect(document.body).not.toHaveClass('is-gnb-web')
   })
 
-  it('다른 상위 메뉴를 클릭하면 열려 있던 메뉴가 바뀐다', async () => {
+  it('다른 상위 메뉴를 클릭하면 패널은 열린 채 펼침 표시만 옮겨 간다', async () => {
+    const { user } = renderWithChakra(<Header />)
+
+    const intro = screen.getByRole('button', { name: '법인소개' })
+    const notices = screen.getByRole('button', { name: '공지사항' })
+    const wrap = toggleWrapOf(intro)
+
+    await user.click(intro)
+    expect(wrap).toHaveClass('is-open')
+    expect(intro).toHaveClass('active')
+    expect(intro).toHaveAttribute('aria-expanded', 'true')
+
+    await user.click(notices)
+    expect(wrap).toHaveClass('is-open')
+    expect(intro).not.toHaveClass('active')
+    expect(intro).toHaveAttribute('aria-expanded', 'false')
+    expect(notices).toHaveClass('active')
+    expect(notices).toHaveAttribute('aria-expanded', 'true')
+    expect(document.body).toHaveClass('is-gnb-web')
+    expect(document.activeElement).toBe(notices)
+
+    // 펼쳐 둔 트리거를 다시 누르면 닫힌다.
+    await user.click(notices)
+    expect(wrap).not.toHaveClass('is-open')
+    expect(notices).not.toHaveClass('active')
+    expect(document.body).not.toHaveClass('is-gnb-web')
+  })
+
+  it('패널 안에 포커스를 둔 채 다른 트리거를 누르면 포커스가 그 트리거에 남는다', async () => {
     const { user } = renderWithChakra(<Header />)
 
     const intro = screen.getByRole('button', { name: '법인소개' })
     const notices = screen.getByRole('button', { name: '공지사항' })
 
     await user.click(intro)
-    expect(toggleWrapOf(intro)).toHaveClass('is-open')
+    screen.getByRole('link', { name: '연혁' }).focus()
 
     await user.click(notices)
-    expect(toggleWrapOf(intro)).not.toHaveClass('is-open')
+
+    // 이전 트리거(법인소개)로 되돌리면 안 된다.
+    expect(document.activeElement).toBe(notices)
     expect(toggleWrapOf(notices)).toHaveClass('is-open')
-    expect(document.body).toHaveClass('is-gnb-web')
   })
 
   it('배경 버튼을 클릭하면 열려 있던 데스크탑 메뉴가 닫힌다', async () => {
@@ -191,6 +281,30 @@ describe('<Header>', () => {
 
     expect(trigger).toHaveClass('gnb-main-trigger', 'active', 'is-current')
     expect(trigger).toHaveAttribute('aria-expanded', 'true')
+  })
+
+  it('다른 1Depth를 펼친 동안은 현재 구역 밑줄을 감춰 두 곳이 강조되지 않게 한다', async () => {
+    usePathnameMock.mockReturnValue(Links.introHistory)
+    const { user } = renderWithChakra(<Header />)
+
+    const intro = screen.getByRole('button', { name: '법인소개' })
+    const business = screen.getByRole('button', { name: '행사&프로그램' })
+    expect(intro).toHaveClass('is-current')
+
+    await user.click(intro)
+    expect(intro).toHaveClass('active', 'is-current')
+
+    // 현재 구역이 아닌 트리거로 옮기면 밑줄은 그 트리거 하나만 갖는다.
+    await user.click(business)
+    expect(business).toHaveClass('active')
+    expect(business).not.toHaveClass('is-current')
+    expect(intro).not.toHaveClass('active')
+    expect(intro).not.toHaveClass('is-current')
+
+    // 닫으면 현재 구역 밑줄이 돌아온다.
+    await user.click(business)
+    expect(business).not.toHaveClass('active')
+    expect(intro).toHaveClass('is-current')
   })
 
   it('경로가 없으면 어떤 트리거도 강조되지 않는다', () => {

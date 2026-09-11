@@ -11,8 +11,11 @@ function anchorId(index: number) {
   return `mGnb-anchor${index + 1}`
 }
 
+const GNB_PANEL_ID = 'gnb-panel'
+
 export default function Header() {
   const pathname = usePathname()
+  // 데스크탑 GNB 패널을 연 1Depth의 라벨. 패널은 하나이며 세 구역을 함께 보여준다.
   const [openGnb, setOpenGnb] = useState<string | null>(null)
   const [utilityOpen, setUtilityOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -24,7 +27,7 @@ export default function Header() {
   const lastFocusedRef = useRef<Element | null>(null)
   const utilityMenuRef = useRef<HTMLDivElement>(null)
   const gnbTriggerRefs = useRef(new Map<string, HTMLButtonElement | null>())
-  const gnbPanelRefs = useRef(new Map<string, HTMLDivElement | null>())
+  const gnbPanelRef = useRef<HTMLDivElement>(null)
   // 모바일 서랍에서 지금 보고 있는 패널. null이면 현재 경로의 구역을 따른다.
   const [mobileSection, setMobileSection] = useState<string | null>(null)
 
@@ -141,17 +144,17 @@ export default function Header() {
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [closeAll])
 
-  // 데스크탑 GNB 패널이 닫힐 때, 포커스가 그 안에 있었다면 트리거로 되돌린다.
+  // 데스크탑 GNB 패널이 닫힐 때, 포커스가 그 안에 있었다면 연 트리거로 되돌린다.
+  // 다른 1Depth로 옮겨 가는 경우에는 포커스가 이미 그 트리거에 있어 건드리지 않는다.
   useEffect(() => {
     if (openGnb === null) {
       return
     }
     const label = openGnb
-    // Map 인스턴스 자체는 바뀌지 않지만, 정리 시점에 참조하도록 지역에 담는다.
-    const panels = gnbPanelRefs.current
+    // 패널 노드와 Map 인스턴스는 바뀌지 않지만, 정리 시점에 참조하도록 지역에 담는다.
+    const panel = gnbPanelRef.current
     const triggers = gnbTriggerRefs.current
     return () => {
-      const panel = panels.get(label)
       if (
         panel?.contains(document.activeElement) ||
         document.activeElement === document.body
@@ -386,14 +389,17 @@ export default function Header() {
                           'gnb-main-trigger',
                           // KRDS의 active는 화살표를 180도 돌리므로 펼침 상태에만 쓴다.
                           open ? 'active' : '',
-                          // 현재 구역 밑줄은 별도 클래스로 표시한다.
-                          activeSection?.label === menu.label
+                          // 현재 구역 밑줄은 별도 클래스로 표시한다. 다른 1Depth를
+                          // 펼친 동안은 펼침 밑줄만 남겨 두 곳이 강조되지 않게 한다.
+                          activeSection?.label === menu.label &&
+                          (openGnb === null || open)
                             ? 'is-current'
                             : '',
                         ]
                           .filter(Boolean)
                           .join(' ')}
                         aria-expanded={open}
+                        aria-controls={GNB_PANEL_ID}
                         onClick={() =>
                           setOpenGnb((current) =>
                             current === menu.label ? null : menu.label,
@@ -402,64 +408,67 @@ export default function Header() {
                       >
                         {menu.label}
                       </button>
-                      <div
-                        ref={(node) => {
-                          gnbPanelRefs.current.set(menu.label, node)
-                        }}
-                        className={
-                          open ? 'gnb-toggle-wrap is-open' : 'gnb-toggle-wrap'
-                        }
-                      >
-                        <div className="gnb-main-list">
-                          <div className="gnb-sub-list single-list">
-                            <div className="gnb-sub-content">
-                              <h2 className="sub-title">
-                                {menu.label}
-                                <Link
-                                  href={menu.href}
-                                  className="krds-btn link basic small"
-                                  aria-current={
-                                    pathname === menu.href ? 'page' : undefined
-                                  }
-                                  onClick={closeAll}
-                                >
-                                  <span className="underline">바로가기</span>
-                                  <i
-                                    className="svg-icon ico-angle right"
-                                    aria-hidden="true"
-                                  />
-                                </Link>
-                              </h2>
-                              <ul>
-                                {menu.subMenus.map((subMenu) => (
-                                  <li key={subMenu.href}>
-                                    <Link
-                                      href={subMenu.href}
-                                      className={
-                                        pathname === subMenu.href
-                                          ? 'active'
-                                          : undefined
-                                      }
-                                      aria-current={
-                                        pathname === subMenu.href
-                                          ? 'page'
-                                          : undefined
-                                      }
-                                      onClick={closeAll}
-                                    >
-                                      {subMenu.label}
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </li>
                   )
                 })}
               </ul>
+            </div>
+
+            {/*
+              어느 1Depth를 눌러도 세 구역을 함께 보여주는 공용 패널.
+              KRDS는 1Depth마다 패널을 두지만, 위치가 .krds-main-menu 기준
+              절대 좌표라 li 밖에 두어도 같은 자리에 펼쳐진다.
+            */}
+            <div
+              id={GNB_PANEL_ID}
+              ref={gnbPanelRef}
+              className={
+                openGnb !== null ? 'gnb-toggle-wrap is-open' : 'gnb-toggle-wrap'
+              }
+            >
+              <div className="gnb-main-list">
+                {Menus.map((menu) => (
+                  <div className="gnb-sub-list single-list" key={menu.label}>
+                    <div className="gnb-sub-content">
+                      <h2 className="sub-title">
+                        {menu.label}
+                        <Link
+                          href={menu.href}
+                          className="krds-btn link basic small"
+                          aria-current={
+                            pathname === menu.href ? 'page' : undefined
+                          }
+                          onClick={closeAll}
+                        >
+                          <span className="underline">바로가기</span>
+                          <i
+                            className="svg-icon ico-angle right"
+                            aria-hidden="true"
+                          />
+                        </Link>
+                      </h2>
+                      <ul>
+                        {menu.subMenus.map((subMenu) => (
+                          <li key={subMenu.href}>
+                            <Link
+                              href={subMenu.href}
+                              className={
+                                pathname === subMenu.href ? 'active' : undefined
+                              }
+                              aria-current={
+                                pathname === subMenu.href ? 'page' : undefined
+                              }
+                              onClick={closeAll}
+                            >
+                              {subMenu.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </nav>
         </div>

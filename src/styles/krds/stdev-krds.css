@@ -269,6 +269,30 @@
   width: 100%;
 }
 
+/*
+ * 데스크탑 GNB 펼침 패널. 어느 1Depth를 눌러도 한 패널에 세 구역(법인소개·
+ * 행사&프로그램·공지사항)을 나란히 보여준다. 킷의 single-list는 한 구역의
+ * 하위 메뉴를 4열로 펼치는 구성이므로, 구역마다 한 열을 차지하고 그 안에서
+ * 하위 메뉴가 세로로 쌓이도록 바꾼다. 패널 안쪽 폭은 .inner와 같은 규칙
+ * (최대 1248px, 좌우 24px)으로 맞춰 1Depth 버튼과 좌측 끝이 정렬되게 한다.
+ */
+#krds-header .krds-main-menu .gnb-toggle-wrap .gnb-main-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: var(--krds-gap-7);
+  max-width: var(--krds-contents-wrap-size);
+  padding: 0 var(--krds-contents-padding-x);
+}
+
+#krds-header
+  .krds-main-menu
+  .gnb-toggle-wrap
+  .gnb-sub-list.single-list
+  .gnb-sub-content
+  > ul {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 #krds-header .header-container .header-branding .logo {
   display: inline-flex;
   width: auto;
