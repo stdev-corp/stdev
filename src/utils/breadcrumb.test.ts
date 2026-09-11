@@ -15,39 +15,49 @@ describe('resolveBreadcrumb', () => {
     })
   })
 
-  describe('section index pages', () => {
+  describe('bare section paths (no page of their own)', () => {
     it('resolves /intro to 홈 > 법인소개', () => {
-      expect(resolveBreadcrumb(Links.intro)).toEqual([
+      expect(resolveBreadcrumb(IntroMenu.path)).toEqual([
         { label: '홈', href: Links.root },
         { label: '법인소개' },
       ])
     })
 
     it('resolves /business to 홈 > 행사&프로그램', () => {
-      expect(resolveBreadcrumb(Links.business)).toEqual([
+      expect(resolveBreadcrumb(BusinessMenu.path)).toEqual([
         { label: '홈', href: Links.root },
         { label: '행사&프로그램' },
       ])
     })
 
     it('resolves /notices to 홈 > 공지사항', () => {
-      expect(resolveBreadcrumb(Links.notices)).toEqual([
+      expect(resolveBreadcrumb(NoticesMenu.path)).toEqual([
         { label: '홈', href: Links.root },
         { label: '공지사항' },
       ])
     })
 
-    it('does not link the section crumb on its own index page', () => {
-      const crumbs = resolveBreadcrumb(Links.intro)
-      expect(crumbs[crumbs.length - 1].href).toBeUndefined()
+    it('resolves /info to 홈 > 안내 및 공시', () => {
+      expect(resolveBreadcrumb(InfoMenu.path)).toEqual([
+        { label: '홈', href: Links.root },
+        { label: '안내 및 공시' },
+      ])
     })
   })
 
   describe('leaf pages', () => {
+    it('resolves /intro/about to 홈 > 법인소개 > 사단법인 에스티데브', () => {
+      expect(resolveBreadcrumb(Links.introAbout)).toEqual([
+        { label: '홈', href: Links.root },
+        { label: '법인소개' },
+        { label: '사단법인 에스티데브' },
+      ])
+    })
+
     it('resolves /intro/history to 홈 > 법인소개 > 연혁', () => {
       expect(resolveBreadcrumb(Links.introHistory)).toEqual([
         { label: '홈', href: Links.root },
-        { label: '법인소개', href: Links.intro },
+        { label: '법인소개' },
         { label: '연혁' },
       ])
     })
@@ -55,7 +65,7 @@ describe('resolveBreadcrumb', () => {
     it('resolves /intro/chart to 홈 > 법인소개 > 조직도', () => {
       expect(resolveBreadcrumb(Links.introChart)).toEqual([
         { label: '홈', href: Links.root },
-        { label: '법인소개', href: Links.intro },
+        { label: '법인소개' },
         { label: '조직도' },
       ])
     })
@@ -63,7 +73,7 @@ describe('resolveBreadcrumb', () => {
     it('resolves /business/hackathon to 홈 > 행사&프로그램 > 해커톤', () => {
       expect(resolveBreadcrumb(Links.businessHackathon)).toEqual([
         { label: '홈', href: Links.root },
-        { label: '행사&프로그램', href: Links.business },
+        { label: '행사&프로그램' },
         { label: '해커톤' },
       ])
     })
@@ -71,7 +81,7 @@ describe('resolveBreadcrumb', () => {
     it('resolves /notices/records to 홈 > 공지사항 > 총회 및 이사회', () => {
       expect(resolveBreadcrumb(Links.noticesRecords)).toEqual([
         { label: '홈', href: Links.root },
-        { label: '공지사항', href: Links.notices },
+        { label: '공지사항' },
         { label: '총회 및 이사회' },
       ])
     })
@@ -81,11 +91,13 @@ describe('resolveBreadcrumb', () => {
       expect(crumbs[crumbs.length - 1].href).toBeUndefined()
     })
 
-    it('links every crumb except the last one', () => {
+    it('links only 홈 because sections have no page of their own', () => {
       const crumbs = resolveBreadcrumb(Links.businessConference)
-      expect(crumbs.slice(0, -1).every((crumb) => Boolean(crumb.href))).toBe(
-        true,
-      )
+      expect(crumbs.map((crumb) => crumb.href)).toEqual([
+        Links.root,
+        undefined,
+        undefined,
+      ])
     })
 
     it('covers every registered sub menu of every section', () => {
@@ -94,7 +106,7 @@ describe('resolveBreadcrumb', () => {
         section.subMenus.forEach((subMenu) => {
           expect(resolveBreadcrumb(subMenu.href)).toEqual([
             { label: '홈', href: Links.root },
-            { label: section.label, href: section.href },
+            { label: section.label },
             { label: subMenu.label },
           ])
         })
@@ -111,8 +123,7 @@ describe('resolveBreadcrumb', () => {
       ])
     })
 
-    it('leaves the 안내 및 공시 crumb unlinked because its href is Links.root', () => {
-      expect(InfoMenu.href).toBe(Links.root)
+    it('leaves the 안내 및 공시 crumb unlinked like every other section', () => {
       const [, section] = resolveBreadcrumb(Links.infoTerms)
       expect(section).toEqual({ label: '안내 및 공시' })
       expect(section.href).toBeUndefined()
@@ -136,9 +147,10 @@ describe('resolveBreadcrumb', () => {
       })
     })
 
-    it('returns only 홈 for /info because it is not a registered page', () => {
-      expect(resolveBreadcrumb('/info')).toEqual([
+    it('stops at the section for an unregistered page under /info', () => {
+      expect(resolveBreadcrumb('/info/unknown')).toEqual([
         { label: '홈', href: Links.root },
+        { label: '안내 및 공시' },
       ])
     })
   })
@@ -164,21 +176,21 @@ describe('resolveBreadcrumb', () => {
     it('stops at the section for an unregistered page under /intro', () => {
       expect(resolveBreadcrumb('/intro/unknown')).toEqual([
         { label: '홈', href: Links.root },
-        { label: '법인소개', href: Links.intro },
+        { label: '법인소개' },
       ])
     })
 
     it('stops at the section for an unregistered page under /notices', () => {
       expect(resolveBreadcrumb('/notices/unknown')).toEqual([
         { label: '홈', href: Links.root },
-        { label: '공지사항', href: Links.notices },
+        { label: '공지사항' },
       ])
     })
 
     it('stops at the section for a deeply nested page under /business', () => {
       expect(resolveBreadcrumb('/business/hackathon/2026')).toEqual([
         { label: '홈', href: Links.root },
-        { label: '행사&프로그램', href: Links.business },
+        { label: '행사&프로그램' },
       ])
     })
 
@@ -197,8 +209,8 @@ describe('resolveBreadcrumb', () => {
 
   describe('crumb shape', () => {
     it('returns a new array on every call', () => {
-      expect(resolveBreadcrumb(Links.intro)).not.toBe(
-        resolveBreadcrumb(Links.intro),
+      expect(resolveBreadcrumb(Links.introAbout)).not.toBe(
+        resolveBreadcrumb(Links.introAbout),
       )
     })
 

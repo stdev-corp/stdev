@@ -22,15 +22,8 @@ export function resolveBreadcrumb(pathname: string): Crumb[] {
     return [home]
   }
 
-  // 안내 및 공시처럼 자체 인덱스 페이지가 없는 구역은 링크 없이 표시한다.
-  const sectionCrumb: Crumb =
-    section.href === Links.root
-      ? { label: section.label }
-      : { label: section.label, href: section.href }
-
-  if (pathname === section.href) {
-    return [home, { label: section.label }]
-  }
+  // 구역 자체의 페이지는 없으므로 구역 항목은 링크를 갖지 않는다.
+  const sectionCrumb: Crumb = { label: section.label }
 
   const subMenu = section.subMenus.find((menu) => menu.href === pathname)
   if (!subMenu) {

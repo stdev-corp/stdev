@@ -1,11 +1,10 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import {
   queryWebpagesMock,
   queryReportsMock,
   resetCmsMocks,
 } from '@/tests/mocks/cms'
 import { renderAsyncServerComponent, screen } from '@/tests/utils/render'
-import NoticesPage from '@/app/(stdev)/notices/page'
 import PressPage from '@/app/(stdev)/notices/press/page'
 import DonationPage from '@/app/(stdev)/notices/donation/page'
 import RecordsPage from '@/app/(stdev)/notices/records/page'
@@ -13,45 +12,6 @@ import {
   makeWebpageWithBusiness,
   makeReportWithFile,
 } from '@/tests/utils/fixtures'
-import { NoticesMenu } from '@/utils/menus'
-
-vi.mock('next/link', () => ({
-  default: ({
-    href,
-    children,
-    ...rest
-  }: {
-    href: string
-    children: React.ReactNode
-    [key: string]: unknown
-  }) => (
-    <a href={typeof href === 'string' ? href : '#'} {...rest}>
-      {children}
-    </a>
-  ),
-}))
-
-describe('NoticesPage', () => {
-  it('renders 공지사항 heading', async () => {
-    await renderAsyncServerComponent(() => NoticesPage())
-    expect(
-      screen.getByRole('heading', { name: '공지사항' }),
-    ).toBeInTheDocument()
-  })
-
-  it('lists links to every notices sub menu', async () => {
-    await renderAsyncServerComponent(() => NoticesPage())
-    for (const subMenu of NoticesMenu.subMenus) {
-      expect(screen.getByRole('link', { name: subMenu.label })).toHaveAttribute(
-        'href',
-        subMenu.href,
-      )
-    }
-    expect(screen.getAllByRole('link')).toHaveLength(
-      NoticesMenu.subMenus.length,
-    )
-  })
-})
 
 describe('PressPage', () => {
   beforeEach(() => resetCmsMocks())

@@ -57,16 +57,17 @@ describe('<Breadcrumb>', () => {
     expect(items[2]).not.toHaveClass('home')
   })
 
-  it('links every crumb except the current page', () => {
-    renderAt('/intro/history')
+  it('links only 홈; sections have no page and the last crumb is current', () => {
+    const { container } = renderAt('/intro/history')
 
     expect(screen.getByRole('link', { name: '홈' })).toHaveAttribute(
       'href',
       '/',
     )
-    expect(screen.getByRole('link', { name: '법인소개' })).toHaveAttribute(
-      'href',
-      '/intro',
+    expect(screen.queryByRole('link', { name: '법인소개' })).toBeNull()
+    expect(crumbItems(container)[1].firstElementChild!.tagName).toBe('SPAN')
+    expect(crumbItems(container)[1].firstElementChild).not.toHaveAttribute(
+      'aria-current',
     )
     expect(screen.queryByRole('link', { name: '연혁' })).toBeNull()
   })
@@ -100,7 +101,7 @@ describe('<Breadcrumb>', () => {
     ])
   })
 
-  it('renders the section itself as the current page on a section index', () => {
+  it('renders the section itself as the current page on a bare section path', () => {
     const { container } = renderAt('/notices')
     const items = crumbItems(container)
 
@@ -109,7 +110,7 @@ describe('<Breadcrumb>', () => {
     expect(items[1].firstElementChild).toHaveAttribute('aria-current', 'page')
   })
 
-  it('marks only the last crumb as the current page when a middle crumb has no link', () => {
+  it('marks only the last crumb as the current page even though the section crumb is unlinked', () => {
     const { container } = renderAt('/info/sitemap')
     const items = crumbItems(container)
 
@@ -118,14 +119,14 @@ describe('<Breadcrumb>', () => {
       '안내 및 공시',
       '사이트맵',
     ])
-    // 안내 및 공시는 링크가 없지만 현재 페이지가 아니다.
+    // 구역 항목은 링크가 없지만 현재 페이지도 아니다.
     expect(items[1].firstElementChild!.tagName).toBe('SPAN')
     expect(items[1].firstElementChild).not.toHaveAttribute('aria-current')
     expect(items[2].firstElementChild).toHaveAttribute('aria-current', 'page')
     expect(container.querySelectorAll('[aria-current="page"]')).toHaveLength(1)
   })
 
-  it('does not link a section that has no index page', () => {
+  it('renders the 안내 및 공시 section crumb unlinked like every other section', () => {
     const { container } = renderAt('/info/privacy')
     const items = crumbItems(container)
 
@@ -147,10 +148,7 @@ describe('<Breadcrumb>', () => {
       '홈',
       '행사&프로그램',
     ])
-    expect(screen.getByRole('link', { name: '행사&프로그램' })).toHaveAttribute(
-      'href',
-      '/business',
-    )
+    expect(screen.queryByRole('link', { name: '행사&프로그램' })).toBeNull()
     expect(screen.queryByText('홈')).toHaveAttribute('href', '/')
   })
 

@@ -9,7 +9,7 @@ import {
   renderWithChakra,
   screen,
 } from '@/tests/utils/render'
-import IntroPage from '@/app/(stdev)/intro/page'
+import AboutPage from '@/app/(stdev)/intro/about/page'
 import HistoryPage from '@/app/(stdev)/intro/history/page'
 import ArticlesPage from '@/app/(stdev)/intro/articles/page'
 import ChartPage from '@/app/(stdev)/intro/chart/page'
@@ -62,40 +62,40 @@ const makeHistoryEntry = (
   ...overrides,
 })
 
-describe('IntroPage (intro landing)', () => {
-  it('renders the 법인소개 page title heading', async () => {
-    await renderAsyncServerComponent(() => IntroPage())
+describe('AboutPage (/intro/about)', () => {
+  it('renders the 사단법인 에스티데브 page title heading', async () => {
+    await renderAsyncServerComponent(() => AboutPage())
     expect(
-      screen.getByRole('heading', { name: '법인소개', level: 1 }),
+      screen.getByRole('heading', { name: '사단법인 에스티데브', level: 1 }),
     ).toBeInTheDocument()
   })
 
   it('renders the main greeting as the page description', async () => {
-    await renderAsyncServerComponent(() => IntroPage())
+    await renderAsyncServerComponent(() => AboutPage())
     expect(
       screen.getByText('안녕하세요, 사단법인 STDev입니다!'),
     ).toBeInTheDocument()
   })
 
   it('renders the title image', async () => {
-    await renderAsyncServerComponent(() => IntroPage())
+    await renderAsyncServerComponent(() => AboutPage())
     expect(screen.getByAltText('STDev 소개 이미지')).toBeInTheDocument()
   })
 
   it('renders the 3w1h image', async () => {
-    await renderAsyncServerComponent(() => IntroPage())
+    await renderAsyncServerComponent(() => AboutPage())
     expect(
       screen.getByAltText('STDev의 What, Why, Who, How 소개'),
     ).toBeInTheDocument()
   })
 
   it('renders introductory paragraph text', async () => {
-    const { container } = await renderAsyncServerComponent(() => IntroPage())
+    const { container } = await renderAsyncServerComponent(() => AboutPage())
     expect(container.textContent).toContain('KAIST 총학생회')
   })
 
   it('renders paragraph about 과학기술정보통신부 사단법인', async () => {
-    const { container } = await renderAsyncServerComponent(() => IntroPage())
+    const { container } = await renderAsyncServerComponent(() => AboutPage())
     expect(container.textContent).toContain('과학기술정보통신부')
   })
 })

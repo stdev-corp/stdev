@@ -1,11 +1,11 @@
 import Image from 'next/image'
 import PageTitle from '@/components/krds/page-title'
 
-export default function IntroPage() {
+export default function AboutPage() {
   return (
     <>
       <PageTitle
-        title="법인소개"
+        title="사단법인 에스티데브"
         description="안녕하세요, 사단법인 STDev입니다!"
       />
       <div className="conts-area">

@@ -5,7 +5,7 @@ import '@/tests/mocks/navigation'
 import { resetNavigationMocks, usePathnameMock } from '@/tests/mocks/navigation'
 import { renderWithChakra, screen, waitFor } from '@/tests/utils/render'
 import { Links } from '@/utils/links'
-import { InfoMenu } from '@/utils/menus'
+import { InfoMenu, IntroMenu, NoticesMenu } from '@/utils/menus'
 import Header from './header'
 
 vi.mock('next/link', () => ({
@@ -102,14 +102,16 @@ describe('<Header>', () => {
     const intro = screen.getByRole('button', { name: '법인소개' })
     const wrap = toggleWrapOf(intro)
     expect(wrap).toHaveClass('gnb-toggle-wrap')
-    expect(wrap.querySelector('a[href="/intro"]')).toHaveTextContent('바로가기')
+    // 구역 자체의 페이지가 없으므로 제목에 바로가기 링크를 달지 않는다.
+    expect(wrap.querySelector('.sub-title a')).toBeNull()
+    expect(screen.queryByRole('link', { name: /바로가기/ })).toBeNull()
     expect(
       Array.from(
         wrap.querySelectorAll(
           '.gnb-sub-list:first-child .gnb-sub-content > ul a',
         ),
       ).map((link) => link.textContent),
-    ).toEqual(['연혁', '조직도', '리더십', '정관'])
+    ).toEqual(['사단법인 에스티데브', '연혁', '조직도', '리더십', '정관'])
   })
 
   it('데스크탑 GNB 패널은 하나뿐이며 세 트리거가 모두 그 패널을 가리킨다', () => {
@@ -142,11 +144,7 @@ describe('<Header>', () => {
             section.querySelector('.sub-title')?.firstChild?.textContent,
         ),
       ).toEqual(DESKTOP_SECTIONS)
-      expect(
-        sections.map((section) =>
-          section.querySelector('.sub-title a')?.getAttribute('href'),
-        ),
-      ).toEqual([Links.intro, Links.business, Links.notices])
+      expect(wrap.querySelectorAll('.sub-title a')).toHaveLength(0)
       expect(
         sections.map((section) =>
           Array.from(section.querySelectorAll('ul a')).map(
@@ -154,7 +152,7 @@ describe('<Header>', () => {
           ),
         ),
       ).toEqual([
-        ['연혁', '조직도', '리더십', '정관'],
+        ['사단법인 에스티데브', '연혁', '조직도', '리더십', '정관'],
         ['해커톤', '컨퍼런스', '뉴스 기사', '참여후기'],
         ['보도자료', '연간 기부금 모금액 및 활용실적', '총회 및 이사회'],
       ])
@@ -260,8 +258,8 @@ describe('<Header>', () => {
     )
   })
 
-  it('구역 최상위 경로에서도 해당 트리거가 is-current가 된다', () => {
-    usePathnameMock.mockReturnValue(Links.notices)
+  it('구역 경로 접두사만 맞는 경로에서도 해당 트리거가 is-current가 된다', () => {
+    usePathnameMock.mockReturnValue(`${NoticesMenu.path}/unknown`)
     renderWithChakra(<Header />)
 
     expect(screen.getByRole('button', { name: '공지사항' })).toHaveClass(
@@ -273,7 +271,7 @@ describe('<Header>', () => {
   })
 
   it('현재 구역의 트리거를 펼치면 is-current와 active를 함께 갖는다', async () => {
-    usePathnameMock.mockReturnValue(Links.notices)
+    usePathnameMock.mockReturnValue(Links.noticesPress)
     const { user } = renderWithChakra(<Header />)
 
     const trigger = screen.getByRole('button', { name: '공지사항' })
@@ -398,8 +396,8 @@ describe('<Header>', () => {
     expect(openBtn).toHaveFocus()
   })
 
-  it('모바일 내비게이션에 앵커 목록과 전체보기 링크를 렌더링한다', async () => {
-    usePathnameMock.mockReturnValue(Links.intro)
+  it('모바일 내비게이션에 앵커 목록과 구역별 하위 링크를 렌더링한다', async () => {
+    usePathnameMock.mockReturnValue(Links.introAbout)
     const { container, user } = renderWithChakra(<Header />)
 
     await user.click(container.querySelector('button.btn-navi.all')!)
@@ -420,16 +418,16 @@ describe('<Header>', () => {
     expect(anchors[0]).toHaveClass('active')
     expect(anchors[1]).not.toHaveClass('active')
 
-    const introFullView = screen.getByRole('link', {
-      name: '법인소개 전체보기',
-    })
-    expect(introFullView).toHaveAttribute('href', Links.intro)
-    expect(introFullView).toHaveClass('gnb-sub-trigger', 'selected')
-
-    // 안내 및 공시는 href가 루트라 전체보기 링크를 만들지 않는다.
+    // 구역 자체의 페이지가 없으므로 전체보기 링크는 만들지 않는다.
+    expect(screen.queryByRole('link', { name: /전체보기/ })).toBeNull()
     expect(
-      screen.queryByRole('link', { name: '안내 및 공시 전체보기' }),
-    ).toBeNull()
+      Array.from(
+        container.querySelectorAll('#mGnb-anchor1 .gnb-sub-trigger'),
+      ).map((link) => link.textContent),
+    ).toEqual(IntroMenu.subMenus.map((subMenu) => subMenu.label))
+    expect(
+      container.querySelector('#mGnb-anchor1 .gnb-sub-trigger.selected'),
+    ).toHaveTextContent('사단법인 에스티데브')
     expect(
       container.querySelectorAll('#mGnb-anchor4 .gnb-sub-trigger'),
     ).toHaveLength(InfoMenu.subMenus.length)
@@ -633,7 +631,7 @@ describe('<Header>', () => {
   })
 
   it('데스크탑으로 넓어질 때 서랍 안의 포커스를 GNB 트리거로 옮긴다', async () => {
-    usePathnameMock.mockReturnValue(Links.notices)
+    usePathnameMock.mockReturnValue(Links.noticesPress)
     const { cross } = stubBreakpoint()
     const { container, user } = renderWithChakra(<Header />)
 
@@ -676,8 +674,8 @@ describe('<Header>', () => {
   })
 
   it('서랍에서 다른 구역을 둘러보던 중이면 그 구역의 트리거로 옮긴다', async () => {
-    // 경로는 /intro 지만 서랍에서 공지사항을 펼쳐 보고 있던 상황.
-    usePathnameMock.mockReturnValue(Links.intro)
+    // 경로는 /intro/about 이지만 서랍에서 공지사항을 펼쳐 보고 있던 상황.
+    usePathnameMock.mockReturnValue(Links.introAbout)
     const { cross } = stubBreakpoint()
     const { container, user } = renderWithChakra(<Header />)
 
@@ -703,7 +701,7 @@ describe('<Header>', () => {
   })
 
   it('서랍에서 안내 및 공시를 둘러보던 중이면 유틸리티 버튼으로 옮긴다', async () => {
-    usePathnameMock.mockReturnValue(Links.intro)
+    usePathnameMock.mockReturnValue(Links.introAbout)
     const { cross } = stubBreakpoint()
     const { container, user } = renderWithChakra(<Header />)
 
@@ -836,7 +834,7 @@ describe('<Header>', () => {
   })
 
   it('모바일 좌측 목록의 active를 클릭한 패널에 맞춘다', async () => {
-    usePathnameMock.mockReturnValue(Links.intro)
+    usePathnameMock.mockReturnValue(Links.introAbout)
     const { container, user } = renderWithChakra(<Header />)
 
     await user.click(container.querySelector('button.btn-navi.all')!)

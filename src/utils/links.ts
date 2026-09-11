@@ -6,19 +6,17 @@ export const HOST =
 export class Links {
   static root = '/'
 
-  static intro = '/intro'
+  static introAbout = '/intro/about'
   static introChart = '/intro/chart'
   static introArticles = '/intro/articles'
   static introDirectors = '/intro/directors'
   static introHistory = '/intro/history'
 
-  static business = '/business'
   static businessHackathon = '/business/hackathon'
   static businessConference = '/business/conference'
   static businessBlog = '/business/blog'
   static businessNews = '/business/news'
 
-  static notices = '/notices'
   static noticesPress = '/notices/press'
   static noticesDonation = '/notices/donation'
   static noticesRecords = '/notices/records'

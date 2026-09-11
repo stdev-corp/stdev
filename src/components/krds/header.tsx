@@ -430,23 +430,7 @@ export default function Header() {
                 {Menus.map((menu) => (
                   <div className="gnb-sub-list single-list" key={menu.label}>
                     <div className="gnb-sub-content">
-                      <h2 className="sub-title">
-                        {menu.label}
-                        <Link
-                          href={menu.href}
-                          className="krds-btn link basic small"
-                          aria-current={
-                            pathname === menu.href ? 'page' : undefined
-                          }
-                          onClick={closeAll}
-                        >
-                          <span className="underline">바로가기</span>
-                          <i
-                            className="svg-icon ico-angle right"
-                            aria-hidden="true"
-                          />
-                        </Link>
-                      </h2>
+                      <h2 className="sub-title">{menu.label}</h2>
                       <ul>
                         {menu.subMenus.map((subMenu) => (
                           <li key={subMenu.href}>
@@ -535,24 +519,6 @@ export default function Header() {
                     >
                       <h2 className="sub-title">{menu.label}</h2>
                       <ul>
-                        {menu.href !== Links.root && (
-                          <li>
-                            <Link
-                              href={menu.href}
-                              className={
-                                pathname === menu.href
-                                  ? 'gnb-sub-trigger selected'
-                                  : 'gnb-sub-trigger'
-                              }
-                              aria-current={
-                                pathname === menu.href ? 'page' : undefined
-                              }
-                              onClick={closeAll}
-                            >
-                              {menu.label} 전체보기
-                            </Link>
-                          </li>
-                        )}
                         {menu.subMenus.map((subMenu) => (
                           <li key={subMenu.href}>
                             <Link

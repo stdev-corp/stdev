@@ -3,17 +3,15 @@ import { isDatabaseAvailable } from './fixtures/db'
 
 const publicPaths = [
   '/',
-  '/intro',
+  '/intro/about',
   '/intro/history',
   '/intro/chart',
   '/intro/directors',
   '/intro/articles',
-  '/business',
   '/business/blog',
   '/business/news',
   '/business/hackathon',
   '/business/conference',
-  '/notices',
   '/notices/press',
   '/notices/donation',
   '/notices/records',
@@ -90,4 +88,22 @@ test.describe('public navigation', () => {
 
     expect(response?.status()).toBe(404)
   })
+
+  test('/intro permanently redirects to /intro/about', async ({ page }) => {
+    const redirect = await page.request.get('/intro', { maxRedirects: 0 })
+    expect(redirect.status()).toBe(308)
+    expect(redirect.headers()['location']).toMatch(/\/intro\/about$/)
+
+    await page.goto('/intro')
+    await expect(page).toHaveURL(/\/intro\/about$/)
+    await expect(page.locator('h1.h-tit')).toHaveText('사단법인 에스티데브')
+  })
+
+  for (const path of ['/business', '/notices']) {
+    test(`removed section index ${path} returns 404`, async ({ page }) => {
+      const response = await page.goto(path)
+
+      expect(response?.status()).toBe(404)
+    })
+  }
 })

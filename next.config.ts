@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next'
+import { Links } from './src/utils/links'
 
 const s3Hosts = new Set([
   'stdev-kr.s3.ap-northeast-2.amazonaws.com',
@@ -22,6 +23,12 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     authInterrupts: true,
+  },
+  async redirects() {
+    return [
+      // 법인소개 첫 페이지가 /intro에서 하위 메뉴로 옮겨 갔다.
+      { source: '/intro', destination: Links.introAbout, permanent: true },
+    ]
   },
 }
 
