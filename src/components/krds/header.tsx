@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
+import Wordmark from '@/components/krds/wordmark'
 import { Links } from '@/utils/links'
 import Menus, { AllMenus, findMenuSection } from '@/utils/menus'
 
@@ -266,7 +267,9 @@ export default function Header() {
             <div className="inner">
               <div className="header-branding">
                 <h2 className="logo">
-                  <Link href={Links.root}>사단법인 STDev</Link>
+                  <Link href={Links.root}>
+                    <Wordmark />
+                  </Link>
                 </h2>
                 <div className="header-actions">
                   <a

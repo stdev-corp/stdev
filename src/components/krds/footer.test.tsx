@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { renderWithChakra, screen, within } from '@/tests/utils/render'
 import Footer from '@/components/krds/footer'
+import { LOGO_SRC } from '@/components/krds/wordmark'
 import { Links } from '@/utils/links'
 
 vi.mock('next/image', () => ({
@@ -53,6 +54,16 @@ describe('<Footer>', () => {
     const logo = container.querySelector('.f-logo')
     expect(logo).not.toBeNull()
     expect(logo).toHaveTextContent('사단법인 STDev')
+  })
+
+  it('puts the round symbol before the wordmark as a decorative image', () => {
+    const { container } = renderWithChakra(<Footer />)
+    const logo = container.querySelector('.f-logo')!
+    const symbol = logo.querySelector('img')!
+    expect(symbol).toHaveClass('stdev-symbol')
+    expect(symbol).toHaveAttribute('src', LOGO_SRC)
+    expect(symbol).toHaveAttribute('alt', '')
+    expect(logo.firstElementChild).toBe(symbol)
   })
 
   it('renders the corporate address, registration details and phone number', () => {

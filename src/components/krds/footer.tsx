@@ -8,6 +8,7 @@ import SnsLink, {
   LinkedinLogo,
   YoutubeLogo,
 } from '@/components/layout/sns-link'
+import Wordmark from '@/components/krds/wordmark'
 import { Links } from '@/utils/links'
 
 // width/height는 실제 원본 크기여야 로드 전후로 레이아웃이 흔들리지 않는다.
@@ -39,7 +40,9 @@ export default function Footer() {
   return (
     <footer id="krds-footer">
       <div className="inner">
-        <div className="f-logo">사단법인 STDev</div>
+        <div className="f-logo">
+          <Wordmark />
+        </div>
 
         <div className="f-cnt">
           <div className="f-info">

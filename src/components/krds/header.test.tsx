@@ -7,6 +7,23 @@ import { renderWithChakra, screen, waitFor } from '@/tests/utils/render'
 import { Links } from '@/utils/links'
 import { InfoMenu, IntroMenu, NoticesMenu } from '@/utils/menus'
 import Header from './header'
+import { LOGO_SRC } from './wordmark'
+
+vi.mock('next/image', () => ({
+  default: (props: Record<string, unknown>) => {
+    const {
+      fill: _fill,
+      priority: _priority,
+      loader: _loader,
+      quality: _quality,
+      placeholder: _placeholder,
+      blurDataURL: _blurDataURL,
+      unoptimized: _unoptimized,
+      ...imgProps
+    } = props
+    return <img {...imgProps} />
+  },
+}))
 
 vi.mock('next/link', () => ({
   default: ({
@@ -76,6 +93,19 @@ describe('<Header>', () => {
     const logo = screen.getByRole('link', { name: '사단법인 STDev' })
     expect(logo).toHaveAttribute('href', Links.root)
     expect(logo.closest('h2')).toHaveClass('logo')
+  })
+
+  it('로고 링크 안에 원형 심벌을 워드마크 왼쪽에 장식 이미지로 둔다', () => {
+    renderWithChakra(<Header />)
+
+    const logo = screen.getByRole('link', { name: '사단법인 STDev' })
+    const symbol = logo.querySelector('img')!
+    expect(symbol).toHaveClass('stdev-symbol')
+    expect(symbol).toHaveAttribute('src', LOGO_SRC)
+    // 뒤따르는 텍스트가 이름을 대신하므로 대체 텍스트는 비운다.
+    expect(symbol).toHaveAttribute('alt', '')
+    expect(logo.firstElementChild).toBe(symbol)
+    expect(logo.textContent?.trim()).toBe('사단법인 STDev')
   })
 
   it('행사 참가하기 링크를 새 창으로 여는 외부 링크로 렌더링한다', () => {

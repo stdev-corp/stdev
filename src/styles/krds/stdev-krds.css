@@ -299,9 +299,24 @@
   height: auto;
 }
 
+/* 원형 심벌. 워드마크 글자 높이에 맞춰 헤더·푸터에서 같은 크기로 쓴다. */
+.stdev-symbol {
+  flex-shrink: 0;
+  width: var(--krds-size-height-6);
+  height: var(--krds-size-height-6);
+}
+
+@media (max-width: 767px) {
+  .stdev-symbol {
+    width: var(--krds-size-height-5);
+    height: var(--krds-size-height-5);
+  }
+}
+
 #krds-header .header-container .header-branding .logo a {
   display: inline-flex;
   align-items: center;
+  gap: var(--krds-gap-3);
   width: auto;
   height: auto;
   background-image: none;
@@ -327,6 +342,9 @@
  * 푸터 - KRDS 로고 배경을 STDev 워드마크로 교체
  * ------------------------------------------------------------------ */
 #krds-footer .f-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--krds-gap-3);
   width: auto;
   height: auto;
   background-image: none;
