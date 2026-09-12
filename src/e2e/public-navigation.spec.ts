@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 import { isDatabaseAvailable } from './fixtures/db'
 
 const publicPaths = [
@@ -19,6 +19,23 @@ const publicPaths = [
   '/info/terms',
   '/info/sitemap',
 ]
+
+/** 어떤 라우트에도 맞지 않는 URL은 KRDS 셸을 갖춘 한국어 404 화면이어야 한다. */
+async function expectPublicNotFound(page: Page) {
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ko')
+  await expect(page.locator('#krds-header')).toBeVisible()
+  await expect(page.locator('#krds-footer')).toBeVisible()
+  await expect(
+    page.getByRole('heading', { level: 1, name: '404 Not Found' }),
+  ).toBeVisible()
+  await expect(
+    page.getByText('요청하신 페이지를 찾을 수 없습니다.'),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('link', { name: '홈페이지로 돌아가기' }),
+  ).toHaveAttribute('href', '/')
+  await expect(page.getByText('This page could not be found')).toHaveCount(0)
+}
 
 test.describe('public navigation', () => {
   test.beforeEach(async () => {
@@ -83,10 +100,11 @@ test.describe('public navigation', () => {
     })
   }
 
-  test('unknown path returns 404', async ({ page }) => {
+  test('unknown path returns the public 404 page', async ({ page }) => {
     const response = await page.goto('/unknown-e2e-path')
 
     expect(response?.status()).toBe(404)
+    await expectPublicNotFound(page)
   })
 
   test('/intro permanently redirects to /intro/about', async ({ page }) => {
@@ -104,6 +122,7 @@ test.describe('public navigation', () => {
       const response = await page.goto(path)
 
       expect(response?.status()).toBe(404)
+      await expectPublicNotFound(page)
     })
   }
 })

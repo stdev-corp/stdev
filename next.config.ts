@@ -23,6 +23,9 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     authInterrupts: true,
+    // 라우트 그룹마다 루트 레이아웃이 있어 app/not-found.tsx를 둘 공통 레이아웃이
+    // 없다. app/global-not-found.tsx로 어떤 라우트에도 맞지 않는 URL을 처리한다.
+    globalNotFound: true,
   },
   async redirects() {
     return [

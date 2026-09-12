@@ -6,6 +6,7 @@ Next.js App Router with sibling route groups that share no layout: `(stdev)` for
 
 ```
 app/
+├── global-not-found.tsx  # App-wide 404 for unmatched URLs (composes (stdev) layout + not-found)
 ├── (stdev)/              # Public marketing site - owns global <html> + analytics
 │   ├── layout.tsx        # Root <html lang="ko">, KRDS stylesheet links, GTM+GA, force-dynamic
 │   ├── providers.tsx     # 'use client' - Channel.io boot (no UI framework)
@@ -40,6 +41,7 @@ app/
 | New section with sub-nav | Copy `(stdev)/intro/` - has `layout.tsx` wrapping children in `SiteLayout menu={IntroMenu}`            |
 | New sitemap entry        | Add a submenu in `utils/menus.ts`; `sitemap.ts` auto-picks it up                                       |
 | Error/loading UX         | `(stdev)/{not-found,forbidden,unauthorized,loading}.tsx` - already exist; edit, don't add new siblings |
+| 404 for unmatched URLs   | `global-not-found.tsx` - wraps `(stdev)/not-found.tsx` in `(stdev)/layout.tsx`; edit the 404 UI there  |
 | Admin/CMS change         | `(cms)/admin/**` + `src/utils/cms.ts` + `prisma/schema.prisma`                                         |
 
 Admin access is limited by `src/utils/admin-auth.ts`: the user must have a Google account row and an email ending in `@stdev.kr`.
@@ -57,6 +59,7 @@ Admin access is limited by `src/utils/admin-auth.ts`: the user must have a Googl
 
 - **CMS work belongs under `(cms)/admin` and Prisma utilities**; keep public marketing routes under `(stdev)`.
 - **Do not create a new root `layout.tsx`** at `src/app/layout.tsx`. Next.js route groups work because ONLY `(stdev)/layout.tsx` declares `<html>`.
+- **Do not add a root `not-found.tsx` or a `[...catchAll]` route for 404s.** With two root layouts a root `not-found.tsx` renders in Next's bare default document (no `lang`, no KRDS CSS), and a catch-all page that calls `notFound()` streams through `(stdev)/loading.tsx` and answers **200**. `global-not-found.tsx` (enabled via `experimental.globalNotFound`) is the documented answer for multiple root layouts and returns a real 404.
 - **Do not remove `export const dynamic = 'force-dynamic'`** from `(stdev)/layout.tsx` - CMS queries run per-request.
 - **Do not add client components as page defaults** - keep page.tsx as server async; push interactivity into child `'use client'` components (see `components/krds/header.tsx` and `components/krds/breadcrumb.tsx`).
 - **Do not read `process.env.NEXT_PUBLIC_*` without the guarding `throw`** pattern used in `layout.tsx`/`providers.tsx`.
@@ -66,4 +69,5 @@ Admin access is limited by `src/utils/admin-auth.ts`: the user must have a Googl
 - `robots.txt` is a static file inside the route group (Next.js serves it verbatim) - not a `robots.ts` metadata route.
 - `sitemap.ts` must stay in sync with `utils/menus.ts` - there is no other registration.
 - `authInterrupts` is enabled (`next.config.ts`), so `forbidden()`/`unauthorized()` from `next/navigation` work and are rendered by the sibling files.
+- `(stdev)/not-found.tsx` is the single 404 UI. It wraps itself in `SiteLayout` because the nearest not-found boundary is the `(stdev)` root, so section layouts (and their LNB/breadcrumb) are not rendered around it. `global-not-found.tsx` reuses it for unmatched URLs; an in-group `notFound()` call reuses it too, but streams via `loading.tsx` and therefore responds 200 (Next.js streaming semantics), while unmatched URLs respond 404.
 - The breadcrumb is derived, not passed: `components/krds/breadcrumb.tsx` resolves `usePathname()` through `utils/breadcrumb.ts`, which reads `utils/menus.ts`. A new page shows up in the breadcrumb only once it is registered as a sub-menu there.

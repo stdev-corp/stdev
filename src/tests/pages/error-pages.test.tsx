@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import {
   renderAsyncServerComponent,
@@ -8,6 +9,22 @@ import LoadingPage from '@/app/(stdev)/loading'
 import NotFoundPage from '@/app/(stdev)/not-found'
 import ForbiddenPage from '@/app/(stdev)/forbidden'
 import UnauthorizedPage from '@/app/(stdev)/unauthorized'
+
+// KRDS 셸(SkipLink/Header/Footer)은 SiteLayout이 담당한다. 여기서는 셸을 대체하고
+// 404 화면이 셸 안에 브레드크럼 없이 들어가는지만 본다.
+vi.mock('@/components/krds/site-layout', () => ({
+  default: ({
+    breadcrumb,
+    children,
+  }: {
+    breadcrumb?: boolean
+    children: ReactNode
+  }) => (
+    <div data-testid="site-layout" data-breadcrumb={String(breadcrumb)}>
+      {children}
+    </div>
+  ),
+}))
 
 vi.mock('next/link', () => ({
   default: ({
@@ -61,6 +78,15 @@ describe('NotFoundPage', () => {
     expect(
       screen.getByRole('link', { name: '홈페이지로 돌아가기' }),
     ).toBeInTheDocument()
+  })
+
+  it('wraps the screen in the KRDS site shell without a breadcrumb', async () => {
+    await renderAsyncServerComponent(() => NotFoundPage())
+    const shell = screen.getByTestId('site-layout')
+    expect(shell).toHaveAttribute('data-breadcrumb', 'false')
+    expect(shell).toContainElement(
+      screen.getByRole('heading', { name: '404 Not Found' }),
+    )
   })
 })
 
