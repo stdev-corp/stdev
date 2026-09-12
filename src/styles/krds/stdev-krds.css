@@ -293,6 +293,23 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
+/*
+ * 펼친 하위 메뉴 패널은 헤더 바로 아래(top:100%)에 붙는 절대 위치 요소이고,
+ * 헤더는 sticky top:0이라 패널 위에는 언제나 헤더 높이만큼만 남는다. 화면이
+ * 낮으면 마지막 항목이 화면 밖으로 밀리는데, 메뉴를 열면 body에
+ * .is-gnb-web(overflow:hidden)이 걸리는 데다 헤더가 sticky라 페이지를
+ * 굴려도 항목이 따라 올라오지 않아 아예 닿을 수 없다. 패널 안에서 스크롤한다.
+ * 12.6rem은 데스크톱 헤더 높이(브랜딩 줄 6.8rem + 메뉴 줄 5.8rem)로, 킷이
+ * 헤더 높이를 토큰으로 주지 않아 직접 적는다.
+ */
+#krds-header .krds-main-menu .gnb-toggle-wrap {
+  max-height: calc(100vh - 12.6rem);
+  max-height: calc(100dvh - 12.6rem);
+  overflow-y: auto;
+  /* 패널 끝까지 굴렸을 때 잠긴 body로 스크롤이 넘어가지 않게 한다. */
+  overscroll-behavior: contain;
+}
+
 #krds-header .header-container .header-branding .logo {
   display: inline-flex;
   width: auto;
@@ -330,6 +347,19 @@
 @media (max-width: 767px) {
   #krds-header .header-container .header-branding .logo a {
     font-size: var(--krds-mobile-font-size-heading-xxsmall);
+  }
+}
+
+/*
+ * 좁은 화면에서는 로고(심벌+워드마크)와 두 버튼이 한 줄에 들어가지 않아
+ * "전체메뉴" 버튼이 잘리고 가로 스크롤이 생긴다. 글자를 더 줄이는 대신 줄을
+ * 바꾼다. .header-actions에 걸린 킷의 margin-left:auto가 둘째 줄에서도
+ * 버튼을 오른쪽으로 붙인다. 359px은 킷이 이미 쓰는 최저 폭 분기점이다.
+ */
+@media (max-width: 359px) {
+  #krds-header .header-container .header-branding {
+    flex-wrap: wrap;
+    row-gap: var(--krds-gap-3);
   }
 }
 
