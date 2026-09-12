@@ -66,24 +66,34 @@ describe('<Footer>', () => {
     expect(logo.firstElementChild).toBe(symbol)
   })
 
-  it('renders the corporate address, registration details and phone number', () => {
+  it('renders the corporate address on its own line', () => {
     const { container } = renderWithChakra(<Footer />)
     const addresses = container.querySelectorAll('.f-info .info-addr')
-    expect(addresses.length).toBe(2)
+    expect(addresses.length).toBe(1)
     expect(addresses[0]).toHaveTextContent(
       '대전광역시 서구 월평로 65, 802호 (월평동, 용원빌딩)',
     )
-    expect(addresses[1]).toHaveTextContent(
-      '상호명: 사단법인 에스티데브 (STDev Nonprofit Corporation)',
-    )
-    expect(addresses[1]).toHaveTextContent('대표자: 한우영')
-    expect(addresses[1]).toHaveTextContent('사업자등록번호: 169-82-00606')
-    expect(addresses[1]).toHaveTextContent(
-      '통신판매업신고번호: 2025-대전서구-0117',
-    )
-    expect(
-      container.querySelector('.f-info .info-cs .strong'),
-    ).toHaveTextContent('대표전화 0507-1441-9392')
+  })
+
+  it('lists each registration detail on its own labelled row', () => {
+    const { container } = renderWithChakra(<Footer />)
+    const rows = container.querySelectorAll('.f-info .info-corp .info-row')
+
+    // 한 줄에 한 항목. 가운뎃점으로 이어 붙이면 이 단언이 깨진다.
+    const expected: [string, string][] = [
+      ['상호명', '사단법인 에스티데브 (STDev Nonprofit Corporation)'],
+      ['대표자', '한우영'],
+      ['사업자등록번호', '169-82-00606'],
+      ['통신판매업신고번호', '2025-대전서구-0117'],
+      ['대표전화', '0507-1441-9392'],
+    ]
+    expect(rows.length).toBe(expected.length)
+    rows.forEach((row, index) => {
+      const [term, description] = expected[index]
+      expect(row.querySelector('dt')).toHaveTextContent(term)
+      expect(row.querySelector('dd')).toHaveTextContent(description)
+      expect(row.children.length).toBe(2)
+    })
   })
 
   it('renders the policy shortcut links with their internal hrefs', () => {
@@ -93,8 +103,6 @@ describe('<Footer>', () => {
     const shortcuts = within(linkGo as HTMLElement)
 
     const expected: [string, string][] = [
-      ['개인정보처리방침', Links.infoPrivacy],
-      ['이용약관', Links.infoTerms],
       ['연간 기부금 모금액 및 활용실적', Links.noticesDonation],
       ['사이트맵', Links.infoSitemap],
     ]
@@ -136,7 +144,7 @@ describe('<Footer>', () => {
 
   it('renders the three government logos linking out in a new tab', () => {
     const { container } = renderWithChakra(<Footer />)
-    const govLogos = container.querySelector('.f-btm .f-gov-logos')
+    const govLogos = container.querySelector('.inner > .f-gov-logos')
     expect(govLogos).not.toBeNull()
 
     // width/height는 원본 크기여야 로드 전후 레이아웃이 흔들리지 않는다.
@@ -181,7 +189,6 @@ describe('<Footer>', () => {
 
     const privacy = bottom.getByRole('link', { name: '개인정보처리방침' })
     expect(privacy).toHaveAttribute('href', Links.infoPrivacy)
-    expect(privacy).toHaveClass('point')
     expect(bottom.getByRole('link', { name: '이용약관' })).toHaveAttribute(
       'href',
       Links.infoTerms,
@@ -193,12 +200,12 @@ describe('<Footer>', () => {
     expect(menu?.querySelectorAll('a').length).toBe(3)
   })
 
-  it('links to 개인정보처리방침 and 이용약관 from both the shortcuts and the bottom menu', () => {
+  it('links to 개인정보처리방침 and 이용약관 exactly once each', () => {
     renderWithChakra(<Footer />)
     expect(
       screen.getAllByRole('link', { name: '개인정보처리방침' }),
-    ).toHaveLength(2)
-    expect(screen.getAllByRole('link', { name: '이용약관' })).toHaveLength(2)
+    ).toHaveLength(1)
+    expect(screen.getAllByRole('link', { name: '이용약관' })).toHaveLength(1)
   })
 
   it('renders the copyright for the current year', () => {
