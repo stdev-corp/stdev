@@ -96,8 +96,8 @@ describe('links', () => {
       expect(Links.acrc).toBe('https://www.acrc.go.kr')
     })
 
-    it('shop is https://shop.stdev.kr', () => {
-      expect(Links.shop).toBe('https://shop.stdev.kr')
+    it('event is https://event.stdev.kr', () => {
+      expect(Links.event).toBe('https://event.stdev.kr')
     })
 
     it('admin is /admin', () => {
@@ -114,7 +114,7 @@ describe('links', () => {
       expect(Links.msit.startsWith('https://')).toBe(true)
       expect(Links.nts.startsWith('https://')).toBe(true)
       expect(Links.acrc.startsWith('https://')).toBe(true)
-      expect(Links.shop.startsWith('https://')).toBe(true)
+      expect(Links.event.startsWith('https://')).toBe(true)
     })
   })
 })

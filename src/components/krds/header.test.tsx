@@ -81,12 +81,27 @@ describe('<Header>', () => {
   it('행사 참가하기 링크를 새 창으로 여는 외부 링크로 렌더링한다', () => {
     renderWithChakra(<Header />)
 
-    const shop = screen.getByRole('link', { name: '행사 참가하기' })
-    expect(shop).toHaveAttribute('href', Links.shop)
-    expect(shop).toHaveAttribute('target', '_blank')
-    expect(shop).toHaveAttribute('rel', 'noopener noreferrer')
-    expect(shop).toHaveAttribute('title', '새 창 열림')
-    expect(shop).toHaveClass('krds-btn', 'small', 'primary')
+    const event = screen.getByRole('link', { name: '행사 참가하기' })
+    expect(event).toHaveAttribute('href', Links.event)
+    expect(event).toHaveAttribute('href', 'https://event.stdev.kr')
+    expect(event).toHaveAttribute('target', '_blank')
+    expect(event).toHaveAttribute('rel', 'noopener noreferrer')
+    expect(event).toHaveAttribute('title', '새 창 열림')
+    expect(event).toHaveClass('krds-btn', 'small', 'primary')
+  })
+
+  it('헤더 상단에 안내 및 공시 유틸리티 드롭다운을 두지 않는다', () => {
+    const { container } = renderWithChakra(<Header />)
+
+    expect(container.querySelector('.header-utility')).toBeNull()
+    expect(container.querySelector('.krds-drop-wrap')).toBeNull()
+    expect(screen.queryByRole('button', { name: InfoMenu.label })).toBeNull()
+    // 안내 및 공시 하위 페이지는 (닫혀 있어 aria-hidden인) 모바일 서랍에서만 노출된다.
+    for (const subMenu of InfoMenu.subMenus) {
+      const links = container.querySelectorAll(`a[href="${subMenu.href}"]`)
+      expect(links).toHaveLength(1)
+      expect(links[0].closest('nav#mobile-nav')).not.toBeNull()
+    }
   })
 
   it('상위 메뉴마다 데스크탑 GNB 트리거 버튼을 렌더링한다', () => {
@@ -337,36 +352,6 @@ describe('<Header>', () => {
     expect(mobileSelected[0]).toHaveTextContent('연혁')
   })
 
-  it('안내 및 공시 드롭 버튼이 drop-menu를 열고 닫는다', async () => {
-    const { container, user } = renderWithChakra(<Header />)
-
-    const dropBtn = screen.getByRole('button', { name: InfoMenu.label })
-    expect(dropBtn).toHaveClass('krds-btn', 'small', 'text', 'drop-btn')
-    const dropMenu = container.querySelector(
-      '.krds-drop-wrap .drop-menu',
-    ) as HTMLElement
-
-    expect(dropMenu).toHaveStyle({ display: 'none' })
-    expect(dropBtn).toHaveAttribute('aria-expanded', 'false')
-
-    await user.click(dropBtn)
-    expect(dropMenu).toHaveStyle({ display: 'block' })
-    expect(dropBtn).toHaveClass('active')
-    expect(dropBtn).toHaveAttribute('aria-expanded', 'true')
-    expect(
-      screen.getByRole('link', { name: '개인정보처리방침' }),
-    ).toHaveAttribute('href', Links.infoPrivacy)
-    expect(
-      Array.from(dropMenu.querySelectorAll('.drop-list a')).map(
-        (link) => link.textContent,
-      ),
-    ).toEqual(['개인정보처리방침', '이용약관', '사이트맵'])
-
-    await user.click(dropBtn)
-    expect(dropMenu).toHaveStyle({ display: 'none' })
-    expect(dropBtn).not.toHaveClass('active')
-  })
-
   it('전체메뉴 버튼이 모바일 내비게이션을 열고 닫기 버튼이 닫는다', async () => {
     const { container, user } = renderWithChakra(<Header />)
 
@@ -453,22 +438,15 @@ describe('<Header>', () => {
     expect(document.body).not.toHaveClass('is-gnb-web')
   })
 
-  it('Escape 키를 누르면 모바일 내비게이션과 드롭 메뉴도 닫힌다', async () => {
+  it('Escape 키를 누르면 모바일 내비게이션도 닫힌다', async () => {
     const { container, user } = renderWithChakra(<Header />)
 
-    const dropBtn = screen.getByRole('button', { name: InfoMenu.label })
-    const dropMenu = container.querySelector(
-      '.krds-drop-wrap .drop-menu',
-    ) as HTMLElement
     const nav = container.querySelector('nav#mobile-nav') as HTMLElement
 
-    await user.click(dropBtn)
     await user.click(container.querySelector('button.btn-navi.all')!)
-    expect(dropMenu).toHaveStyle({ display: 'block' })
     expect(nav).toHaveClass('is-open')
 
     await user.keyboard('{Escape}')
-    expect(dropMenu).toHaveStyle({ display: 'none' })
     expect(nav).not.toHaveClass('is-open')
     expect(document.body).not.toHaveClass('is-gnb-mobile')
   })
@@ -652,8 +630,8 @@ describe('<Header>', () => {
     vi.unstubAllGlobals()
   })
 
-  it('안내 및 공시 경로에서는 데스크탑으로 넓어질 때 유틸리티 버튼으로 옮긴다', async () => {
-    // InfoMenu는 데스크탑 GNB에 없고 헤더 유틸리티 드롭다운이 대신한다.
+  it('안내 및 공시 경로에서는 데스크탑으로 넓어질 때 주 메뉴 첫 트리거로 옮긴다', async () => {
+    // InfoMenu는 데스크탑 GNB에 없으므로 담당 트리거가 없다.
     usePathnameMock.mockReturnValue(Links.infoSitemap)
     const { cross } = stubBreakpoint()
     const { container, user } = renderWithChakra(<Header />)
@@ -664,12 +642,10 @@ describe('<Header>', () => {
 
     await cross(true)
 
-    const dropButton = screen.getByRole('button', { name: InfoMenu.label })
-    expect(document.activeElement).toBe(dropButton)
-    // 무관한 첫 GNB 트리거로 가면 안 된다.
-    expect(document.activeElement).not.toBe(
+    expect(document.activeElement).toBe(
       screen.getByRole('button', { name: '법인소개' }),
     )
+    expect(document.activeElement).not.toBe(document.body)
     vi.unstubAllGlobals()
   })
 
@@ -700,7 +676,7 @@ describe('<Header>', () => {
     vi.unstubAllGlobals()
   })
 
-  it('서랍에서 안내 및 공시를 둘러보던 중이면 유틸리티 버튼으로 옮긴다', async () => {
+  it('서랍에서 안내 및 공시를 둘러보던 중이면 주 메뉴 첫 트리거로 옮긴다', async () => {
     usePathnameMock.mockReturnValue(Links.introAbout)
     const { cross } = stubBreakpoint()
     const { container, user } = renderWithChakra(<Header />)
@@ -717,8 +693,9 @@ describe('<Header>', () => {
     await cross(true)
 
     expect(document.activeElement).toBe(
-      screen.getByRole('button', { name: InfoMenu.label }),
+      screen.getByRole('button', { name: '법인소개' }),
     )
+    expect(document.activeElement).not.toBe(document.body)
     vi.unstubAllGlobals()
   })
 
@@ -818,19 +795,6 @@ describe('<Header>', () => {
     await user.keyboard('{Escape}')
 
     expect(document.activeElement).toBe(trigger)
-  })
-
-  it('유틸리티 드롭다운을 Escape로 닫으면 포커스가 드롭 버튼으로 돌아온다', async () => {
-    const { user } = renderWithChakra(<Header />)
-
-    const dropBtn = screen.getByRole('button', { name: InfoMenu.label })
-    await user.click(dropBtn)
-    const item = screen.getByRole('link', { name: '사이트맵' })
-    item.focus()
-
-    await user.keyboard('{Escape}')
-
-    expect(document.activeElement).toBe(dropBtn)
   })
 
   it('모바일 좌측 목록의 active를 클릭한 패널에 맞춘다', async () => {

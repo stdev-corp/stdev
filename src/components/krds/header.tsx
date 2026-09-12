@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { Links } from '@/utils/links'
-import Menus, { AllMenus, InfoMenu, findMenuSection } from '@/utils/menus'
+import Menus, { AllMenus, findMenuSection } from '@/utils/menus'
 
 function anchorId(index: number) {
   return `mGnb-anchor${index + 1}`
@@ -17,15 +17,12 @@ export default function Header() {
   const pathname = usePathname()
   // 데스크탑 GNB 패널을 연 1Depth의 라벨. 패널은 하나이며 세 구역을 함께 보여준다.
   const [openGnb, setOpenGnb] = useState<string | null>(null)
-  const [utilityOpen, setUtilityOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const openButtonRef = useRef<HTMLButtonElement>(null)
   const drawerRef = useRef<HTMLDivElement>(null)
-  const utilityButtonRef = useRef<HTMLButtonElement>(null)
   // 브레이크포인트가 바뀌는 시점에는 브라우저가 이미 감춰진 요소의 포커스를
   // 걷어낸 뒤라 activeElement로는 어디에 있었는지 알 수 없다. 직전 위치를 남긴다.
   const lastFocusedRef = useRef<Element | null>(null)
-  const utilityMenuRef = useRef<HTMLDivElement>(null)
   const gnbTriggerRefs = useRef(new Map<string, HTMLButtonElement | null>())
   const gnbPanelRef = useRef<HTMLDivElement>(null)
   // 모바일 서랍에서 지금 보고 있는 패널. null이면 현재 경로의 구역을 따른다.
@@ -36,7 +33,6 @@ export default function Header() {
 
   const closeAll = useCallback(() => {
     setOpenGnb(null)
-    setUtilityOpen(false)
     setMobileOpen(false)
     setMobileSection(null)
   }, [])
@@ -47,7 +43,6 @@ export default function Header() {
   if (pathname !== renderedPathname) {
     setRenderedPathname(pathname)
     setOpenGnb(null)
-    setUtilityOpen(false)
     setMobileOpen(false)
     setMobileSection(null)
   }
@@ -81,11 +76,10 @@ export default function Header() {
     const desktop = window.matchMedia('(min-width: 1024px)')
 
     const onChange = (event: MediaQueryListEvent) => {
-      // 1024px 이상은 서랍과 전체메뉴 버튼을, 미만은 데스크탑 GNB와 유틸리티
-      // 영역을 감춘다.
+      // 1024px 이상은 서랍과 전체메뉴 버튼을, 미만은 데스크탑 GNB를 감춘다.
       const hiddenByNewLayout = event.matches
         ? '.krds-main-menu-mobile, .btn-navi.all'
-        : '.krds-main-menu, .header-utility'
+        : '.krds-main-menu'
       const active = document.activeElement
       // 이미 <body>로 떨어졌다면 직전 위치를 기준으로 판단한다.
       const focused =
@@ -102,20 +96,17 @@ export default function Header() {
       }
 
       /*
-       * 데스크탑에서 그 구역을 담당하는 컨트롤로 보낸다.
-       * 안내 및 공시는 데스크탑 GNB에 없고 헤더 유틸리티 드롭다운이 대신하므로
-       * 그 버튼으로 가야 한다. 기준 구역이 없으면(홈) 주 메뉴의 첫 트리거로 간다.
+       * 데스크탑에서 그 구역을 담당하는 GNB 트리거로 보낸다. 담당 트리거가 없으면
+       * (홈, 또는 데스크탑 GNB에 없는 안내 및 공시) 주 메뉴의 첫 트리거로 간다.
        */
       // closeAll()이 mobileSection을 비우므로, 캡처해 둔 값으로 판단한다.
       const target = event.matches
-        ? currentMobileSection === InfoMenu.label
-          ? utilityButtonRef.current
-          : ((currentMobileSection
-              ? gnbTriggerRefs.current.get(currentMobileSection)
-              : null) ??
-            document.querySelector<HTMLElement>(
-              '#krds-header .krds-main-menu .gnb-main-trigger',
-            ))
+        ? ((currentMobileSection
+            ? gnbTriggerRefs.current.get(currentMobileSection)
+            : null) ??
+          document.querySelector<HTMLElement>(
+            '#krds-header .krds-main-menu .gnb-main-trigger',
+          ))
         : openButtonRef.current
       target?.focus()
     }
@@ -163,23 +154,6 @@ export default function Header() {
       }
     }
   }, [openGnb])
-
-  // 유틸리티 드롭다운도 동일하게 처리한다.
-  useEffect(() => {
-    if (!utilityOpen) {
-      return
-    }
-    const menu = utilityMenuRef.current
-    const button = utilityButtonRef.current
-    return () => {
-      if (
-        menu?.contains(document.activeElement) ||
-        document.activeElement === document.body
-      ) {
-        button?.focus()
-      }
-    }
-  }, [utilityOpen])
 
   // 모바일 서랍이 열리면 KRDS 스크립트와 동일하게 나머지 화면을 inert 처리하고
   // 포커스를 서랍 안으로 옮긴다. 닫을 때의 포커스 복원은 closeAll이 맡는다.
@@ -290,66 +264,13 @@ export default function Header() {
         <div className="header-in">
           <div className="header-container">
             <div className="inner">
-              <div className="header-utility">
-                <ul className="utility-list">
-                  <li>
-                    <div className="krds-drop-wrap drop-right">
-                      <button
-                        type="button"
-                        ref={utilityButtonRef}
-                        className={
-                          utilityOpen
-                            ? 'krds-btn small text drop-btn active'
-                            : 'krds-btn small text drop-btn'
-                        }
-                        aria-expanded={utilityOpen}
-                        onClick={() => setUtilityOpen((open) => !open)}
-                      >
-                        {InfoMenu.label}
-                        <i className="svg-icon ico-toggle" aria-hidden="true" />
-                      </button>
-                      <div
-                        className="drop-menu"
-                        ref={utilityMenuRef}
-                        style={{ display: utilityOpen ? 'block' : 'none' }}
-                      >
-                        <div className="drop-in">
-                          <ul className="drop-list">
-                            {InfoMenu.subMenus.map((subMenu) => (
-                              <li key={subMenu.href}>
-                                <Link
-                                  href={subMenu.href}
-                                  className={
-                                    pathname === subMenu.href
-                                      ? 'item-link active'
-                                      : 'item-link'
-                                  }
-                                  aria-current={
-                                    pathname === subMenu.href
-                                      ? 'page'
-                                      : undefined
-                                  }
-                                  onClick={closeAll}
-                                >
-                                  {subMenu.label}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-
               <div className="header-branding">
                 <h2 className="logo">
                   <Link href={Links.root}>사단법인 STDev</Link>
                 </h2>
                 <div className="header-actions">
                   <a
-                    href={Links.shop}
+                    href={Links.event}
                     className="krds-btn small primary"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -474,7 +395,7 @@ export default function Header() {
                 <ul className="utility-list">
                   <li>
                     <a
-                      href={Links.shop}
+                      href={Links.event}
                       className="krds-btn xsmall text"
                       target="_blank"
                       rel="noopener noreferrer"

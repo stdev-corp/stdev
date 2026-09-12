@@ -31,5 +31,5 @@ export class Links {
 
   static admin = '/admin'
 
-  static shop = 'https://shop.stdev.kr'
+  static event = 'https://event.stdev.kr'
 }
