@@ -100,6 +100,30 @@ test.describe('public navigation', () => {
     })
   }
 
+  test('robots.txt is served as plain text and points at the sitemap', async ({
+    page,
+  }) => {
+    const response = await page.request.get('/robots.txt')
+
+    expect(response.status()).toBe(200)
+    expect(response.headers()['content-type']).toMatch(/^text\/plain/)
+    const body = await response.text()
+    expect(body).toContain('User-Agent: *')
+    expect(body).toContain('Disallow: /admin/')
+    expect(body).toContain('Disallow: /api/')
+    expect(body).toContain('Sitemap: https://stdev.kr/sitemap.xml')
+  })
+
+  test('sitemap.xml lists the public pages', async ({ page }) => {
+    const response = await page.request.get('/sitemap.xml')
+
+    expect(response.status()).toBe(200)
+    expect(response.headers()['content-type']).toMatch(/xml/)
+    const body = await response.text()
+    expect(body).toContain('/intro/about</loc>')
+    expect(body).not.toContain('/business</loc>')
+  })
+
   test('unknown path returns the public 404 page', async ({ page }) => {
     const response = await page.goto('/unknown-e2e-path')
 

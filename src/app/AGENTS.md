@@ -7,12 +7,12 @@ Next.js App Router with sibling route groups that share no layout: `(stdev)` for
 ```
 app/
 ├── global-not-found.tsx  # App-wide 404 for unmatched URLs (composes (stdev) layout + not-found)
+├── robots.txt            # Static metadata file; MUST live at the app root (see NOTES)
 ├── (stdev)/              # Public marketing site - owns global <html> + analytics
 │   ├── layout.tsx        # Root <html lang="ko">, KRDS stylesheet links, GTM+GA, force-dynamic
 │   ├── providers.tsx     # 'use client' - Channel.io boot (no UI framework)
 │   ├── page.tsx          # Landing
 │   ├── sitemap.ts        # Reads menus.ts → MetadataRoute.Sitemap
-│   ├── robots.txt        # Static file (NOT a route handler)
 │   ├── {forbidden,unauthorized,not-found,loading}.tsx
 │   ├── intro/            # 법인소개   (subtree has own layout + KRDS side nav)
 │   ├── business/         # 행사&프로그램 (same pattern)
@@ -66,7 +66,7 @@ Admin access is limited by `src/utils/admin-auth.ts`: the user must have a Googl
 
 ## NOTES
 
-- `robots.txt` is a static file inside the route group (Next.js serves it verbatim) - not a `robots.ts` metadata route.
+- `robots.txt` is a static metadata file at `src/app/robots.txt` (Next.js serves it verbatim) - not a `robots.ts` metadata route. It cannot live inside `(stdev)/`: Next matches `robots.txt` only at the app root (`^/robots.txt`), whereas `sitemap.xml` is matched anywhere, which is why `(stdev)/sitemap.ts` works but a route-group `robots.txt` silently 404s.
 - `sitemap.ts` must stay in sync with `utils/menus.ts` - there is no other registration.
 - `authInterrupts` is enabled (`next.config.ts`), so `forbidden()`/`unauthorized()` from `next/navigation` work and are rendered by the sibling files.
 - `(stdev)/not-found.tsx` is the single 404 UI. It wraps itself in `SiteLayout` because the nearest not-found boundary is the `(stdev)` root, so section layouts (and their LNB/breadcrumb) are not rendered around it. `global-not-found.tsx` reuses it for unmatched URLs; an in-group `notFound()` call reuses it too, but streams via `loading.tsx` and therefore responds 200 (Next.js streaming semantics), while unmatched URLs respond 404.
