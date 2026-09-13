@@ -5,6 +5,7 @@ import PrivacyPage from '@/app/(stdev)/info/privacy/page'
 import TermsPage from '@/app/(stdev)/info/terms/page'
 import SitemapPage from '@/app/(stdev)/info/sitemap/page'
 import { makeMarkdown } from '@/tests/utils/fixtures'
+import { AllMenus, IntroMenu } from '@/utils/menus'
 
 vi.mock('next/link', () => ({
   default: ({
@@ -139,39 +140,32 @@ describe('SitemapPage', () => {
     ).toBeInTheDocument()
   })
 
-  it('renders 법인소개 menu link', async () => {
+  it('renders every section as a plain heading, not a link', async () => {
     await renderAsyncServerComponent(() => SitemapPage())
-    expect(
-      screen.getByRole('heading', { name: '법인소개' }),
-    ).toBeInTheDocument()
+    for (const menu of AllMenus) {
+      const heading = screen.getByRole('heading', { name: menu.label })
+      expect(heading).toBeInTheDocument()
+      // 구역 자체의 페이지가 없으므로 제목은 링크가 아니다.
+      expect(heading.querySelector('a')).toBeNull()
+      expect(screen.queryByRole('link', { name: menu.label })).toBeNull()
+    }
   })
 
-  it('renders 행사&프로그램 menu link', async () => {
+  it('renders every intro sub menu as a link, starting with 사단법인 에스티데브', async () => {
     await renderAsyncServerComponent(() => SitemapPage())
-    expect(
-      screen.getByRole('heading', { name: '행사&프로그램' }),
-    ).toBeInTheDocument()
+    expect(IntroMenu.subMenus[0].label).toBe('사단법인 에스티데브')
+    for (const subMenu of IntroMenu.subMenus) {
+      expect(screen.getByRole('link', { name: subMenu.label })).toHaveAttribute(
+        'href',
+        subMenu.href,
+      )
+    }
   })
 
-  it('renders 공지사항 menu link', async () => {
+  it('renders exactly one link per sub menu across all sections', async () => {
     await renderAsyncServerComponent(() => SitemapPage())
-    expect(
-      screen.getByRole('heading', { name: '공지사항' }),
-    ).toBeInTheDocument()
-  })
-
-  it('renders 안내 및 공시 menu link', async () => {
-    await renderAsyncServerComponent(() => SitemapPage())
-    expect(
-      screen.getByRole('heading', { name: '안내 및 공시' }),
-    ).toBeInTheDocument()
-  })
-
-  it('renders intro submenu items', async () => {
-    await renderAsyncServerComponent(() => SitemapPage())
-    expect(screen.getByText('연혁')).toBeInTheDocument()
-    expect(screen.getByText('조직도')).toBeInTheDocument()
-    expect(screen.getByText('리더십')).toBeInTheDocument()
-    expect(screen.getByText('정관')).toBeInTheDocument()
+    expect(screen.getAllByRole('link')).toHaveLength(
+      AllMenus.reduce((count, menu) => count + menu.subMenus.length, 0),
+    )
   })
 })

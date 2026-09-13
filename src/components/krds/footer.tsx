@@ -8,9 +8,23 @@ import SnsLink, {
   LinkedinLogo,
   YoutubeLogo,
 } from '@/components/layout/sns-link'
+import Wordmark from '@/components/krds/wordmark'
 import { Links } from '@/utils/links'
 
+// 법정 표기 항목. 항목마다 한 줄을 쓰고 그 줄 안에서 라벨과 값을 나란히 둔다.
+const CorpInfo = [
+  {
+    term: '상호명',
+    description: '사단법인 에스티데브 (STDev Nonprofit Corporation)',
+  },
+  { term: '대표자', description: '한우영' },
+  { term: '사업자등록번호', description: '169-82-00606' },
+  { term: '통신판매업신고번호', description: '2025-대전서구-0117' },
+  { term: '대표전화', description: '0507-1441-9392' },
+]
+
 // width/height는 실제 원본 크기여야 로드 전후로 레이아웃이 흔들리지 않는다.
+// sizes는 4.8rem 높이로 그렸을 때의 실제 너비라 로고마다 다르다.
 const GovLogos = [
   {
     src: '/images/gov/msit-logo.png',
@@ -18,6 +32,7 @@ const GovLogos = [
     alt: '과학기술정보통신부',
     width: 2452,
     height: 458,
+    sizes: '264px',
   },
   {
     src: '/images/gov/nts-logo.png',
@@ -25,6 +40,7 @@ const GovLogos = [
     alt: '국세청',
     width: 1655,
     height: 458,
+    sizes: '176px',
   },
   {
     src: '/images/gov/acrc-logo.png',
@@ -32,6 +48,7 @@ const GovLogos = [
     alt: '국민권익위원회',
     width: 2490,
     height: 458,
+    sizes: '264px',
   },
 ]
 
@@ -39,35 +56,26 @@ export default function Footer() {
   return (
     <footer id="krds-footer">
       <div className="inner">
-        <div className="f-logo">사단법인 STDev</div>
-
         <div className="f-cnt">
           <div className="f-info">
+            <div className="f-logo">
+              <Wordmark />
+            </div>
             <p className="info-addr">
               대전광역시 서구 월평로 65, 802호 (월평동, 용원빌딩)
             </p>
-            <p className="info-addr">
-              상호명: 사단법인 에스티데브 (STDev Nonprofit Corporation) ·
-              대표자: 한우영 · 사업자등록번호: 169-82-00606 ·
-              통신판매업신고번호: 2025-대전서구-0117
-            </p>
-            <ul className="info-cs">
-              <li>
-                <strong className="strong">대표전화 0507-1441-9392</strong>
-              </li>
-            </ul>
+            <dl className="info-corp">
+              {CorpInfo.map((info) => (
+                <div key={info.term} className="info-row">
+                  <dt>{info.term}</dt>
+                  <dd>{info.description}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
 
           <div className="f-link">
             <div className="link-go">
-              <Link href={Links.infoPrivacy} className="krds-btn medium text">
-                개인정보처리방침
-                <i className="svg-icon ico-angle right" aria-hidden="true" />
-              </Link>
-              <Link href={Links.infoTerms} className="krds-btn medium text">
-                이용약관
-                <i className="svg-icon ico-angle right" aria-hidden="true" />
-              </Link>
               <Link
                 href={Links.noticesDonation}
                 className="krds-btn medium text"
@@ -110,32 +118,30 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="f-btm">
-          <div className="f-gov-logos">
-            {GovLogos.map((logo) => (
-              <a
-                key={logo.url}
-                href={logo.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                title="새 창 열림"
-              >
-                <Image
-                  src={logo.src}
-                  alt={logo.alt}
-                  width={logo.width}
-                  height={logo.height}
-                  sizes="224px"
-                />
-              </a>
-            ))}
-          </div>
+        <div className="f-gov-logos">
+          {GovLogos.map((logo) => (
+            <a
+              key={logo.url}
+              href={logo.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="새 창 열림"
+            >
+              <Image
+                src={logo.src}
+                alt={logo.alt}
+                width={logo.width}
+                height={logo.height}
+                sizes={logo.sizes}
+              />
+            </a>
+          ))}
+        </div>
 
+        <div className="f-btm">
           <div className="f-btm-text">
             <div className="f-menu">
-              <Link href={Links.infoPrivacy} className="point">
-                개인정보처리방침
-              </Link>
+              <Link href={Links.infoPrivacy}>개인정보처리방침</Link>
               <Link href={Links.infoTerms}>이용약관</Link>
               <Link href={Links.admin}>관리자</Link>
             </div>

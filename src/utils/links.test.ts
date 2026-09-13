@@ -24,8 +24,8 @@ describe('links', () => {
       expect(Links.root).toBe('/')
     })
 
-    it('intro is /intro', () => {
-      expect(Links.intro).toBe('/intro')
+    it('introAbout is /intro/about', () => {
+      expect(Links.introAbout).toBe('/intro/about')
     })
 
     it('introChart is /intro/chart', () => {
@@ -44,10 +44,6 @@ describe('links', () => {
       expect(Links.introHistory).toBe('/intro/history')
     })
 
-    it('business is /business', () => {
-      expect(Links.business).toBe('/business')
-    })
-
     it('businessHackathon is /business/hackathon', () => {
       expect(Links.businessHackathon).toBe('/business/hackathon')
     })
@@ -62,10 +58,6 @@ describe('links', () => {
 
     it('businessNews is /business/news', () => {
       expect(Links.businessNews).toBe('/business/news')
-    })
-
-    it('notices is /notices', () => {
-      expect(Links.notices).toBe('/notices')
     })
 
     it('noticesPress is /notices/press', () => {
@@ -104,19 +96,25 @@ describe('links', () => {
       expect(Links.acrc).toBe('https://www.acrc.go.kr')
     })
 
-    it('shop is https://shop.stdev.kr', () => {
-      expect(Links.shop).toBe('https://shop.stdev.kr')
+    it('event is https://event.stdev.kr', () => {
+      expect(Links.event).toBe('https://event.stdev.kr')
     })
 
     it('admin is /admin', () => {
       expect(Links.admin).toBe('/admin')
     })
 
+    it('does not expose section index paths, which have no page', () => {
+      expect(Links).not.toHaveProperty('intro')
+      expect(Links).not.toHaveProperty('business')
+      expect(Links).not.toHaveProperty('notices')
+    })
+
     it('all external links use https protocol', () => {
       expect(Links.msit.startsWith('https://')).toBe(true)
       expect(Links.nts.startsWith('https://')).toBe(true)
       expect(Links.acrc.startsWith('https://')).toBe(true)
-      expect(Links.shop.startsWith('https://')).toBe(true)
+      expect(Links.event.startsWith('https://')).toBe(true)
     })
   })
 })

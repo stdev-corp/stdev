@@ -1,19 +1,17 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 import { isDatabaseAvailable } from './fixtures/db'
 
 const publicPaths = [
   '/',
-  '/intro',
+  '/intro/about',
   '/intro/history',
   '/intro/chart',
   '/intro/directors',
   '/intro/articles',
-  '/business',
   '/business/blog',
   '/business/news',
   '/business/hackathon',
   '/business/conference',
-  '/notices',
   '/notices/press',
   '/notices/donation',
   '/notices/records',
@@ -21,6 +19,23 @@ const publicPaths = [
   '/info/terms',
   '/info/sitemap',
 ]
+
+/** 어떤 라우트에도 맞지 않는 URL은 KRDS 셸을 갖춘 한국어 404 화면이어야 한다. */
+async function expectPublicNotFound(page: Page) {
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ko')
+  await expect(page.locator('#krds-header')).toBeVisible()
+  await expect(page.locator('#krds-footer')).toBeVisible()
+  await expect(
+    page.getByRole('heading', { level: 1, name: '404 Not Found' }),
+  ).toBeVisible()
+  await expect(
+    page.getByText('요청하신 페이지를 찾을 수 없습니다.'),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('link', { name: '홈페이지로 돌아가기' }),
+  ).toHaveAttribute('href', '/')
+  await expect(page.getByText('This page could not be found')).toHaveCount(0)
+}
 
 test.describe('public navigation', () => {
   test.beforeEach(async () => {
@@ -85,9 +100,53 @@ test.describe('public navigation', () => {
     })
   }
 
-  test('unknown path returns 404', async ({ page }) => {
+  test('robots.txt is served as plain text and points at the sitemap', async ({
+    page,
+  }) => {
+    const response = await page.request.get('/robots.txt')
+
+    expect(response.status()).toBe(200)
+    expect(response.headers()['content-type']).toMatch(/^text\/plain/)
+    const body = await response.text()
+    expect(body).toContain('User-Agent: *')
+    expect(body).toContain('Disallow: /admin/')
+    expect(body).toContain('Disallow: /api/')
+    expect(body).toContain('Sitemap: https://stdev.kr/sitemap.xml')
+  })
+
+  test('sitemap.xml lists the public pages', async ({ page }) => {
+    const response = await page.request.get('/sitemap.xml')
+
+    expect(response.status()).toBe(200)
+    expect(response.headers()['content-type']).toMatch(/xml/)
+    const body = await response.text()
+    expect(body).toContain('/intro/about</loc>')
+    expect(body).not.toContain('/business</loc>')
+  })
+
+  test('unknown path returns the public 404 page', async ({ page }) => {
     const response = await page.goto('/unknown-e2e-path')
 
     expect(response?.status()).toBe(404)
+    await expectPublicNotFound(page)
   })
+
+  test('/intro permanently redirects to /intro/about', async ({ page }) => {
+    const redirect = await page.request.get('/intro', { maxRedirects: 0 })
+    expect(redirect.status()).toBe(308)
+    expect(redirect.headers()['location']).toMatch(/\/intro\/about$/)
+
+    await page.goto('/intro')
+    await expect(page).toHaveURL(/\/intro\/about$/)
+    await expect(page.locator('h1.h-tit')).toHaveText('사단법인 에스티데브')
+  })
+
+  for (const path of ['/business', '/notices']) {
+    test(`removed section index ${path} returns 404`, async ({ page }) => {
+      const response = await page.goto(path)
+
+      expect(response?.status()).toBe(404)
+      await expectPublicNotFound(page)
+    })
+  }
 })

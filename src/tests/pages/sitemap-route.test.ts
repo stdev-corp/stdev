@@ -33,7 +33,6 @@ describe('sitemap()', () => {
   it('includes all IntroMenu hrefs', () => {
     const result = sitemap()
     const urls = result.map((e) => e.url)
-    expect(urls).toContain(HOST + IntroMenu.href)
     for (const sub of IntroMenu.subMenus) {
       expect(urls).toContain(HOST + sub.href)
     }
@@ -42,7 +41,6 @@ describe('sitemap()', () => {
   it('includes all BusinessMenu hrefs', () => {
     const result = sitemap()
     const urls = result.map((e) => e.url)
-    expect(urls).toContain(HOST + BusinessMenu.href)
     for (const sub of BusinessMenu.subMenus) {
       expect(urls).toContain(HOST + sub.href)
     }
@@ -51,7 +49,6 @@ describe('sitemap()', () => {
   it('includes all NoticesMenu hrefs', () => {
     const result = sitemap()
     const urls = result.map((e) => e.url)
-    expect(urls).toContain(HOST + NoticesMenu.href)
     for (const sub of NoticesMenu.subMenus) {
       expect(urls).toContain(HOST + sub.href)
     }
@@ -63,6 +60,18 @@ describe('sitemap()', () => {
     for (const sub of InfoMenu.subMenus) {
       expect(urls).toContain(HOST + sub.href)
     }
+  })
+
+  it('does not list bare section paths, which have no page', () => {
+    const urls = sitemap().map((e) => e.url)
+    for (const menu of [IntroMenu, BusinessMenu, NoticesMenu, InfoMenu]) {
+      expect(urls).not.toContain(HOST + menu.path)
+    }
+  })
+
+  it('lists every url only once', () => {
+    const urls = sitemap().map((e) => e.url)
+    expect(new Set(urls).size).toBe(urls.length)
   })
 
   it('every entry has changeFrequency set to monthly', () => {

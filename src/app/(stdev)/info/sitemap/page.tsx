@@ -7,7 +7,6 @@ import {
   Menu,
   NoticesMenu,
 } from '@/utils/menus'
-import { Links } from '@/utils/links'
 
 type SitemapMenuProps = {
   menu: Menu
@@ -16,13 +15,7 @@ type SitemapMenuProps = {
 function SitemapMenu(props: SitemapMenuProps) {
   return (
     <div className="sitemap-col">
-      <h2>
-        {props.menu.href === Links.root ? (
-          props.menu.label
-        ) : (
-          <Link href={props.menu.href}>{props.menu.label}</Link>
-        )}
-      </h2>
+      <h2>{props.menu.label}</h2>
       <ul>
         {props.menu.subMenus.map((child) => (
           <li key={child.href}>

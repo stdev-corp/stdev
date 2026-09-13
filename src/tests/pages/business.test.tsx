@@ -1,52 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { queryWebpagesMock, resetCmsMocks } from '@/tests/mocks/cms'
 import { renderAsyncServerComponent, screen } from '@/tests/utils/render'
-import BusinessPage from '@/app/(stdev)/business/page'
 import BlogPage from '@/app/(stdev)/business/blog/page'
 import NewsPage from '@/app/(stdev)/business/news/page'
 import HackathonPage from '@/app/(stdev)/business/hackathon/page'
 import ConferencePage from '@/app/(stdev)/business/conference/page'
 import { makeWebpageWithBusiness } from '@/tests/utils/fixtures'
-import { BusinessMenu } from '@/utils/menus'
 
 vi.mock('next/image', () => ({
   default: (props: Record<string, unknown>) => <img {...props} />,
 }))
-
-vi.mock('next/link', () => ({
-  default: ({
-    href,
-    children,
-    ...rest
-  }: {
-    href: string
-    children: React.ReactNode
-    [key: string]: unknown
-  }) => (
-    <a href={typeof href === 'string' ? href : '#'} {...rest}>
-      {children}
-    </a>
-  ),
-}))
-
-describe('BusinessPage', () => {
-  it('renders 행사&프로그램 heading', async () => {
-    await renderAsyncServerComponent(() => BusinessPage())
-    expect(
-      screen.getByRole('heading', { name: '행사&프로그램' }),
-    ).toBeInTheDocument()
-  })
-
-  it('renders a link for every business sub menu', async () => {
-    await renderAsyncServerComponent(() => BusinessPage())
-    for (const subMenu of BusinessMenu.subMenus) {
-      expect(screen.getByRole('link', { name: subMenu.label })).toHaveAttribute(
-        'href',
-        subMenu.href,
-      )
-    }
-  })
-})
 
 describe('BlogPage', () => {
   beforeEach(() => resetCmsMocks())

@@ -15,12 +15,19 @@ describe('menus', () => {
       expect(IntroMenu.label).toBe('법인소개')
     })
 
-    it('has href equal to Links.intro', () => {
-      expect(IntroMenu.href).toBe(Links.intro)
+    it('has path /intro', () => {
+      expect(IntroMenu.path).toBe('/intro')
     })
 
-    it('has exactly 4 subMenus', () => {
-      expect(IntroMenu.subMenus).toHaveLength(4)
+    it('has exactly 5 subMenus', () => {
+      expect(IntroMenu.subMenus).toHaveLength(5)
+    })
+
+    it('first subMenu 사단법인 에스티데브 points to Links.introAbout', () => {
+      expect(IntroMenu.subMenus[0]).toEqual({
+        label: '사단법인 에스티데브',
+        href: Links.introAbout,
+      })
     })
 
     it('subMenu 연혁 points to Links.introHistory', () => {
@@ -49,8 +56,8 @@ describe('menus', () => {
       expect(BusinessMenu.label).toBe('행사&프로그램')
     })
 
-    it('has href equal to Links.business', () => {
-      expect(BusinessMenu.href).toBe(Links.business)
+    it('has path /business', () => {
+      expect(BusinessMenu.path).toBe('/business')
     })
 
     it('has exactly 4 subMenus', () => {
@@ -83,8 +90,8 @@ describe('menus', () => {
       expect(NoticesMenu.label).toBe('공지사항')
     })
 
-    it('has href equal to Links.notices', () => {
-      expect(NoticesMenu.href).toBe(Links.notices)
+    it('has path /notices', () => {
+      expect(NoticesMenu.path).toBe('/notices')
     })
 
     it('has exactly 3 subMenus', () => {
@@ -114,6 +121,10 @@ describe('menus', () => {
   describe('InfoMenu', () => {
     it('has label 안내 및 공시', () => {
       expect(InfoMenu.label).toBe('안내 및 공시')
+    })
+
+    it('has path /info', () => {
+      expect(InfoMenu.path).toBe('/info')
     })
 
     it('has exactly 3 subMenus', () => {
@@ -164,6 +175,14 @@ describe('menus', () => {
         })
       })
     })
+
+    it('every subMenu href lives under its section path', () => {
+      AllMenus.forEach((menu) => {
+        menu.subMenus.forEach((sub) => {
+          expect(sub.href.startsWith(`${menu.path}/`)).toBe(true)
+        })
+      })
+    })
   })
 
   describe('AllMenus', () => {
@@ -173,18 +192,20 @@ describe('menus', () => {
   })
 
   describe('findMenuSection', () => {
-    it('matches a section index path', () => {
-      expect(findMenuSection(Links.intro)).toBe(IntroMenu)
-      expect(findMenuSection(Links.business)).toBe(BusinessMenu)
-      expect(findMenuSection(Links.notices)).toBe(NoticesMenu)
+    it('matches a bare section path even though it has no page', () => {
+      expect(findMenuSection(IntroMenu.path)).toBe(IntroMenu)
+      expect(findMenuSection(BusinessMenu.path)).toBe(BusinessMenu)
+      expect(findMenuSection(NoticesMenu.path)).toBe(NoticesMenu)
+      expect(findMenuSection(InfoMenu.path)).toBe(InfoMenu)
     })
 
     it('matches a path nested under a section', () => {
+      expect(findMenuSection(Links.introAbout)).toBe(IntroMenu)
       expect(findMenuSection(Links.introHistory)).toBe(IntroMenu)
       expect(findMenuSection('/business/hackathon/2026')).toBe(BusinessMenu)
     })
 
-    it('matches InfoMenu through its sub menus even though its href is the root', () => {
+    it('matches InfoMenu pages under /info', () => {
       expect(findMenuSection(Links.infoPrivacy)).toBe(InfoMenu)
       expect(findMenuSection(Links.infoTerms)).toBe(InfoMenu)
       expect(findMenuSection(Links.infoSitemap)).toBe(InfoMenu)

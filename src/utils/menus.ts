@@ -2,7 +2,11 @@ import { Links } from '@/utils/links'
 
 export type Menu = {
   label: string
-  href: string
+  /**
+   * 구역의 경로 접두사(예: '/intro'). 구역 자체의 페이지는 없고 하위 메뉴가
+   * 곧 페이지이므로 링크로 쓰지 않는다. 현재 구역 판별에만 쓴다.
+   */
+  path: string
   subMenus: {
     label: string
     href: string
@@ -11,8 +15,9 @@ export type Menu = {
 
 export const IntroMenu: Menu = {
   label: '법인소개',
-  href: Links.intro,
+  path: '/intro',
   subMenus: [
+    { label: '사단법인 에스티데브', href: Links.introAbout },
     { label: '연혁', href: Links.introHistory },
     { label: '조직도', href: Links.introChart },
     { label: '리더십', href: Links.introDirectors },
@@ -22,7 +27,7 @@ export const IntroMenu: Menu = {
 
 export const BusinessMenu: Menu = {
   label: '행사&프로그램',
-  href: Links.business,
+  path: '/business',
   subMenus: [
     { label: '해커톤', href: Links.businessHackathon },
     { label: '컨퍼런스', href: Links.businessConference },
@@ -33,7 +38,7 @@ export const BusinessMenu: Menu = {
 
 export const NoticesMenu: Menu = {
   label: '공지사항',
-  href: Links.notices,
+  path: '/notices',
   subMenus: [
     { label: '보도자료', href: Links.noticesPress },
     { label: '연간 기부금 모금액 및 활용실적', href: Links.noticesDonation },
@@ -43,7 +48,7 @@ export const NoticesMenu: Menu = {
 
 export const InfoMenu: Menu = {
   label: '안내 및 공시',
-  href: Links.root,
+  path: '/info',
   subMenus: [
     { label: '개인정보처리방침', href: Links.infoPrivacy },
     { label: '이용약관', href: Links.infoTerms },
@@ -59,9 +64,7 @@ export const AllMenus: Menu[] = [...Menus, InfoMenu]
 /**
  * 경로가 속한 구역을 찾는다.
  *
- * - '/introduction'이 '/intro' 구역으로 잡히지 않도록 경로 구분자까지 확인한다.
- * - InfoMenu처럼 href가 루트인 구역은 하위 메뉴로만 판별해, 홈에서 잘못
- *   선택되지 않게 한다.
+ * '/introduction'이 '/intro' 구역으로 잡히지 않도록 경로 구분자까지 확인한다.
  */
 export function findMenuSection(pathname: string | null | undefined) {
   if (!pathname) {
@@ -69,10 +72,7 @@ export function findMenuSection(pathname: string | null | undefined) {
   }
 
   return AllMenus.find(
-    (menu) =>
-      (menu.href !== Links.root &&
-        (pathname === menu.href || pathname.startsWith(`${menu.href}/`))) ||
-      menu.subMenus.some((subMenu) => subMenu.href === pathname),
+    (menu) => pathname === menu.path || pathname.startsWith(`${menu.path}/`),
   )
 }
 

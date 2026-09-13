@@ -59,6 +59,7 @@ describe('<SideNavigation>', () => {
     expect(items).toHaveLength(IntroMenu.subMenus.length)
     items.forEach((item) => expect(item).toHaveClass('lnb-item'))
     expect(items.map((item) => item.textContent)).toEqual([
+      '사단법인 에스티데브',
       '연혁',
       '조직도',
       '리더십',
@@ -74,7 +75,7 @@ describe('<SideNavigation>', () => {
 
   it('marks the sub menu matching the current pathname as active', () => {
     const { container } = renderMenu(IntroMenu, '/intro/history')
-    const [active] = lnbItems(container)
+    const [, active] = lnbItems(container)
 
     expect(active).toHaveClass('lnb-item', 'active')
     const link = screen.getByRole('link', { name: '연혁' })
@@ -84,7 +85,10 @@ describe('<SideNavigation>', () => {
 
   it('leaves the other sub menus inactive', () => {
     const { container } = renderMenu(IntroMenu, '/intro/history')
-    const inactive = lnbItems(container).slice(1)
+    const inactive = lnbItems(container).filter(
+      (item) => item.textContent !== '연혁',
+    )
+    expect(inactive).toHaveLength(IntroMenu.subMenus.length - 1)
 
     expect(container.querySelectorAll('[aria-current="page"]')).toHaveLength(1)
     inactive.forEach((item) => {
@@ -103,7 +107,7 @@ describe('<SideNavigation>', () => {
     expect(container.querySelector('[aria-current="page"]')).toBeNull()
   })
 
-  it('works for a section whose menu has no index page', () => {
+  it('works for the 안내 및 공시 section', () => {
     const { container } = renderMenu(InfoMenu, '/info/sitemap')
 
     expect(container.querySelector('h2.lnb-tit')!.textContent).toBe(
