@@ -14,33 +14,26 @@ test.describe('admin CRUD smoke', () => {
     await seedAdminSession(context)
     await page.goto('/admin')
 
-    if (page.url().includes('/admin/sign-in')) {
-      test.skip(
-        true,
-        'Seeded better-auth cookie was not accepted; cookie format needs re-confirmation for this better-auth version',
-      )
-    }
-
+    await expect(page).toHaveURL(/\/admin$/)
+    await expect(page.getByRole('heading', { name: '대시보드' })).toBeVisible()
     await expect(
-      page.getByRole('heading', { name: 'STDev DIY CMS' }),
-    ).toBeVisible()
-    await expect(
-      page.getByText('e2e@stdev.kr 계정으로 로그인했습니다.'),
+      page.getByRole('complementary').getByText('e2e@stdev.kr'),
     ).toBeVisible()
 
-    for (const label of [
-      '현재 데이터',
-      '기존 데이터 관리',
-      '사업 추가',
-      '이미지 추가',
-      'PDF 파일 추가',
-      '기관 추가',
-      '마크다운 추가',
-      '웹페이지 추가',
-      '보고서 추가',
-      '연혁 추가',
+    for (const [label, href] of [
+      ['사업', '/admin/businesses'],
+      ['이미지', '/admin/images'],
+      ['파일', '/admin/files'],
+      ['기관', '/admin/institutions'],
+      ['마크다운', '/admin/markdowns'],
+      ['웹페이지', '/admin/webpages'],
+      ['보고서', '/admin/reports'],
+      ['연혁', '/admin/histories'],
+      ['설정', '/admin/settings'],
     ]) {
-      await expect(page.getByRole('heading', { name: label })).toBeVisible()
+      await expect(
+        page.getByRole('term').getByRole('link', { name: label, exact: true }),
+      ).toHaveAttribute('href', href)
     }
   })
 })
