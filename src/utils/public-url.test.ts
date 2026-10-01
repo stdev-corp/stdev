@@ -6,6 +6,7 @@ import {
   isSafePdfUrl,
   requireSafePdfUrl,
   requireSafeImageUrl,
+  toPublicAssetUrl,
 } from '@/utils/public-url'
 
 const S3_HOST = 'stdev-kr.s3.ap-northeast-2.amazonaws.com'
@@ -171,7 +172,7 @@ describe('requireSafeImageUrl', () => {
   })
 })
 
-describe('allowedImageHosts with dynamic env', () => {
+describe('s3Hosts with dynamic env', () => {
   beforeEach(() => {
     vi.resetModules()
   })
@@ -180,7 +181,7 @@ describe('allowedImageHosts with dynamic env', () => {
     vi.unstubAllEnvs()
   })
 
-  it('adds custom S3_BUCKET and AWS_REGION to allowedImageHosts', async () => {
+  it('adds custom S3_BUCKET and AWS_REGION to s3Hosts', async () => {
     vi.stubEnv('S3_BUCKET', 'custom-bucket')
     vi.stubEnv('AWS_REGION', 'us-east-1')
     const mod = await import('@/utils/public-url')
@@ -200,5 +201,36 @@ describe('allowedImageHosts with dynamic env', () => {
         'https://other-bucket.s3.us-east-1.amazonaws.com/images/photo.png',
       ),
     ).toBe(false)
+  })
+})
+
+describe('toPublicAssetUrl', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
+  it('returns the stored URL when S3_PUBLIC_BASE_URL is unset', () => {
+    vi.stubEnv('S3_PUBLIC_BASE_URL', '')
+    const url = `https://${S3_HOST}/images/photo.png`
+    expect(toPublicAssetUrl(url)).toBe(url)
+  })
+
+  it('moves an S3 asset onto S3_PUBLIC_BASE_URL', () => {
+    vi.stubEnv('S3_PUBLIC_BASE_URL', 'http://127.0.0.1:9000/stdev-kr/')
+    expect(toPublicAssetUrl(`https://${S3_HOST}/files/a%20b.pdf?v=1`)).toBe(
+      'http://127.0.0.1:9000/stdev-kr/files/a%20b.pdf?v=1',
+    )
+  })
+
+  it('leaves URLs on other hosts alone', () => {
+    vi.stubEnv('S3_PUBLIC_BASE_URL', 'http://127.0.0.1:9000/stdev-kr')
+    expect(toPublicAssetUrl('https://example.com/images/a.png')).toBe(
+      'https://example.com/images/a.png',
+    )
+  })
+
+  it('returns an unparseable URL as-is', () => {
+    vi.stubEnv('S3_PUBLIC_BASE_URL', 'http://127.0.0.1:9000/stdev-kr')
+    expect(toPublicAssetUrl('')).toBe('')
   })
 })

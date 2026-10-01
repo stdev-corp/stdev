@@ -6,6 +6,7 @@ import {
   isAllowedImageUrl,
   isSafeHttpsUrl,
   isSafePdfUrl,
+  toPublicAssetUrl,
 } from '@/utils/public-url'
 
 export async function queryInstitutions() {
@@ -18,12 +19,11 @@ export async function queryInstitutions() {
     },
   })
 
-  return institutions
-    .map((institution) => ({
-      imageUrl: institution.logo.url,
-      imageAlt: institution.logo.alt,
-    }))
-    .filter((institution) => isAllowedImageUrl(institution.imageUrl))
+  return institutions.flatMap(({ logo }) =>
+    isAllowedImageUrl(logo.url)
+      ? [{ imageUrl: toPublicAssetUrl(logo.url), imageAlt: logo.alt }]
+      : [],
+  )
 }
 
 export async function queryWebpages(type: WebpageType) {
@@ -70,7 +70,7 @@ export async function queryReports(type: ReportType) {
       id: report.id,
       title: report.title,
       publishedDate: report.publishedDate,
-      file_url: report.file.url ?? '',
+      file_url: toPublicAssetUrl(report.file.url ?? ''),
     }))
 }
 
@@ -111,9 +111,10 @@ export async function queryHistories() {
     date: history.date,
     title: history.title,
     content: history.content,
-    imageUrl: isAllowedImageUrl(history.image?.url)
-      ? (history.image?.url ?? null)
-      : null,
+    imageUrl:
+      history.image && isAllowedImageUrl(history.image.url)
+        ? toPublicAssetUrl(history.image.url)
+        : null,
     imageAlt: history.image?.alt ?? null,
   }))
 }

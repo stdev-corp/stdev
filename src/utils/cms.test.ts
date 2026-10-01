@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { prismaMock, resetPrismaMock } from '@/tests/mocks/prisma'
 import {
   makeBusiness,
@@ -393,5 +393,40 @@ describe('queryHistories', () => {
     prismaMock.history.findMany.mockResolvedValue([])
     const result = await queryHistories()
     expect(result).toEqual([])
+  })
+})
+
+describe('asset URLs with S3_PUBLIC_BASE_URL', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
+  it('serves institution logos, history images and report PDFs from the base URL', async () => {
+    vi.stubEnv('S3_PUBLIC_BASE_URL', 'http://127.0.0.1:9000/stdev-kr')
+    prismaMock.institution.findMany.mockResolvedValue([
+      makeInstitutionWithLogo({
+        logo: makeImageAsset({ url: `https://${S3_HOST}/images/logo.png` }),
+      }),
+    ] as never)
+    prismaMock.history.findMany.mockResolvedValue([
+      makeHistoryWithImage({
+        image: makeImageAsset({ url: `https://${S3_HOST}/images/event.png` }),
+      }),
+    ] as never)
+    prismaMock.report.findMany.mockResolvedValue([
+      makeReportWithFile({
+        file: makeFileAsset({ url: `https://${S3_HOST}/files/report.pdf` }),
+      }),
+    ] as never)
+
+    expect((await queryInstitutions())[0].imageUrl).toBe(
+      'http://127.0.0.1:9000/stdev-kr/images/logo.png',
+    )
+    expect((await queryHistories())[0].imageUrl).toBe(
+      'http://127.0.0.1:9000/stdev-kr/images/event.png',
+    )
+    expect((await queryReports('meeting'))[0].file_url).toBe(
+      'http://127.0.0.1:9000/stdev-kr/files/report.pdf',
+    )
   })
 })
