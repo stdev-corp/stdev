@@ -90,6 +90,10 @@ Github 레포지토리 설정에서 `Actions secrets and variables` 페이지로
 - BETTER_AUTH_URL=<https://www.stdev.kr>
 - GOOGLE_CLIENT_ID=example.apps.googleusercontent.com
 - GOOGLE_CLIENT_SECRET=example
+- S3_BUCKET=stdev-kr
+- AWS_REGION=ap-northeast-2
+
+이 값은 `main`에 push될 때의 이미지 빌드에서만 쓰입니다. PR의 `Build Docker Image`는 이미지를 push하지 않으므로 `.env.test`의 dummy 값으로 빌드합니다. Dependabot이나 fork PR은 Actions secrets를 읽을 수 없기 때문입니다.
 
 서버에서 `Docker Compose` 환경을 설정한 후, `docker-compose.yml` 을 아래와 같이 작성합니다.
 

@@ -58,11 +58,44 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
+      # PR images are never pushed, and PR runs cannot count on Actions
+      # secrets: runs that Dependabot triggers read only the (empty) Dependabot
+      # secret store and fork runs get no secrets, so `next build` died on
+      # DATABASE_URL. Build every PR against the committed dummy values in
+      # .env.test, the same ones CI's `pnpm build` uses, so production
+      # credentials only reach builds of main. The key list mirrors
+      # `secret-envs` below.
+      - name: Load dummy build env from .env.test
+        if: github.event_name == 'pull_request'
+        run: >-
+          grep -E '^(NEXT_PUBLIC_CHANNEL_PLUGIN_KEY|NEXT_PUBLIC_GTM_ID|NEXT_PUBLIC_GA_ID|DATABASE_URL|S3_BUCKET|AWS_REGION|BETTER_AUTH_SECRET|BETTER_AUTH_URL|GOOGLE_CLIENT_ID|GOOGLE_CLIENT_SECRET)='
+          .env.test >> "$GITHUB_ENV"
+
+      - name: Build Docker image (PR, dummy env)
+        if: github.event_name == 'pull_request'
+        uses: docker/build-push-action@v6
+        with:
+          push: false
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          secret-envs: |
+            NEXT_PUBLIC_CHANNEL_PLUGIN_KEY=NEXT_PUBLIC_CHANNEL_PLUGIN_KEY
+            NEXT_PUBLIC_GTM_ID=NEXT_PUBLIC_GTM_ID
+            NEXT_PUBLIC_GA_ID=NEXT_PUBLIC_GA_ID
+            DATABASE_URL=DATABASE_URL
+            S3_BUCKET=S3_BUCKET
+            AWS_REGION=AWS_REGION
+            BETTER_AUTH_SECRET=BETTER_AUTH_SECRET
+            BETTER_AUTH_URL=BETTER_AUTH_URL
+            GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID
+            GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET
+
       - name: Build and push Docker image
+        if: github.event_name != 'pull_request'
         id: build-and-push
         uses: docker/build-push-action@v6
         with:
-          push: ${{ github.event_name != 'pull_request' }} # Don't push on PR
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           secrets: |
