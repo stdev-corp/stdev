@@ -17,16 +17,15 @@ stdev/
 ├── prisma.config.ts                # Prisma config; reads DATABASE_URL
 ├── pnpm-workspace.yaml             # workspace packages + allowBuilds (must COPY into Dockerfile deps)
 ├── vitest.config.ts                # Unit / component / mocked-integration (jsdom)
-├── vitest.config.integration.ts    # Real-DB integration suite (src/tests/db/**)
 ├── playwright.config.ts            # E2E (real Postgres + MinIO via docker-compose.test.yml)
-├── docker-compose.test.yml         # Postgres + MinIO for E2E and DB integration
+├── docker-compose.test.yml         # Postgres + MinIO for E2E
 ├── tools/migrate/package.json      # Prisma CLI manifest; `pnpm deploy` feeds the Dockerfile migrator stage
 ├── Dockerfile                      # Multi-stage standalone Next build + in-container migration toolchain
 ├── src/
 │   ├── app/                        # (stdev) public site, (cms) admin, api/auth
 │   ├── components/                 # UI building blocks (krds/ = public chrome, admin/ = CMS)
 │   ├── styles/krds/                # Vendored KRDS CSS + site layer (see its README)
-│   ├── tests/                      # Vitest suites (actions, mocks, pages, utils, db)
+│   ├── tests/                      # Vitest suites (actions, mocks, pages, utils)
 │   ├── e2e/                        # Playwright specs + fixtures
 │   └── utils/                      # cms.ts, prisma.ts, auth.ts, menus/links/date helpers
 ├── public/images/                  # intro/, business/, gov/ static assets
@@ -104,7 +103,7 @@ pnpm test:e2e:install       # First-time Chromium install for Playwright
 
 ## NOTES
 
-- Test stack: Vitest 4 (unit / component / mocked integration in jsdom) + Vitest separate integration suite against real Postgres + Playwright E2E. CI runs all of these on every PR.
+- Test stack: Vitest 4 (unit / component / mocked integration in jsdom) + Playwright E2E against real Postgres and the S3 sidecar. CI runs both on every PR. There is no real-DB Vitest suite.
 - Vitest 4 specifics: `coverage.all` and `test.poolOptions` were removed; this repo uses top-level `pool: 'forks'` + `maxWorkers: 1` (per-file module isolation preserved via default `isolate: true`).
 - Docker prod port is 1000.
 - The production image can migrate itself: `docker compose run --rm stdev pnpm db:migrate:deploy` (or `exec` on a running container). The `migrator` stage `pnpm deploy`s `tools/migrate` into `/app/.migrate/node_modules`, whose only top-level entries are `prisma` and `dotenv`, so it cannot shadow Next's traced output; `/app/node_modules` gets three symlinks because Prisma resolves `prisma.config.ts` and its imports from the working directory. The schema engine is a musl binary fetched by `@prisma/engines`' postinstall, so that stage must build on the same platform as the runner. Cost: +278 MB on the image (263 MB -> 541 MB uncompressed).

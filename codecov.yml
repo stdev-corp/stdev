@@ -47,7 +47,6 @@ ignore:
   - 'src/app/(stdev)/sitemap.ts'
   - 'playwright.config.ts'
   - 'vitest.config.ts'
-  - 'vitest.config.integration.ts'
   - 'eslint.config.mjs'
   - 'prettier.config.mjs'
   - 'public/service-worker.js'
