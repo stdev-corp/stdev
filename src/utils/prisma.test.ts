@@ -75,15 +75,12 @@ describe('prisma singleton', () => {
     })
   })
 
-  it('adds the RDS SSL params to the adapter connection string', async () => {
-    vi.stubEnv(
-      'DATABASE_URL',
-      'postgres://test:test@db.abc.ap-northeast-2.rds.amazonaws.com:5432/test',
-    )
+  it('adds the SSL params for a remote DATABASE_URL', async () => {
+    vi.stubEnv('DATABASE_URL', 'postgres://test:test@db.example.org:5432/test')
     const mod = await import('@/utils/prisma')
     expect(adapterConfig(mod.prisma)).toEqual({
       connectionString:
-        'postgres://test:test@db.abc.ap-northeast-2.rds.amazonaws.com:5432/test?sslmode=require&uselibpqcompat=true',
+        'postgres://test:test@db.example.org:5432/test?sslmode=require&uselibpqcompat=true',
     })
   })
 
