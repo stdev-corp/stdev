@@ -22,13 +22,16 @@ services:
   # top-level directory (MinIO single-drive mode treats those as buckets)
   # before execing the server, so no extra init sidecar is needed.
   #
-  # Pulled from quay.io, not Docker Hub: docker.io/minio/minio stopped serving
-  # anonymous pulls ("denied: requested access to the resource is denied"), so
-  # CI could not start the sidecar. quay.io is MinIO's other official registry
-  # and needs no login. A machine that pulled the Docker Hub image earlier
-  # keeps working from its local cache, which is why this only broke in CI.
+  # The image is Silo (github.com/pgsty/silo), the community-maintained MinIO
+  # fork, not MinIO's own: docker.io/minio/minio is gone and quay.io/minio/minio
+  # now rejects every anonymous pull, pinned tags and digests included
+  # ("unauthorized: access to the requested resource is not authorized"). Silo
+  # keeps the MINIO_* variables, the /minio/health/* routes and curl; only the
+  # binary is named `silo`. Pinned by tag and digest so the server cannot change
+  # under CI unnoticed. A machine with the old MinIO image cached keeps working,
+  # which is why this only broke in CI.
   minio:
-    image: quay.io/minio/minio:latest
+    image: docker.io/pgsty/silo:RELEASE.2026-09-16T00-00-00Z@sha256:635197cb9f36d01bee221d34d1c7d7960f6a95c48b0b6c01d99cd13bdae51a46
     container_name: stdev-test-minio
     environment:
       MINIO_ROOT_USER: test-access-key
@@ -37,7 +40,7 @@ services:
       - '9000:9000'
       - '9001:9001'
     entrypoint: sh
-    command: -c 'mkdir -p /data/stdev-kr && exec minio server /data --console-address ":9001"'
+    command: -c 'mkdir -p /data/stdev-kr && exec silo server /data --console-address ":9001"'
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://127.0.0.1:9000/minio/health/live']
       interval: 3s
