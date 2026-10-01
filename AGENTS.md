@@ -17,8 +17,8 @@ stdev/
 ├── prisma.config.ts                # Prisma config; reads DATABASE_URL
 ├── pnpm-workspace.yaml             # workspace packages + allowBuilds (must COPY into Dockerfile deps)
 ├── vitest.config.ts                # Unit / component / mocked-integration (jsdom)
-├── playwright.config.ts            # E2E (real Postgres + MinIO via docker-compose.test.yml)
-├── docker-compose.test.yml         # Postgres + MinIO for E2E
+├── playwright.config.ts            # E2E (real Postgres + S3 sidecar via docker-compose.test.yml)
+├── docker-compose.test.yml         # Postgres + Silo (MinIO-fork S3 sidecar) for E2E
 ├── tools/migrate/package.json      # Prisma CLI manifest; `pnpm deploy` feeds the Dockerfile migrator stage
 ├── Dockerfile                      # Multi-stage standalone Next build + in-container migration toolchain
 ├── src/
@@ -46,7 +46,7 @@ stdev/
 | Shared layout chrome    | `src/components/krds/`                                                                        | `site-layout`, `main-layout`, `header`, `footer`, `breadcrumb`, `side-navigation`, `page-title`, `skip-link`                                     |
 | Markdown rendering      | `src/components/markdown/markdown-view.tsx`                                                   | react-markdown + remark-gfm inside `.markdown-body`; styled by `src/styles/krds/stdev-krds.css`                                                  |
 | Add/adjust unit test    | Colocated `*.test.{ts,tsx}` next to source, or under `src/tests/{actions,pages,utils,mocks}/` | Picked up by `vitest.config.ts`                                                                                                                  |
-| Add E2E spec            | `src/e2e/**.spec.ts` (+ fixtures in `src/e2e/fixtures/`)                                      | Runs against Postgres+MinIO from `docker-compose.test.yml`                                                                                       |
+| Add E2E spec            | `src/e2e/**.spec.ts` (+ fixtures in `src/e2e/fixtures/`)                                      | Runs against Postgres + the Silo S3 sidecar from `docker-compose.test.yml`                                                                       |
 | Docker image change     | `Dockerfile`                                                                                  | If editing `deps` stage, also re-check the `COPY` list — workspace yaml and `tools/migrate/package.json` must be present for `--frozen-lockfile` |
 | Prisma CLI in the image | `Dockerfile` migrator stage + `tools/migrate/package.json`                                    | Bump the CLI here and in the root `package.json` together, then regenerate the lockfile                                                          |
 
@@ -97,7 +97,7 @@ pnpm test                   # Vitest run (unit + component + mocked integration,
 pnpm test:watch             # Vitest watch
 pnpm test:coverage          # V8 coverage; threshold 95% lines/functions/statements, 90% branches
 pnpm test:ci                # Same as coverage + JUnit reporter
-pnpm test:e2e               # Playwright E2E; spins up docker-compose.test.yml (Postgres+MinIO)
+pnpm test:e2e               # Playwright E2E; spins up docker-compose.test.yml (Postgres + Silo)
 pnpm test:e2e:install       # First-time Chromium install for Playwright
 ```
 
