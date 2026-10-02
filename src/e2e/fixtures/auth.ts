@@ -66,7 +66,9 @@ export async function seedAdminSession(context: BrowserContext) {
 
     // Name and sign the cookie with better-auth's own helpers so it matches
     // what the server verifies: the server rejects anything but a 44-character
-    // padded base64 HMAC, and the name gains a __Secure- prefix on https.
+    // padded base64 HMAC, and on https the name gains a __Secure- prefix that
+    // the browser only accepts on a Secure cookie, so take `secure` from there
+    // too.
     const { sessionToken } = getCookies({
       baseURL: process.env.BETTER_AUTH_URL,
       secret,
@@ -80,7 +82,7 @@ export async function seedAdminSession(context: BrowserContext) {
         domain: '127.0.0.1',
         path: '/',
         httpOnly: true,
-        secure: false,
+        secure: sessionToken.attributes.secure,
         sameSite: 'Lax',
         expires: Math.floor(Date.now() / 1000) + 3600,
       },
