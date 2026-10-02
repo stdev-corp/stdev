@@ -3,59 +3,92 @@
 // not just *.rds.amazonaws.com: a custom domain CNAMEd to RDS would otherwise
 // connect in plaintext.
 //
-// A non-RDS URL that already configures TLS in any way pg understands keeps it
-// untouched, as it did before this helper covered such hosts: adding
-// uselibpqcompat would turn a provider's `sslmode=require` or an `sslrootcert`
-// from a verified connection into an unverified one, `sslmode=no-verify` into a
+// A non-RDS connection that already configures TLS in any way pg understands
+// keeps it untouched, as it did before this helper covered such hosts: a TLS
+// parameter in the URL, or PGSSLMODE, which pg only consults when the URL brings
+// no TLS setting of its own. Adding sslmode/uselibpqcompat would turn a
+// provider's `sslmode=require`, an `sslrootcert` or `PGSSLMODE=verify-full` from
+// a verified connection into an unverified one, `sslmode=no-verify` into a
 // verified one, and make `sslmode=verify-ca` throw. RDS URLs keep the rules they
 // have always had (require unless the URL picks an sslmode, plus uselibpqcompat
 // so require means encrypt-only), since Node does not trust the RDS CA.
 //
-// Parameters are read the way pg-connection-string reads them: a repeated key
-// takes its last value, and an empty value counts as unset.
+// The URL is read the way pg-connection-string and pg read it: a repeated key
+// takes its last value, an empty value counts as unset, and the host falls back
+// from `?host=` to the authority to PGHOST.
 const tlsParams = ['sslmode', 'ssl', 'sslrootcert', 'sslcert', 'sslkey']
+
+// pg-connection-string's stand-in for the empty host of `user:pass@/db`, which
+// WHATWG rejects.
+const placeholderHost = '___DUMMY___'
 
 function lastParam(url: URL, name: string) {
   return url.searchParams.getAll(name).at(-1) || null
 }
 
-// The host pg will actually connect to: `?host=` wins over the authority, and a
-// host starting with `/` is a Unix socket directory (URL-encoded when it sits in
-// the authority). A special scheme normalizes what postgres: leaves as written:
-// case, IPv4 spellings such as 127.1 and IPv6 spellings of ::1. An IPv4-mapped
-// IPv6 address (::ffff:127.0.0.1, which WHATWG writes as [::ffff:7f00:1])
-// reaches the IPv4 address it wraps, so it is returned as that address.
-function connectionHost(url: URL) {
-  const raw = lastParam(url, 'host') || url.hostname
-  let host: string
+function parseDatabaseUrl(databaseUrl: string) {
+  const attempts = [
+    { input: databaseUrl, hasHost: true },
+    {
+      input: databaseUrl.replace('@/', `@${placeholderHost}/`),
+      hasHost: false,
+    },
+  ]
+
+  for (const { input, hasHost } of attempts) {
+    try {
+      return { url: new URL(input), hasHost }
+    } catch {
+      continue
+    }
+  }
+
+  return null
+}
+
+// The host pg will actually connect to: `?host=` wins over the authority, which
+// wins over PGHOST, and a host starting with `/` is a Unix socket directory
+// (URL-encoded when it sits in the authority). A special scheme normalizes what
+// postgres: leaves as written: case, IPv4 spellings such as 127.1 and IPv6
+// spellings of ::1. An IPv6 zone (::1%lo0) does not change the address, and an
+// IPv4-mapped IPv6 address (::ffff:127.0.0.1, which WHATWG writes as
+// [::ffff:7f00:1]) reaches the IPv4 address it wraps.
+function connectionHost(url: URL, hasHost: boolean) {
+  let authority = hasHost ? url.hostname : ''
 
   try {
-    host = decodeURIComponent(raw)
+    authority = decodeURIComponent(authority)
   } catch {
-    host = raw
+    // pg-connection-string would throw here too; classify the raw text.
   }
+
+  const host = lastParam(url, 'host') || authority || process.env.PGHOST || ''
 
   if (host === '' || host.startsWith('/')) {
     return host
   }
 
+  const unscoped = host.includes(':') ? host.replace(/%.*$/, '') : host
+
   // WHATWG reads a leading-zero part such as 0177 as octal, but not every
   // resolver does (macOS reads 0177.0.0.1 as 177.0.0.1), so do not guess.
   if (
-    /^[\d.]+$/.test(host) &&
-    host.split('.').some((part) => /^0\d/.test(part))
+    /^[\d.]+$/.test(unscoped) &&
+    unscoped.split('.').some((part) => /^0\d/.test(part))
   ) {
-    return host
+    return unscoped
   }
 
   let hostname: string
 
   try {
     const bracketed =
-      host.includes(':') && !host.startsWith('[') ? `[${host}]` : host
+      unscoped.includes(':') && !unscoped.startsWith('[')
+        ? `[${unscoped}]`
+        : unscoped
     hostname = new URL(`http://${bracketed}`).hostname.replace(/\.$/, '')
   } catch {
-    return host.toLowerCase()
+    return unscoped.toLowerCase()
   }
 
   const mapped = /^\[::ffff:([\da-f]{1,4}):([\da-f]{1,4})\]$/.exec(hostname)
@@ -82,22 +115,25 @@ function isLocalHost(host: string) {
 }
 
 export function withDatabaseSslParams(databaseUrl: string) {
-  let url: URL
-  try {
-    url = new URL(databaseUrl)
-  } catch {
+  const parsed = parseDatabaseUrl(databaseUrl)
+
+  if (!parsed) {
     return databaseUrl
   }
 
-  const host = connectionHost(url)
+  const { url, hasHost } = parsed
+  const host = connectionHost(url, hasHost)
 
   if (isLocalHost(host)) {
     return databaseUrl
   }
 
   const isRds = host.endsWith('.rds.amazonaws.com')
+  const choosesTls =
+    Boolean(process.env.PGSSLMODE) ||
+    tlsParams.some((name) => lastParam(url, name))
 
-  if (!isRds && tlsParams.some((name) => lastParam(url, name))) {
+  if (!isRds && choosesTls) {
     return databaseUrl
   }
 
@@ -109,5 +145,6 @@ export function withDatabaseSslParams(databaseUrl: string) {
     url.searchParams.set('uselibpqcompat', 'true')
   }
 
-  return url.toString()
+  const serialized = url.toString()
+  return hasHost ? serialized : serialized.replace(`@${placeholderHost}/`, '@/')
 }

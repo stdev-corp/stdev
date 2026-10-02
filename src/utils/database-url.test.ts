@@ -1,10 +1,20 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { withDatabaseSslParams } from '@/utils/database-url'
 
 const rds = 'postgres://u:p@db.abc.ap-northeast-2.rds.amazonaws.com:5432/stdev'
 const remote = 'postgres://u:p@db.example.org:5432/stdev'
 
 describe('withDatabaseSslParams', () => {
+  // pg falls back to these, so pin them; a developer's shell must not leak in.
+  beforeEach(() => {
+    vi.stubEnv('PGHOST', '')
+    vi.stubEnv('PGSSLMODE', '')
+  })
+
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
   it.each([
     ['an RDS endpoint', rds],
     ['a custom domain', remote],
@@ -89,6 +99,10 @@ describe('withDatabaseSslParams', () => {
     'postgres://u:p@0.0.0.0:5432/stdev',
     'postgres://u:p@[::]:5432/stdev',
     'postgresql:///stdev?host=::1',
+    'postgresql:///stdev?host=::1%25lo0',
+    'postgresql:///stdev?host=::1%25lo',
+    'postgres://u:p@/stdev',
+    'postgres://u:p@/stdev?host=/var/run/postgresql',
     'postgres://u:p@db.example.org:5432/stdev?host=::ffff:127.0.0.1',
     'postgresql:///stdev?host=::ffff:7f00:1',
     'postgres://u:p@[::ffff:127.0.0.1]:5432/stdev',
@@ -148,6 +162,46 @@ describe('withDatabaseSslParams', () => {
     const { searchParams } = new URL(withDatabaseSslParams(databaseUrl))
     expect(searchParams.get('sslmode')).toBe('require')
     expect(searchParams.get('uselibpqcompat')).toBe('true')
+  })
+
+  it('follows the remote ?host= of a credentialed empty-authority URL', () => {
+    expect(
+      withDatabaseSslParams('postgres://u:p@/stdev?host=db.example.org'),
+    ).toBe(
+      'postgres://u:p@/stdev?host=db.example.org&sslmode=require&uselibpqcompat=true',
+    )
+  })
+
+  it.each([
+    ['a remote PGHOST', 'db.example.org', true],
+    ['a local PGHOST', 'localhost', false],
+    ['a socket PGHOST', '/var/run/postgresql', false],
+  ])('follows %s when the URL has no host', (_, pgHost, getsTls) => {
+    vi.stubEnv('PGHOST', pgHost)
+    const databaseUrl = 'postgresql:///stdev'
+    expect(withDatabaseSslParams(databaseUrl)).toBe(
+      getsTls
+        ? `${databaseUrl}?sslmode=require&uselibpqcompat=true`
+        : databaseUrl,
+    )
+  })
+
+  it('lets a host in the URL win over PGHOST', () => {
+    vi.stubEnv('PGHOST', 'db.example.org')
+    const databaseUrl = 'postgres://u:p@localhost:5432/stdev'
+    expect(withDatabaseSslParams(databaseUrl)).toBe(databaseUrl)
+  })
+
+  it('keeps a non-RDS URL as it is when PGSSLMODE is set', () => {
+    vi.stubEnv('PGSSLMODE', 'verify-full')
+    expect(withDatabaseSslParams(remote)).toBe(remote)
+  })
+
+  it('still adds require to an RDS URL when PGSSLMODE is set', () => {
+    vi.stubEnv('PGSSLMODE', 'verify-full')
+    expect(withDatabaseSslParams(rds)).toBe(
+      `${rds}?sslmode=require&uselibpqcompat=true`,
+    )
   })
 
   it('returns an unparseable URL as-is', () => {
