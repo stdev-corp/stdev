@@ -1,4 +1,4 @@
-const allowedImageHosts = new Set(
+const s3Hosts = new Set(
   [
     'stdev-kr.s3.ap-northeast-2.amazonaws.com',
     process.env.S3_BUCKET
@@ -19,7 +19,9 @@ export function isSafeHttpsUrl(url: string | null | undefined) {
   }
 }
 
-export function isAllowedImageUrl(url: string | null | undefined) {
+export function isAllowedImageUrl(
+  url: string | null | undefined,
+): url is string {
   if (!isSafeHttpsUrl(url)) {
     return false
   }
@@ -33,9 +35,33 @@ export function isAllowedImageUrl(url: string | null | undefined) {
         pathname.endsWith(extension),
       )
 
-    return allowedImageHosts.has(parsed.hostname) && looksLikeImagePath
+    return s3Hosts.has(parsed.hostname) && looksLikeImagePath
   } catch {
     return false
+  }
+}
+
+// Pages link and render S3 assets at the URL they were stored under
+// (https://<bucket>.s3.<region>.amazonaws.com/<key>) unless S3_PUBLIC_BASE_URL
+// points somewhere else. E2E points it at the local S3 sidecar so next/image and
+// download links never reach the real bucket; production leaves it unset.
+export function toPublicAssetUrl(url: string) {
+  const base = process.env.S3_PUBLIC_BASE_URL
+
+  if (!base) {
+    return url
+  }
+
+  try {
+    const parsed = new URL(url)
+
+    if (!s3Hosts.has(parsed.hostname)) {
+      return url
+    }
+
+    return `${base.replace(/\/+$/, '')}${parsed.pathname}${parsed.search}`
+  } catch {
+    return url
   }
 }
 

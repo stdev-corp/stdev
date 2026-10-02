@@ -8,18 +8,43 @@ const s3Hosts = new Set([
     : null,
 ])
 
+// E2E serves S3 assets from the local sidecar instead of the bucket (see
+// toPublicAssetUrl). Next refuses to optimize images from loopback addresses
+// unless dangerouslyAllowLocalIP is set, so allow that only for a loopback base;
+// production leaves S3_PUBLIC_BASE_URL unset and keeps the S3-only patterns.
+const publicAssetBase = process.env.S3_PUBLIC_BASE_URL
+  ? new URL(process.env.S3_PUBLIC_BASE_URL)
+  : null
+const loopbackHosts = new Set(['127.0.0.1', 'localhost', '[::1]'])
+
 const nextConfig: NextConfig = {
   output: 'standalone',
   images: {
-    remotePatterns: [...s3Hosts]
-      .filter((hostname): hostname is string => Boolean(hostname))
-      .map((hostname) => ({
-        protocol: 'https',
-        hostname,
-        port: '',
-        pathname: '**',
-        search: '',
-      })),
+    remotePatterns: [
+      ...[...s3Hosts]
+        .filter((hostname): hostname is string => Boolean(hostname))
+        .map((hostname) => ({
+          protocol: 'https' as const,
+          hostname,
+          port: '',
+          pathname: '**',
+          search: '',
+        })),
+      ...(publicAssetBase
+        ? [
+            {
+              protocol: publicAssetBase.protocol === 'http:' ? 'http' : 'https',
+              hostname: publicAssetBase.hostname,
+              port: publicAssetBase.port,
+              pathname: `${publicAssetBase.pathname.replace(/\/+$/, '')}/**`,
+              search: '',
+            } as const,
+          ]
+        : []),
+    ],
+    dangerouslyAllowLocalIP: Boolean(
+      publicAssetBase && loopbackHosts.has(publicAssetBase.hostname),
+    ),
   },
   experimental: {
     authInterrupts: true,
