@@ -89,6 +89,10 @@ describe('withDatabaseSslParams', () => {
     'postgres://u:p@0.0.0.0:5432/stdev',
     'postgres://u:p@[::]:5432/stdev',
     'postgresql:///stdev?host=::1',
+    'postgres://u:p@db.example.org:5432/stdev?host=::ffff:127.0.0.1',
+    'postgresql:///stdev?host=::ffff:7f00:1',
+    'postgres://u:p@[::ffff:127.0.0.1]:5432/stdev',
+    'postgres://u:p@[::ffff:0.0.0.0]:5432/stdev',
     'postgresql:///stdev?host=/var/run/postgresql',
     'postgres://u@%2Fvar%2Frun%2Fpostgresql/stdev',
   ])('leaves the local database %s untouched', (databaseUrl) => {
@@ -136,6 +140,10 @@ describe('withDatabaseSslParams', () => {
       'postgres://u@db%E0%A4%A.example.org/stdev',
     ],
     ['a host only postgres: accepts', 'postgresql:///stdev?host=DB%20HOST'],
+    [
+      'an IPv4-mapped address outside 127/8',
+      'postgresql:///stdev?host=::ffff:10.0.1.5',
+    ],
   ])('treats %s as remote', (_, databaseUrl) => {
     const { searchParams } = new URL(withDatabaseSslParams(databaseUrl))
     expect(searchParams.get('sslmode')).toBe('require')

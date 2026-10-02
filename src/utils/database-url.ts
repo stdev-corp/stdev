@@ -22,7 +22,9 @@ function lastParam(url: URL, name: string) {
 // The host pg will actually connect to: `?host=` wins over the authority, and a
 // host starting with `/` is a Unix socket directory (URL-encoded when it sits in
 // the authority). A special scheme normalizes what postgres: leaves as written:
-// case, IPv4 spellings such as 127.1 and IPv6 spellings of ::1.
+// case, IPv4 spellings such as 127.1 and IPv6 spellings of ::1. An IPv4-mapped
+// IPv6 address (::ffff:127.0.0.1, which WHATWG writes as [::ffff:7f00:1])
+// reaches the IPv4 address it wraps, so it is returned as that address.
 function connectionHost(url: URL) {
   const raw = lastParam(url, 'host') || url.hostname
   let host: string
@@ -46,13 +48,24 @@ function connectionHost(url: URL) {
     return host
   }
 
+  let hostname: string
+
   try {
     const bracketed =
       host.includes(':') && !host.startsWith('[') ? `[${host}]` : host
-    return new URL(`http://${bracketed}`).hostname.replace(/\.$/, '')
+    hostname = new URL(`http://${bracketed}`).hostname.replace(/\.$/, '')
   } catch {
     return host.toLowerCase()
   }
+
+  const mapped = /^\[::ffff:([\da-f]{1,4}):([\da-f]{1,4})\]$/.exec(hostname)
+
+  if (!mapped) {
+    return hostname
+  }
+
+  const [high, low] = [mapped[1], mapped[2]].map((part) => parseInt(part, 16))
+  return [high >> 8, high & 255, low >> 8, low & 255].join('.')
 }
 
 function isLocalHost(host: string) {
