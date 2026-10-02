@@ -12,7 +12,6 @@ node_modules
 
 # testing
 /coverage
-/coverage-db
 /playwright-report
 /test-results
 /.vitest-cache

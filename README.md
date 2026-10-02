@@ -54,13 +54,13 @@ pnpm test:ci
 
 ### E2E 테스트
 
-Playwright E2E 테스트는 실제 브라우저, Next.js 서버, 테스트용 Postgres DB, MinIO (S3 mock)가 필요합니다. 처음 실행하는 환경에서는 Chromium 브라우저를 먼저 설치합니다.
+Playwright E2E 테스트는 실제 브라우저, Next.js 서버, 테스트용 Postgres DB, S3 sidecar(MinIO fork인 Silo)가 필요합니다. 처음 실행하는 환경에서는 Chromium 브라우저를 먼저 설치합니다.
 
 ```bash
 pnpm test:e2e:install
 ```
 
-그 다음 E2E 테스트를 실행합니다. 이 명령은 레포에 커밋된 `.env.test`를 사용하고, `docker-compose.test.yml`의 Postgres와 MinIO를 띄운 뒤 Prisma migration과 dummy data seed를 적용한 다음 Playwright를 실행합니다. `.env.test`에 `AWS_ENDPOINT_URL_S3=http://127.0.0.1:9000`이 설정돼 있어 S3Client는 실제 AWS가 아닌 로컬 MinIO로 붙습니다.
+그 다음 E2E 테스트를 실행합니다. 이 명령은 레포에 커밋된 `.env.test`를 사용하고, `docker-compose.test.yml`의 Postgres와 Silo를 띄운 뒤 Prisma migration과 dummy data seed를 적용한 다음 Playwright를 실행합니다. `.env.test`에 `AWS_ENDPOINT_URL_S3=http://127.0.0.1:9000`이 설정돼 있어 S3Client는 실제 AWS가 아닌 로컬 Silo로 붙습니다.
 
 ```bash
 pnpm test:e2e
@@ -90,6 +90,10 @@ Github 레포지토리 설정에서 `Actions secrets and variables` 페이지로
 - BETTER_AUTH_URL=<https://www.stdev.kr>
 - GOOGLE_CLIENT_ID=example.apps.googleusercontent.com
 - GOOGLE_CLIENT_SECRET=example
+- S3_BUCKET=stdev-kr
+- AWS_REGION=ap-northeast-2
+
+이 값은 `main`에 push될 때의 이미지 빌드에서만 쓰입니다. PR의 `Build Docker Image`는 이미지를 push하지 않으므로 `.env.test`의 dummy 값으로 빌드합니다. Dependabot이나 fork PR은 Actions secrets를 읽을 수 없기 때문입니다.
 
 서버에서 `Docker Compose` 환경을 설정한 후, `docker-compose.yml` 을 아래와 같이 작성합니다.
 

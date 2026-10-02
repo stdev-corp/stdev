@@ -17,16 +17,15 @@ stdev/
 ├── prisma.config.ts                # Prisma config; reads DATABASE_URL
 ├── pnpm-workspace.yaml             # workspace packages + allowBuilds (must COPY into Dockerfile deps)
 ├── vitest.config.ts                # Unit / component / mocked-integration (jsdom)
-├── vitest.config.integration.ts    # Real-DB integration suite (src/tests/db/**)
-├── playwright.config.ts            # E2E (real Postgres + MinIO via docker-compose.test.yml)
-├── docker-compose.test.yml         # Postgres + MinIO for E2E and DB integration
+├── playwright.config.ts            # E2E (real Postgres + S3 sidecar via docker-compose.test.yml)
+├── docker-compose.test.yml         # Postgres + Silo (MinIO-fork S3 sidecar) for E2E
 ├── tools/migrate/package.json      # Prisma CLI manifest; `pnpm deploy` feeds the Dockerfile migrator stage
 ├── Dockerfile                      # Multi-stage standalone Next build + in-container migration toolchain
 ├── src/
 │   ├── app/                        # (stdev) public site, (cms) admin, api/auth
 │   ├── components/                 # UI building blocks (krds/ = public chrome, admin/ = CMS)
 │   ├── styles/krds/                # Vendored KRDS CSS + site layer (see its README)
-│   ├── tests/                      # Vitest suites (actions, mocks, pages, utils, db)
+│   ├── tests/                      # Vitest suites (actions, mocks, pages, utils)
 │   ├── e2e/                        # Playwright specs + fixtures
 │   └── utils/                      # cms.ts, prisma.ts, auth.ts, menus/links/date helpers
 ├── public/images/                  # intro/, business/, gov/ static assets
@@ -47,7 +46,7 @@ stdev/
 | Shared layout chrome    | `src/components/krds/`                                                                        | `site-layout`, `main-layout`, `header`, `footer`, `breadcrumb`, `side-navigation`, `page-title`, `skip-link`                                     |
 | Markdown rendering      | `src/components/markdown/markdown-view.tsx`                                                   | react-markdown + remark-gfm inside `.markdown-body`; styled by `src/styles/krds/stdev-krds.css`                                                  |
 | Add/adjust unit test    | Colocated `*.test.{ts,tsx}` next to source, or under `src/tests/{actions,pages,utils,mocks}/` | Picked up by `vitest.config.ts`                                                                                                                  |
-| Add E2E spec            | `src/e2e/**.spec.ts` (+ fixtures in `src/e2e/fixtures/`)                                      | Runs against Postgres+MinIO from `docker-compose.test.yml`                                                                                       |
+| Add E2E spec            | `src/e2e/**.spec.ts` (+ fixtures in `src/e2e/fixtures/`)                                      | Runs against Postgres + the Silo S3 sidecar from `docker-compose.test.yml`                                                                       |
 | Docker image change     | `Dockerfile`                                                                                  | If editing `deps` stage, also re-check the `COPY` list — workspace yaml and `tools/migrate/package.json` must be present for `--frozen-lockfile` |
 | Prisma CLI in the image | `Dockerfile` migrator stage + `tools/migrate/package.json`                                    | Bump the CLI here and in the root `package.json` together, then regenerate the lockfile                                                          |
 
@@ -80,6 +79,7 @@ stdev/
 - Do not add imports to `prisma.config.ts` (or to `src/utils/database-url.ts`) without adding the package to `tools/migrate/package.json` and exposing it in the runner stage. The config is loaded from `/app` inside the container, where only `prisma` and `dotenv` resolve; anything else fails at migration time with a bare `Cannot find module`.
 - Do not add a workspace package under `tools/` without also COPYing its install into the `builder` stage (`COPY --from=deps /app/tools ./tools`). pnpm checks every workspace project's `node_modules` before running a script, so `pnpm run build` would otherwise do a full network install first. This hides on a developer machine — keep `.dockerignore` at `**/node_modules` (not `node_modules`, which only matches the root one) so a git-ignored `tools/*/node_modules` cannot leak into the build context and mask it.
 - Do not drop `pnpm_config_verify_deps_before_run=false` from the runner stage. `/app` holds the full `package.json` but only Next's traced dependencies, so pnpm's pre-run check would try to install the whole dev tree and move traced packages into `node_modules/.ignored`, breaking the running server.
+- Do not add a `--mount=type=secret` to the Dockerfile builder stage without also adding the key to `.env.test` and to both build steps in `.github/workflows/cd.yml` (the `.env.test` loader regex plus `secret-envs` for PRs, `secrets` for main). PR builds never see Actions secrets — Dependabot and fork runs cannot read them — so they build from the dummy values in `.env.test`. Do not replace that split with a `secrets.X || 'dummy'` fallback: a deleted production secret would then silently ship a dummy value from main.
 
 ## COMMANDS
 
@@ -97,13 +97,13 @@ pnpm test                   # Vitest run (unit + component + mocked integration,
 pnpm test:watch             # Vitest watch
 pnpm test:coverage          # V8 coverage; threshold 95% lines/functions/statements, 90% branches
 pnpm test:ci                # Same as coverage + JUnit reporter
-pnpm test:e2e               # Playwright E2E; spins up docker-compose.test.yml (Postgres+MinIO)
+pnpm test:e2e               # Playwright E2E; spins up docker-compose.test.yml (Postgres + Silo)
 pnpm test:e2e:install       # First-time Chromium install for Playwright
 ```
 
 ## NOTES
 
-- Test stack: Vitest 4 (unit / component / mocked integration in jsdom) + Vitest separate integration suite against real Postgres + Playwright E2E. CI runs all of these on every PR.
+- Test stack: Vitest 4 (unit / component / mocked integration in jsdom) + Playwright E2E against real Postgres and the S3 sidecar. CI runs both on every PR. There is no real-DB Vitest suite.
 - Vitest 4 specifics: `coverage.all` and `test.poolOptions` were removed; this repo uses top-level `pool: 'forks'` + `maxWorkers: 1` (per-file module isolation preserved via default `isolate: true`).
 - Docker prod port is 1000.
 - The production image can migrate itself: `docker compose run --rm stdev pnpm db:migrate:deploy` (or `exec` on a running container). The `migrator` stage `pnpm deploy`s `tools/migrate` into `/app/.migrate/node_modules`, whose only top-level entries are `prisma` and `dotenv`, so it cannot shadow Next's traced output; `/app/node_modules` gets three symlinks because Prisma resolves `prisma.config.ts` and its imports from the working directory. The schema engine is a musl binary fetched by `@prisma/engines`' postinstall, so that stage must build on the same platform as the runner. Cost: +278 MB on the image (263 MB -> 541 MB uncompressed).
