@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'
-import { randomBytes, createHmac } from 'node:crypto'
+import { randomBytes } from 'node:crypto'
+import { getCookies } from 'better-auth/cookies'
+import { makeSignature } from 'better-auth/crypto'
 import type { BrowserContext } from '@playwright/test'
 
 function createClient() {
@@ -23,6 +25,9 @@ export async function seedAdminSession(context: BrowserContext) {
   const token = randomBytes(32).toString('hex')
 
   try {
+    // A retried test seeds again with the same email and Google account id, so
+    // clear the previous run's admin first (its accounts and sessions cascade).
+    await prisma.user.deleteMany({ where: { email: 'e2e@stdev.kr' } })
     await prisma.user.create({
       data: {
         id: userId,
@@ -53,24 +58,31 @@ export async function seedAdminSession(context: BrowserContext) {
       },
     })
 
-    const secret =
-      process.env.BETTER_AUTH_SECRET ?? 'test-better-auth-secret-32-chars-min'
-    const signature = createHmac('sha256', secret)
-      .update(token)
-      .digest('base64url')
-    const cookieValue = `${token}.${signature}`
+    const secret = process.env.BETTER_AUTH_SECRET
 
-    // better-auth session cookie details can change by version. If this bypass
-    // stops authenticating, keep OAuth covered by admin-signin.spec.ts and skip
-    // admin CRUD smoke until the current cookie format is re-confirmed.
+    if (!secret) {
+      throw new Error('BETTER_AUTH_SECRET is required for E2E tests')
+    }
+
+    // Name and sign the cookie with better-auth's own helpers so it matches
+    // what the server verifies: the server rejects anything but a 44-character
+    // padded base64 HMAC, and on https the name gains a __Secure- prefix that
+    // the browser only accepts on a Secure cookie, so take `secure` from there
+    // too.
+    const { sessionToken } = getCookies({
+      baseURL: process.env.BETTER_AUTH_URL,
+      secret,
+    })
+    const signature = await makeSignature(token, secret)
+
     await context.addCookies([
       {
-        name: 'better-auth.session_token',
-        value: cookieValue,
+        name: sessionToken.name,
+        value: encodeURIComponent(`${token}.${signature}`),
         domain: '127.0.0.1',
         path: '/',
         httpOnly: true,
-        secure: false,
+        secure: sessionToken.attributes.secure,
         sameSite: 'Lax',
         expires: Math.floor(Date.now() / 1000) + 3600,
       },
