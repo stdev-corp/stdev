@@ -16,10 +16,21 @@ vi.mock('@prisma/adapter-pg', () => {
   return { PrismaPg }
 })
 
+// The mocks above keep their constructor arguments, so this reads back what
+// src/utils/prisma.ts handed to PrismaPg.
+function adapterConfig(prisma: unknown) {
+  return (prisma as { config: { adapter: { config: unknown } } }).config.adapter
+    .config
+}
+
 describe('prisma singleton', () => {
   beforeEach(() => {
     vi.resetModules()
     vi.doUnmock('@/utils/prisma')
+    // withDatabaseSslParams also reads these, so a developer's or CI shell must
+    // not decide what the adapter receives.
+    vi.stubEnv('PGHOST', '')
+    vi.stubEnv('PGSSLMODE', '')
   })
 
   afterEach(() => {
@@ -60,18 +71,21 @@ describe('prisma singleton', () => {
     expect((globalThis as { prisma?: unknown }).prisma).toBeUndefined()
   })
 
-  it('respects DATABASE_SSL_REJECT_UNAUTHORIZED=false', async () => {
+  it('passes a local DATABASE_URL to the adapter unchanged', async () => {
     vi.stubEnv('DATABASE_URL', 'postgres://test:test@localhost:5432/test')
-    vi.stubEnv('DATABASE_SSL_REJECT_UNAUTHORIZED', 'false')
     const mod = await import('@/utils/prisma')
-    expect(mod.prisma).toBeDefined()
+    expect(adapterConfig(mod.prisma)).toEqual({
+      connectionString: 'postgres://test:test@localhost:5432/test',
+    })
   })
 
-  it('defaults DATABASE_SSL_REJECT_UNAUTHORIZED to true when env is not "false"', async () => {
-    vi.stubEnv('DATABASE_URL', 'postgres://test:test@localhost:5432/test')
-    vi.stubEnv('DATABASE_SSL_REJECT_UNAUTHORIZED', 'true')
+  it('adds the SSL params for a remote DATABASE_URL', async () => {
+    vi.stubEnv('DATABASE_URL', 'postgres://test:test@db.example.org:5432/test')
     const mod = await import('@/utils/prisma')
-    expect(mod.prisma).toBeDefined()
+    expect(adapterConfig(mod.prisma)).toEqual({
+      connectionString:
+        'postgres://test:test@db.example.org:5432/test?sslmode=require&uselibpqcompat=true',
+    })
   })
 
   it('exports a prisma client object with $connect and $disconnect methods', async () => {
