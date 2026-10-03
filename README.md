@@ -60,7 +60,7 @@ Playwright E2E 테스트는 실제 브라우저, Next.js 서버, 테스트용 Po
 pnpm test:e2e:install
 ```
 
-그 다음 E2E 테스트를 실행합니다. 이 명령은 레포에 커밋된 `.env.test`를 사용하고, `docker-compose.test.yml`의 Postgres와 Silo를 띄운 뒤 Prisma migration과 dummy data seed를 적용한 다음 Playwright를 실행합니다. `.env.test`에 `AWS_ENDPOINT_URL_S3=http://127.0.0.1:9000`이 설정돼 있어 S3Client는 실제 AWS가 아닌 로컬 Silo로 붙습니다.
+그 다음 E2E 테스트를 실행합니다. 이 명령은 레포에 커밋된 `.env.test`를 사용합니다. `.env`를 따로 만들 필요가 없고, `.env`나 `.env.local`이 있어도 `.env.test`에 있는 값이 우선합니다. 다만 셸에서 export한 환경 변수는 `.env.test`보다 우선하고, `.env.test`에 없는 키는 `.env`/`.env.local` 값이 그대로 쓰입니다. seed가 DB를 초기화하므로 `DATABASE_URL`을 export한 셸에서는 실행하지 마세요. 먼저 `.env.test` 값으로 Next.js를 빌드하고, `docker-compose.test.yml`의 Postgres와 Silo를 띄운 뒤 Prisma migration과 dummy data seed를 적용한 다음 Playwright를 실행합니다. `.env.test`에 `AWS_ENDPOINT_URL_S3=http://127.0.0.1:9000`이 설정돼 있어 S3Client는 실제 AWS가 아닌 로컬 Silo로 붙습니다.
 
 ```bash
 pnpm test:e2e
