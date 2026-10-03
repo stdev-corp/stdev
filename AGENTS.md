@@ -97,7 +97,7 @@ pnpm test                   # Vitest run (unit + component + mocked integration,
 pnpm test:watch             # Vitest watch
 pnpm test:coverage          # V8 coverage; threshold 95% lines/functions/statements, 90% branches
 pnpm test:ci                # Same as coverage + JUnit reporter
-pnpm test:e2e               # Playwright E2E; spins up docker-compose.test.yml (Postgres + Silo)
+pnpm test:e2e               # Playwright E2E; builds with .env.test, spins up docker-compose.test.yml (Postgres + Silo)
 pnpm test:e2e:install       # First-time Chromium install for Playwright
 ```
 

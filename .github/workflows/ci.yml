@@ -104,8 +104,8 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Install Playwright browser
         run: pnpm test:e2e:install
-      - name: Copy test env for Next.js build
-        run: cp .env.test .env
+      # No .env copy here: `pnpm test:e2e` builds and runs against .env.test
+      # itself, so this job also covers a checkout without .env.
       - name: Run Playwright with dummy DB
         run: pnpm test:e2e
       - name: Stop dummy DB
