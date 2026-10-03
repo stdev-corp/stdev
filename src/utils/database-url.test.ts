@@ -19,7 +19,14 @@ describe('withDatabaseSslParams', () => {
     ['an RDS endpoint', rds],
     ['a custom domain', remote],
     ['a private IP', 'postgres://u:p@10.0.1.5:5432/stdev'],
-    ['a leading-zero IPv4 spelling', 'postgres://u:p@0177.0.0.1:5432/stdev'],
+    [
+      'a leading-zero IPv4 spelling resolvers read differently',
+      'postgres://u:p@0177.0.0.1:5432/stdev',
+    ],
+    [
+      'a leading-zero part only octal rejects',
+      'postgres://u:p@127.08:5432/stdev',
+    ],
   ])('adds libpq-style sslmode=require for %s', (_, databaseUrl) => {
     expect(withDatabaseSslParams(databaseUrl)).toBe(
       `${databaseUrl}?sslmode=require&uselibpqcompat=true`,
@@ -92,6 +99,9 @@ describe('withDatabaseSslParams', () => {
     'postgres:///stdev',
     'postgres://u:p@127.1:5432/stdev',
     'postgres://u:p@127.0.0.2:5432/stdev',
+    'postgres://u:p@127.01:5432/stdev',
+    'postgres://u:p@127.0.01:5432/stdev',
+    'postgres://u:p@0177.1:5432/stdev',
     'postgres://u:p@0x7f.1:5432/stdev',
     'postgres://u:p@[0:0:0:0:0:0:0:1]:5432/stdev',
     'postgres://u:p@localhost.:5432/stdev',
@@ -155,6 +165,10 @@ describe('withDatabaseSslParams', () => {
     ],
     ['a host only postgres: accepts', 'postgresql:///stdev?host=DB%20HOST'],
     [
+      'a 127 quad with an octet above 255',
+      'postgresql:///stdev?host=127.0.0.256',
+    ],
+    [
       'an IPv4-mapped address outside 127/8',
       'postgresql:///stdev?host=::ffff:10.0.1.5',
     ],
@@ -195,6 +209,36 @@ describe('withDatabaseSslParams', () => {
   it('keeps a non-RDS URL as it is when PGSSLMODE is set', () => {
     vi.stubEnv('PGSSLMODE', 'verify-full')
     expect(withDatabaseSslParams(remote)).toBe(remote)
+  })
+
+  it.each(['allow', 'REQUIRE', 'verify_full'])(
+    'adds require when PGSSLMODE=%s, which pg ignores',
+    (pgSslMode) => {
+      vi.stubEnv('PGSSLMODE', pgSslMode)
+      expect(withDatabaseSslParams(remote)).toBe(
+        `${remote}?sslmode=require&uselibpqcompat=true`,
+      )
+    },
+  )
+
+  it.each([
+    ['postgres://@/stdev', 'postgres:///stdev'],
+    ['postgres://:@/stdev', 'postgres:///stdev'],
+  ])(
+    'keeps the placeholder out of %s with an empty userinfo',
+    (databaseUrl, emptyAuthority) => {
+      vi.stubEnv('PGHOST', 'db.example.org')
+      expect(withDatabaseSslParams(databaseUrl)).toBe(
+        `${emptyAuthority}?sslmode=require&uselibpqcompat=true`,
+      )
+    },
+  )
+
+  it('adds require when PGSSLMODE is set but an empty ssl hides it from pg', () => {
+    vi.stubEnv('PGSSLMODE', 'verify-full')
+    expect(withDatabaseSslParams(`${remote}?ssl=`)).toBe(
+      `${remote}?ssl=&sslmode=require&uselibpqcompat=true`,
+    )
   })
 
   it('still adds require to an RDS URL when PGSSLMODE is set', () => {

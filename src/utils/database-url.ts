@@ -5,9 +5,10 @@
 //
 // A non-RDS connection that already configures TLS in any way pg understands
 // keeps it untouched, as it did before this helper covered such hosts: a TLS
-// parameter in the URL, or PGSSLMODE, which pg only consults when the URL brings
-// no TLS setting of its own. Adding sslmode/uselibpqcompat would turn a
-// provider's `sslmode=require`, an `sslrootcert` or `PGSSLMODE=verify-full` from
+// parameter in the URL, or a PGSSLMODE that pg recognises, which pg only
+// consults when the URL leaves `ssl` undefined (an `ssl` key counts even when
+// empty). Adding sslmode/uselibpqcompat would turn a provider's
+// `sslmode=require`, an `sslrootcert` or `PGSSLMODE=verify-full` from
 // a verified connection into an unverified one, `sslmode=no-verify` into a
 // verified one, and make `sslmode=verify-ca` throw. RDS URLs keep the rules they
 // have always had (require unless the URL picks an sslmode, plus uselibpqcompat
@@ -17,6 +18,17 @@
 // takes its last value, an empty value counts as unset, and the host falls back
 // from `?host=` to the authority to PGHOST.
 const tlsParams = ['sslmode', 'ssl', 'sslrootcert', 'sslcert', 'sslkey']
+
+// The PGSSLMODE values pg acts on. Anything else (allow, REQUIRE, a typo) is
+// ignored and pg connects in plaintext, so it is no TLS choice at all.
+const pgSslModes = [
+  'disable',
+  'prefer',
+  'require',
+  'verify-ca',
+  'verify-full',
+  'no-verify',
+]
 
 // pg-connection-string's stand-in for the empty host of `user:pass@/db`, which
 // WHATWG rejects.
@@ -70,25 +82,37 @@ function connectionHost(url: URL, hasHost: boolean) {
 
   const unscoped = host.includes(':') ? host.replace(/%.*$/, '') : host
 
-  // WHATWG reads a leading-zero part such as 0177 as octal, but not every
-  // resolver does (macOS reads 0177.0.0.1 as 177.0.0.1), so do not guess.
+  // Resolvers disagree on a leading-zero part: WHATWG, glibc and musl read 0177
+  // as octal, while macOS reads it as decimal in a full four-part address
+  // (0177.0.0.1 is 177.0.0.1 there) and as octal in a shorter one. Count such a
+  // host as local only when both readings are loopback, as 127.01 is.
   if (
     /^[\d.]+$/.test(unscoped) &&
     unscoped.split('.').some((part) => /^0\d/.test(part))
   ) {
-    return unscoped
+    const parts = unscoped.replace(/\.$/, '').split('.')
+    const decimalSpelling =
+      parts.length === 4
+        ? parts.map((part) => part.replace(/^0+(?=\d)/, '')).join('.')
+        : unscoped
+    const [octal, decimal] = [unscoped, decimalSpelling].map(normalizeHost)
+    return octal && decimal && isLocalHost(octal) && isLocalHost(decimal)
+      ? octal
+      : unscoped
   }
 
+  return normalizeHost(unscoped) ?? unscoped.toLowerCase()
+}
+
+function normalizeHost(host: string) {
   let hostname: string
 
   try {
     const bracketed =
-      unscoped.includes(':') && !unscoped.startsWith('[')
-        ? `[${unscoped}]`
-        : unscoped
+      host.includes(':') && !host.startsWith('[') ? `[${host}]` : host
     hostname = new URL(`http://${bracketed}`).hostname.replace(/\.$/, '')
   } catch {
-    return unscoped.toLowerCase()
+    return null
   }
 
   const mapped = /^\[::ffff:([\da-f]{1,4}):([\da-f]{1,4})\]$/.exec(hostname)
@@ -110,7 +134,9 @@ function isLocalHost(host: string) {
     host === '0.0.0.0' ||
     host === '[::]' ||
     host === '[::1]' ||
-    /^127(?:\.\d+){3}$/.test(host)
+    // Only canonical octets: normalizeHost returns every real IPv4 address in
+    // that form, so anything else (127.0.0.256) reaches the OS as a hostname.
+    /^127(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/.test(host)
   )
 }
 
@@ -130,8 +156,9 @@ export function withDatabaseSslParams(databaseUrl: string) {
 
   const isRds = host.endsWith('.rds.amazonaws.com')
   const choosesTls =
-    Boolean(process.env.PGSSLMODE) ||
-    tlsParams.some((name) => lastParam(url, name))
+    tlsParams.some((name) => lastParam(url, name)) ||
+    (pgSslModes.includes(process.env.PGSSLMODE ?? '') &&
+      !url.searchParams.has('ssl'))
 
   if (!isRds && choosesTls) {
     return databaseUrl
@@ -145,6 +172,8 @@ export function withDatabaseSslParams(databaseUrl: string) {
     url.searchParams.set('uselibpqcompat', 'true')
   }
 
+  // WHATWG drops the `@` of an empty userinfo (postgres://@/db), so restore the
+  // placeholder without relying on it.
   const serialized = url.toString()
-  return hasHost ? serialized : serialized.replace(`@${placeholderHost}/`, '@/')
+  return hasHost ? serialized : serialized.replace(`${placeholderHost}/`, '/')
 }

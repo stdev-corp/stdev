@@ -27,6 +27,10 @@ describe('prisma singleton', () => {
   beforeEach(() => {
     vi.resetModules()
     vi.doUnmock('@/utils/prisma')
+    // withDatabaseSslParams also reads these, so a developer's or CI shell must
+    // not decide what the adapter receives.
+    vi.stubEnv('PGHOST', '')
+    vi.stubEnv('PGSSLMODE', '')
   })
 
   afterEach(() => {
