@@ -4,6 +4,14 @@
 packages:
   - tools/*
 
+# GHSA-g3hv-75wg-m249: @typescript-eslint/typescript-estree 8.72.2 (latest
+# stable, pulled by eslint-config-next) still ranges minimatch ^10.2.2, and no
+# 10.x carries the fix. Its only call is `minimatch(path, pattern, { dot })`,
+# unchanged in 11. Drop this once typescript-eslint ships its own ^11 range
+# (already on its canary).
+overrides:
+  '@typescript-eslint/typescript-estree>minimatch': ^11.0.1
+
 allowBuilds:
   '@prisma/client': true
   '@prisma/engines': true

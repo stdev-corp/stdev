@@ -39,7 +39,6 @@ export async function seedAdminSession(context: BrowserContext) {
     await prisma.account.create({
       data: {
         id: `acc-${userId}`,
-        issuer: 'https://accounts.google.com',
         accountId: 'google-acc',
         providerId: 'google',
         userId,
