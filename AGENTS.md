@@ -103,8 +103,9 @@ pnpm test:e2e:install       # First-time Chromium install for Playwright
 
 ## NOTES
 
-- Test stack: Vitest 4 (unit / component / mocked integration in jsdom) + Playwright E2E against real Postgres and the S3 sidecar. CI runs both on every PR. There is no real-DB Vitest suite.
-- Vitest 4 specifics: `coverage.all` and `test.poolOptions` were removed; this repo uses top-level `pool: 'forks'` + `maxWorkers: 1` (per-file module isolation preserved via default `isolate: true`).
+- Test stack: Vitest 5 (unit / component / mocked integration in jsdom) + Playwright E2E against real Postgres and the S3 sidecar. CI runs both on every PR. There is no real-DB Vitest suite.
+- Vitest 5 specifics: `coverage.all` and `test.poolOptions` no longer exist; this repo uses top-level `pool: 'forks'` + `maxWorkers: 1` (per-file module isolation preserved via default `isolate: true`). `vite` is a peer of Vitest, not a dependency; pnpm auto-installs it (Vite 8). The `@/*` alias in `vitest.config.ts` is the only path mapping, so no tsconfig-paths plugin is needed. `coverage.exclude` entries are picomatch globs matched against the root-relative path, so `src/app/(stdev)/sitemap.ts` is really excluded now (under Vitest 4 the `(stdev)` group never matched and the file stayed in the report).
+- jsdom stays on 30.x. jsdom 31's CSS engine applies Chakra's `@layer` styles at a fixed 1024×768 viewport that tests cannot change: the admin shell's mobile hamburger becomes `display: none`, and closing drawers and dialogs wait for an `animationend` jsdom never fires.
 - Docker prod port is 1000.
 - The production image can migrate itself: `docker compose run --rm stdev pnpm db:migrate:deploy` (or `exec` on a running container). The `migrator` stage `pnpm deploy`s `tools/migrate` into `/app/.migrate/node_modules`, whose only top-level entries are `prisma` and `dotenv`, so it cannot shadow Next's traced output; `/app/node_modules` gets three symlinks because Prisma resolves `prisma.config.ts` and its imports from the working directory. The schema engine is a musl binary fetched by `@prisma/engines`' postinstall, so that stage must build on the same platform as the runner. Cost: +278 MB on the image (263 MB -> 541 MB uncompressed).
 - Existing S3 object URLs are preserved as CMS asset URLs; remote host is `stdev-kr.s3.ap-northeast-2.amazonaws.com`.
@@ -116,7 +117,7 @@ pnpm test:e2e:install       # First-time Chromium install for Playwright
 
 <!-- BEGIN:nextjs-agent-rules -->
 
-# This is NOT the Next.js you know
+## This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
 
