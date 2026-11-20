@@ -1,6 +1,9 @@
 import type { Element, ElementContent, Root as HastRoot } from 'hast'
 import type { Paragraph, PhrasingContent, Root, RootContent } from 'mdast'
-import type {} from 'remark-directive'
+import remarkDirective from 'remark-directive'
+import remarkGfm from 'remark-gfm'
+import remarkParse from 'remark-parse'
+import { unified } from 'unified'
 import { visit, SKIP } from 'unist-util-visit'
 
 /*
@@ -146,24 +149,26 @@ export function pageLinkKey(
   return `${event ?? ''}:${path ?? ''}`
 }
 
-const PAGE_DIRECTIVE = /^[ \t]*::page(?:\[[^\]\n]*\])?\{([^}\n]*)\}[ \t]*$/gm
-const ATTRIBUTE = /([a-zA-Z][\w-]*)=(?:"([^"]*)"|'([^']*)'|([^\s"']+))/g
+const pageRefParser = unified()
+  .use(remarkParse)
+  .use(remarkGfm)
+  .use(remarkDirective)
 
 /**
  * 본문의 ::page 지시어가 가리키는 대상을 모은다. 페이지가 이 목록으로 DB에서
- * 제목과 주소를 찾아 렌더러에 넘긴다.
+ * 제목과 주소를 찾아 렌더러에 넘긴다. 렌더러와 같은 파서로 읽어야 목록·인용·토글
+ * 안에 있는 링크도 빠지지 않는다.
  */
 export function collectPageRefs(markdown: string) {
   const refs: { event?: string; path?: string }[] = []
-  for (const match of markdown.matchAll(PAGE_DIRECTIVE)) {
-    const attributes: Record<string, string> = {}
-    for (const attribute of match[1].matchAll(ATTRIBUTE)) {
-      attributes[attribute[1]] = attribute[2] ?? attribute[3] ?? attribute[4]
+  visit(pageRefParser.parse(markdown), 'leafDirective', (node) => {
+    if (node.name !== 'page') return
+    const event = node.attributes?.event || undefined
+    const path = node.attributes?.path || undefined
+    if (event || path) {
+      refs.push({ event, path })
     }
-    if (attributes.event || attributes.path) {
-      refs.push({ event: attributes.event, path: attributes.path })
-    }
-  }
+  })
   return refs
 }
 

@@ -116,6 +116,19 @@ describe('events', () => {
       expect(isValidSlug('news')).toBe(false)
       expect(isValidSlug('blog')).toBe(false)
     })
+
+    it.each([
+      '123456781234123412341234567890ab',
+      '12345678-1234-1234-1234-1234567890ab',
+      '3053ff07ff5b80d6a7c3f5d8e7e0a0b1',
+    ])('옛 노션 주소 처리와 겹치는 노션 ID 모양 %s는 막는다', (value) => {
+      expect(isValidSlug(value)).toBe(false)
+    })
+
+    it('노션 ID보다 짧거나 16진수가 아닌 32자 슬러그는 쓸 수 있다', () => {
+      expect(isValidSlug('123456781234123412341234567890a')).toBe(true)
+      expect(isValidSlug('123456781234123412341234567890ag')).toBe(true)
+    })
   })
 
   describe('isValidPagePath', () => {

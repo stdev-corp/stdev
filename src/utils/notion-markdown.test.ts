@@ -215,6 +215,43 @@ describe('collectPageRefs', () => {
     ).toEqual([])
   })
 
+  it('목록·인용·토글·단 안에 있는 지시어도 렌더러처럼 모은다', () => {
+    const markdown = [
+      '- ::page{path="list"}',
+      '',
+      '1. 항목',
+      '',
+      '   ::page{path="ordered"}',
+      '',
+      '> ::page{path="quote"}',
+      '',
+      ':::toggle[열기]',
+      '::page{event="dsf26" path="toggle"}',
+      ':::',
+      '',
+      '::::columns',
+      ':::column',
+      '::page{path="column"}',
+      ':::',
+      '::::',
+    ].join('\n')
+    expect(collectPageRefs(markdown)).toEqual([
+      { event: undefined, path: 'list' },
+      { event: undefined, path: 'ordered' },
+      { event: undefined, path: 'quote' },
+      { event: 'dsf26', path: 'toggle' },
+      { event: undefined, path: 'column' },
+    ])
+  })
+
+  it('코드 블록 안의 지시어는 렌더러처럼 글자로 보고 모으지 않는다', () => {
+    expect(
+      collectPageRefs(
+        '```\n::page{path="fenced"}\n```\n\n    ::page{path="indented"}',
+      ),
+    ).toEqual([])
+  })
+
   it('지시어가 없으면 빈 목록', () => {
     expect(collectPageRefs('')).toEqual([])
     expect(collectPageRefs('그냥 글')).toEqual([])

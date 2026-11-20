@@ -167,6 +167,7 @@ describe('business actions', () => {
       ['slash', 'dsf/26'],
       ['reserved news', 'news'],
       ['reserved blog', 'blog'],
+      ['Notion ID shape', '3053ff07ff5b80d6a7c3f5d8e7e0a0b1'],
     ])('rejects an invalid slug (%s)', async (_label, slug) => {
       await expect(createBusiness(businessForm({ slug }))).rejects.toThrow(
         /슬러그는 영문 소문자·숫자·하이픈만/,

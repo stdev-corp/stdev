@@ -82,8 +82,17 @@ const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const PAGE_PATH_PATTERN =
   /^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/
 
+/**
+ * 노션 ID 모양(32자리 16진수, 대시 선택)의 슬러그도 쓸 수 없다. next.config.ts가
+ * /hackathon/<노션 ID> 주소를 옛 노션 주소로 보고 api/legacy-notion으로 넘기므로,
+ * 그런 슬러그의 행사 페이지에는 닿을 수 없다.
+ */
 export function isValidSlug(value: string) {
-  return SLUG_PATTERN.test(value) && !RESERVED_SLUGS.includes(value)
+  return (
+    SLUG_PATTERN.test(value) &&
+    !RESERVED_SLUGS.includes(value) &&
+    normalizeNotionId(value) === null
+  )
 }
 
 export function isValidPagePath(value: string) {

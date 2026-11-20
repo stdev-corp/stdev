@@ -48,7 +48,9 @@
     "react-markdown": "^10.1.0",
     "remark-directive": "^4.0.0",
     "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
     "sharp": "^0.35.5",
+    "unified": "^11.0.5",
     "unist-util-visit": "^5.2.0",
     "zod": "^4.6.7"
   },

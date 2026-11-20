@@ -208,7 +208,7 @@ function optionalSlug(formData: FormData) {
   const slug = optionalText(formData, 'slug')
   if (slug && !isValidSlug(slug)) {
     throw new Error(
-      '슬러그는 영문 소문자·숫자·하이픈만 쓸 수 있고, news와 blog는 쓸 수 없습니다.',
+      '슬러그는 영문 소문자·숫자·하이픈만 쓸 수 있고, news·blog와 노션 ID 모양(32자리 16진수)은 쓸 수 없습니다.',
     )
   }
   return slug
