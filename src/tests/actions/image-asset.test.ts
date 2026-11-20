@@ -54,6 +54,10 @@ describe('image-asset actions', () => {
     resetCacheMocks()
     resetS3ModuleMock()
     mockAdminAuthAllowed()
+    // 본문 참조 검사(행사·행사 페이지·마크다운)는 기본적으로 참조 없음.
+    prismaMock.business.count.mockResolvedValue(0)
+    prismaMock.businessPage.count.mockResolvedValue(0)
+    prismaMock.markdown.count.mockResolvedValue(0)
   })
 
   describe('createImageAsset', () => {
@@ -180,6 +184,24 @@ describe('image-asset actions', () => {
       expect(revalidatePathMock).toHaveBeenCalledWith('/admin')
     })
 
+    it('keeps the old S3 asset when event content still embeds its URL', async () => {
+      prismaMock.imageAsset.findUnique.mockResolvedValue(
+        makeImageAsset({ id: 9, url: altImageUrl }),
+      )
+      prismaMock.imageAsset.count.mockResolvedValue(0)
+      prismaMock.markdown.count.mockResolvedValue(1)
+      mockedUploadAsset.mockResolvedValue(uploadedPayload())
+      prismaMock.imageAsset.update.mockResolvedValue(makeImageAsset({ id: 9 }))
+      const fd = createFormData({ id: '9', file: createPngFile('new.png') })
+      await updateImageAsset(fd)
+      expect(prismaMock.imageAsset.update).toHaveBeenCalled()
+      expect(prismaMock.markdown.count).toHaveBeenCalledWith({
+        where: { content: { contains: altImageUrl } },
+      })
+      expect(mockedDeleteManagedAsset).not.toHaveBeenCalled()
+      expect(revalidatePathMock).toHaveBeenCalledWith('/admin')
+    })
+
     it('keeps the old S3 asset when still referenced elsewhere', async () => {
       prismaMock.imageAsset.findUnique.mockResolvedValue(
         makeImageAsset({ id: 9, url: altImageUrl }),
@@ -228,6 +250,22 @@ describe('image-asset actions', () => {
       expect(revalidatePathMock).not.toHaveBeenCalled()
     })
 
+    it('does not touch S3 when a URL-only update fails', async () => {
+      prismaMock.imageAsset.findUnique.mockResolvedValue(
+        makeImageAsset({ id: 1, url: altImageUrl }),
+      )
+      prismaMock.imageAsset.update.mockRejectedValue(
+        Object.assign(new Error('nf'), { code: 'P2025' }),
+      )
+      const fd = createFormData({ id: '1', url: validImageUrl })
+      await expect(updateImageAsset(fd)).rejects.toThrow(
+        /연결된 데이터가 올바르지 않습니다/,
+      )
+      expect(mockedUploadAsset).not.toHaveBeenCalled()
+      expect(mockedDeleteManagedAsset).not.toHaveBeenCalled()
+      expect(revalidatePathMock).not.toHaveBeenCalled()
+    })
+
     it('throws when neither file nor URL supplied', async () => {
       prismaMock.imageAsset.findUnique.mockResolvedValue(makeImageAsset())
       const fd = createFormData({ id: '1' })
@@ -264,6 +302,76 @@ describe('image-asset actions', () => {
       expect(revalidatePathMock).toHaveBeenCalledWith('/admin')
     })
 
+    it('checks event content, summary, icon and markdown for the image URL', async () => {
+      prismaMock.imageAsset.findUnique.mockResolvedValue(
+        makeImageAsset({ id: 1, url: validImageUrl }),
+      )
+      prismaMock.imageAsset.delete.mockResolvedValue(makeImageAsset({ id: 1 }))
+      prismaMock.imageAsset.count.mockResolvedValue(0)
+      await deleteImageAsset(createFormData({ id: '1' }))
+      expect(prismaMock.business.count).toHaveBeenCalledWith({
+        where: {
+          OR: [
+            { content: { contains: validImageUrl } },
+            { summary: { contains: validImageUrl } },
+            { icon: validImageUrl },
+          ],
+        },
+      })
+      expect(prismaMock.businessPage.count).toHaveBeenCalledWith({
+        where: {
+          OR: [
+            { content: { contains: validImageUrl } },
+            { icon: validImageUrl },
+          ],
+        },
+      })
+      expect(prismaMock.markdown.count).toHaveBeenCalledWith({
+        where: { content: { contains: validImageUrl } },
+      })
+    })
+
+    it.each([
+      ['an event body or icon', 'business'],
+      ['an event sub-page', 'businessPage'],
+      ['a section intro markdown', 'markdown'],
+    ] as const)(
+      'refuses to delete an image that %s references',
+      async (_label, model) => {
+        prismaMock.imageAsset.findUnique.mockResolvedValue(
+          makeImageAsset({ id: 1, url: validImageUrl }),
+        )
+        prismaMock[model].count.mockResolvedValue(2)
+        await expect(
+          deleteImageAsset(createFormData({ id: '1' })),
+        ).rejects.toThrow(
+          '이미지 항목이 행사 본문이나 소개 글에서 사용 중이어서 삭제할 수 없습니다. 본문에서 이미지 주소를 먼저 지워주세요.',
+        )
+        expect(prismaMock.imageAsset.delete).not.toHaveBeenCalled()
+        expect(mockedDeleteManagedAsset).not.toHaveBeenCalled()
+        expect(revalidatePathMock).not.toHaveBeenCalled()
+      },
+    )
+
+    it('keeps the S3 object when content starts referencing the URL after the pre-check', async () => {
+      prismaMock.imageAsset.findUnique.mockResolvedValue(
+        makeImageAsset({ id: 1, url: validImageUrl }),
+      )
+      prismaMock.imageAsset.delete.mockResolvedValue(makeImageAsset({ id: 1 }))
+      prismaMock.imageAsset.count.mockResolvedValue(0)
+      // 삭제 전 검사에서는 0건, 정리 직전 검사에서는 1건
+      prismaMock.businessPage.count
+        .mockResolvedValueOnce(0)
+        .mockResolvedValueOnce(1)
+      await deleteImageAsset(createFormData({ id: '1' }))
+      expect(prismaMock.imageAsset.delete).toHaveBeenCalledWith({
+        where: { id: 1 },
+      })
+      expect(prismaMock.businessPage.count).toHaveBeenCalledTimes(2)
+      expect(mockedDeleteManagedAsset).not.toHaveBeenCalled()
+      expect(revalidatePathMock).toHaveBeenCalledWith('/admin')
+    })
+
     it('skips S3 delete when still referenced', async () => {
       prismaMock.imageAsset.findUnique.mockResolvedValue(
         makeImageAsset({ id: 1, url: validImageUrl }),
@@ -291,6 +399,7 @@ describe('image-asset actions', () => {
       const fd = createFormData({ id: '1' })
       await deleteImageAsset(fd)
       expect(prismaMock.imageAsset.count).not.toHaveBeenCalled()
+      expect(prismaMock.business.count).not.toHaveBeenCalled()
       expect(mockedDeleteManagedAsset).not.toHaveBeenCalled()
       expect(revalidatePathMock).toHaveBeenCalledWith('/admin')
     })

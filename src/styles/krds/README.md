@@ -9,16 +9,18 @@
 
 ## 파일
 
-| 파일                             | 출처                                         | 수정 여부                                                                         |
-| -------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------- |
-| `src/styles/krds/krds.min.css`   | `resources/cdn/krds.min.css`                 | 아이콘 `url()`을 `https://www.krds.go.kr/resources/img/` → `/krds/img/` 로만 치환 |
-| `public/krds/img/**`             | `resources/img/**`                           | 원본 그대로                                                                       |
-| `public/krds/fonts/**`           | `resources/fonts/**` (Pretendard GOV subset) | 원본 그대로                                                                       |
-| `src/styles/krds/krds-fonts.css` | 직접 작성                                    | 킷에 `@font-face` 선언이 없어 이 저장소에서 추가                                  |
-| `src/styles/krds/stdev-krds.css` | 직접 작성                                    | 킷이 제공하지 않는 페이지 레이아웃과 STDev 고유 요소                              |
+| 파일                               | 출처                                         | 수정 여부                                                                         |
+| ---------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------- |
+| `src/styles/krds/krds.min.css`     | `resources/cdn/krds.min.css`                 | 아이콘 `url()`을 `https://www.krds.go.kr/resources/img/` → `/krds/img/` 로만 치환 |
+| `public/krds/img/**`               | `resources/img/**`                           | 원본 그대로                                                                       |
+| `public/krds/fonts/**`             | `resources/fonts/**` (Pretendard GOV subset) | 원본 그대로                                                                       |
+| `src/styles/krds/krds-fonts.css`   | 직접 작성                                    | 킷에 `@font-face` 선언이 없어 이 저장소에서 추가                                  |
+| `src/styles/krds/stdev-krds.css`   | 직접 작성                                    | 킷이 제공하지 않는 페이지 레이아웃과 STDev 고유 요소                              |
+| `src/styles/krds/stdev-notion.css` | 직접 작성                                    | 행사 페이지의 노션 레이아웃(`.notion-page` 안)과 행사 목록·개요                   |
 
 CSS는 `src/app/(stdev)/layout.tsx`가 위 순서대로 `import` 한다. Next.js 번들러가
-해시·압축·순서를 관리하며, `(cms)` 관리자 화면에는 주입되지 않는다. 이미지와 글꼴은
+해시·압축·순서를 관리하며, `(cms)` 관리자 화면에는 `stdev-notion.css`만 주입된다
+(행사 본문 미리보기용, `.notion-page` 안에만 적용). 이미지와 글꼴은
 CSS 안에서 `/krds/...` 절대 경로로 참조하므로 `public/` 에 그대로 두어야 한다.
 
 ## 갱신 방법
@@ -32,7 +34,7 @@ sed 's|https://www\.krds\.go\.kr/resources/img/|/krds/img/|g' \
   /tmp/krds/resources/cdn/krds.min.css > src/styles/krds/krds.min.css
 ```
 
-`krds-fonts.css`와 `stdev-krds.css`는 이 저장소 소유이므로 덮어쓰지 않는다.
+`krds-fonts.css`, `stdev-krds.css`, `stdev-notion.css`는 이 저장소 소유이므로 덮어쓰지 않는다.
 
 ## 규칙
 
@@ -44,5 +46,9 @@ sed 's|https://www\.krds\.go\.kr/resources/img/|/krds/img/|g' \
 - 토큰 스케일이 덮지 못하는 값(9.6rem을 넘는 컴포넌트 치수, `vh`·`em` 단위)만
   직접 적되 이유를 주석으로 남긴다. 자세한 정책은 저장소 루트 `AGENTS.md`의
   **Styling (public)** 항목을 따른다.
+- `stdev-notion.css`는 노션 페이지를 옮긴 것이라 노션 팔레트와 노션 고유 치수를 직접 적는다.
+  노션 치수는 본문 글자 크기에 비례하는 `em`으로 쓰고, 간격·모서리·선 굵기는 KRDS 토큰에
+  같은 px 대체값을 붙인다(`var(--krds-number-3, 4px)`). 관리자 미리보기에는 KRDS 토큰이
+  없고 루트 글자 크기도 달라(10px ↔ 16px) `rem`을 쓰지 않는다.
 - 정부 아이덴티티 컴포넌트(`#krds-masthead`, `.krds-identifier`, 정부상징)는 사용하지 않는다.
   STDev는 민간 사단법인이므로 정부기관으로 오인될 수 있다.

@@ -4,6 +4,7 @@
 import '@/styles/krds/krds-fonts.css'
 import '@/styles/krds/krds.min.css'
 import '@/styles/krds/stdev-krds.css'
+import '@/styles/krds/stdev-notion.css'
 import type { Metadata } from 'next'
 import { Providers } from './providers'
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'

@@ -69,6 +69,37 @@ describe('<MarkdownView>', () => {
     expect(heading.tagName).toBe('H6')
   })
 
+  it('titleLine이면 최상위 제목을 KRDS 강조 바 제목으로 그린다', async () => {
+    const { container } = await renderAsyncServerComponent(() =>
+      MarkdownView({ content: '# 비전\n\n## 지속 가능성', titleLine: true }),
+    )
+    expect(container.querySelector('h2')).toHaveClass('g-tit-line')
+    expect(container.querySelector('h3')).not.toHaveClass('g-tit-line')
+  })
+
+  it('titleLine이 없으면 제목에 클래스를 붙이지 않는다', async () => {
+    const { container } = await renderAsyncServerComponent(() =>
+      MarkdownView({ content: '# 정관' }),
+    )
+    expect(container.querySelector('h2')).not.toHaveAttribute('class')
+  })
+
+  it('S3 이미지는 최적화한 srcSet으로, 그 밖의 이미지는 원래 주소로 그린다', async () => {
+    const s3 = 'https://stdev-kr.s3.ap-northeast-2.amazonaws.com/images/a.jpg'
+    const { container } = await renderAsyncServerComponent(() =>
+      MarkdownView({
+        content: `![행사 사진](${s3}) ![로고](/images/logo/stdev-logo.png)`,
+      }),
+    )
+    const [photo, logo] = Array.from(container.querySelectorAll('img'))
+    expect(photo.getAttribute('src')).toContain(encodeURIComponent(s3))
+    expect(photo.getAttribute('srcset')).toContain('640w')
+    expect(photo).toHaveAttribute('alt', '행사 사진')
+    expect(photo).toHaveAttribute('loading', 'lazy')
+    expect(logo).toHaveAttribute('src', '/images/logo/stdev-logo.png')
+    expect(logo).not.toHaveAttribute('srcset')
+  })
+
   it('renders paragraph text', async () => {
     await renderAsyncServerComponent(() =>
       MarkdownView({ content: 'Just a paragraph line.' }),

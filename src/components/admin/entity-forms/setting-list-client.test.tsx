@@ -1,7 +1,14 @@
 import { describe, expect, it, vi } from 'vitest'
-import { renderWithChakra, screen, waitFor } from '@/tests/utils/render'
+import { act, renderWithChakra, screen, waitFor } from '@/tests/utils/render'
 import { SettingListClient } from './setting-list-client'
 import type { AdminSettingSummary } from './setting-form'
+import { FormDrawer } from '../form-drawer'
+
+// 실제 드로어를 그대로 그리되, 받은 props를 꺼내 쓸 수 있게 감싼다.
+vi.mock('../form-drawer', async (importOriginal) => {
+  const mod = await importOriginal<typeof import('../form-drawer')>()
+  return { ...mod, FormDrawer: vi.fn(mod.FormDrawer) }
+})
 
 const settings: AdminSettingSummary[] = [
   {
@@ -170,5 +177,28 @@ describe('SettingListClient', () => {
     expect(
       screen.getByRole('heading', { name: '설정 추가' }),
     ).toBeInTheDocument()
+  })
+
+  it('keeps the edit drawer open on open requests and closes it on close requests', async () => {
+    const title = '설정 수정: AWS_ACCESS_KEY_ID'
+    const lastDrawerProps = () =>
+      vi
+        .mocked(FormDrawer)
+        .mock.calls.map(([props]) => props)
+        .findLast((props) => props.title === title)!
+    const { user } = renderWithChakra(
+      <SettingListClient settings={settings} actions={actions} />,
+    )
+
+    await user.click(screen.getAllByRole('button', { name: '수정' })[0])
+    act(() => lastDrawerProps().onOpenChange(true))
+    expect(screen.getByRole('heading', { name: title })).toBeInTheDocument()
+
+    act(() => lastDrawerProps().onOpenChange(false))
+    await waitFor(() =>
+      expect(
+        screen.queryByRole('heading', { name: title }),
+      ).not.toBeInTheDocument(),
+    )
   })
 })

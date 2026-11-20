@@ -10,3 +10,4 @@ prettier.config.mjs
 .gitignore
 README.md
 tsconfig.tsbuildinfo
+.notion-cache

@@ -5,7 +5,8 @@ export type AdminMenuItem = {
 
 export const adminMenuItems: AdminMenuItem[] = [
   { label: '대시보드', href: '/admin' },
-  { label: '사업', href: '/admin/businesses' },
+  { label: '사업(행사)', href: '/admin/businesses' },
+  { label: '행사 하위 페이지', href: '/admin/business-pages' },
   { label: '이미지', href: '/admin/images' },
   { label: '파일', href: '/admin/files' },
   { label: '기관', href: '/admin/institutions' },

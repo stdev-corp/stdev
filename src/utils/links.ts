@@ -12,10 +12,13 @@ export class Links {
   static introDirectors = '/intro/directors'
   static introHistory = '/intro/history'
 
-  static businessHackathon = '/business/hackathon'
-  static businessConference = '/business/conference'
-  static businessBlog = '/business/blog'
-  static businessNews = '/business/news'
+  static hackathon = '/hackathon'
+  static hackathonNews = '/hackathon/news'
+  static hackathonBlog = '/hackathon/blog'
+
+  static conference = '/conference'
+  static conferenceNews = '/conference/news'
+  static conferenceBlog = '/conference/blog'
 
   static noticesPress = '/notices/press'
   static noticesDonation = '/notices/donation'
@@ -30,6 +33,4 @@ export class Links {
   static acrc = 'https://www.acrc.go.kr'
 
   static admin = '/admin'
-
-  static event = 'https://event.stdev.kr'
 }

@@ -1,5 +1,6 @@
 import type {
   Business,
+  BusinessPage,
   FileAsset,
   History,
   ImageAsset,
@@ -19,9 +20,34 @@ export function makeBusiness(overrides: Partial<Business> = {}): Business {
     id: 1,
     name: 'Hackathon 2026',
     code: 'hack-2026',
+    slug: null,
+    category: 'hackathon',
     startDate: new Date('2026-06-01T00:00:00Z'),
     endDate: new Date('2026-06-02T00:00:00Z'),
+    hasTime: false,
     location: 'Seoul',
+    icon: null,
+    coverImageId: null,
+    summary: null,
+    content: '',
+    notionId: null,
+    ...baseTimestamps,
+    ...overrides,
+  }
+}
+
+export function makeBusinessPage(
+  overrides: Partial<BusinessPage> = {},
+): BusinessPage {
+  return {
+    id: 1,
+    businessId: 1,
+    path: 'faq',
+    title: 'FAQ',
+    icon: '❓',
+    coverImageId: null,
+    content: '본문',
+    notionId: null,
     ...baseTimestamps,
     ...overrides,
   }
@@ -87,6 +113,7 @@ export function makeInstitution(
     nameEn: 'Institution',
     url: 'https://example.com',
     logoId: 1,
+    showOnHome: true,
     ...baseTimestamps,
     ...overrides,
   }

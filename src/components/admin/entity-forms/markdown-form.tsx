@@ -39,6 +39,8 @@ export function MarkdownFormDrawer({
               <option value="articles">정관</option>
               <option value="privacy">개인정보처리방침</option>
               <option value="terms">이용약관</option>
+              <option value="hackathon">해커톤&아이디어톤 소개</option>
+              <option value="conference">컨퍼런스&프로그램 소개</option>
             </NativeSelect.Field>
             <NativeSelect.Indicator />
           </NativeSelect.Root>

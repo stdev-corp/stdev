@@ -67,13 +67,13 @@ export function WebpageFormDrawer({
           />
         </Field.Root>
         <Field.Root>
-          <Field.Label>관련 사업</Field.Label>
+          <Field.Label>관련 행사(사업)</Field.Label>
           <NativeSelect.Root>
             <NativeSelect.Field
               name="businessId"
               defaultValue={webpage?.businessId ?? ''}
             >
-              <option value="">관련 사업 없음</option>
+              <option value="">관련 행사 없음(보도 자료만 가능)</option>
               {businesses.map((business) => (
                 <option key={business.id} value={business.id}>
                   #{business.id} {business.name}
@@ -82,6 +82,10 @@ export function WebpageFormDrawer({
             </NativeSelect.Field>
             <NativeSelect.Indicator />
           </NativeSelect.Root>
+          <Field.HelperText>
+            뉴스 기사·블로그 포스트는 행사를 골라야 하며, 행사 분류에 따라
+            해커톤&아이디어톤 또는 컨퍼런스&프로그램 메뉴에 보입니다.
+          </Field.HelperText>
         </Field.Root>
       </Stack>
     </FormDrawer>

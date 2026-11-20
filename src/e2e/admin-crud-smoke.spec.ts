@@ -21,7 +21,8 @@ test.describe('admin CRUD smoke', () => {
     ).toBeVisible()
 
     for (const [label, href] of [
-      ['사업', '/admin/businesses'],
+      ['사업(행사)', '/admin/businesses'],
+      ['행사 하위 페이지', '/admin/business-pages'],
       ['이미지', '/admin/images'],
       ['파일', '/admin/files'],
       ['기관', '/admin/institutions'],

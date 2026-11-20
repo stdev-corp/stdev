@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import PageTitle from '@/components/krds/page-title'
 import {
-  BusinessMenu,
+  ConferenceMenu,
+  HackathonMenu,
   InfoMenu,
   IntroMenu,
   Menu,
@@ -37,7 +38,8 @@ export default async function Sitemap() {
         <div className="g-conts-area">
           <div className="sitemap-grid">
             <SitemapMenu menu={IntroMenu} />
-            <SitemapMenu menu={BusinessMenu} />
+            <SitemapMenu menu={HackathonMenu} />
+            <SitemapMenu menu={ConferenceMenu} />
             <SitemapMenu menu={NoticesMenu} />
             <SitemapMenu menu={InfoMenu} />
           </div>

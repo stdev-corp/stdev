@@ -272,15 +272,12 @@ export default function Header() {
                   </Link>
                 </h2>
                 <div className="header-actions">
-                  <a
-                    href={Links.event}
+                  <Link
+                    href={Links.hackathon}
                     className="krds-btn small primary"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="새 창 열림"
                   >
                     행사 참가하기
-                  </a>
+                  </Link>
                   <button
                     type="button"
                     ref={openButtonRef}
@@ -397,16 +394,13 @@ export default function Header() {
               <div className="gnb-utils">
                 <ul className="utility-list">
                   <li>
-                    <a
-                      href={Links.event}
+                    <Link
+                      href={Links.hackathon}
                       className="krds-btn xsmall text"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title="새 창 열림"
                       onClick={closeAll}
                     >
                       행사 참가하기
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>

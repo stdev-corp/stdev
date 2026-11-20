@@ -45,13 +45,14 @@ describe('institution actions', () => {
       expect(prismaMock.institution.create).not.toHaveBeenCalled()
     })
 
-    it('creates with logo reference and revalidates', async () => {
+    it('creates with logo reference, home flag and revalidates', async () => {
       prismaMock.institution.create.mockResolvedValue(makeInstitution())
       const fd = createFormData({
         nameKo: '기관명',
         nameEn: 'Institution',
         url: 'https://example.com',
         logoId: '3',
+        showOnHome: 'on',
       })
       await createInstitution(fd)
       expect(prismaMock.institution.create).toHaveBeenCalledWith({
@@ -60,9 +61,48 @@ describe('institution actions', () => {
           nameEn: 'Institution',
           url: 'https://example.com',
           logoId: 3,
+          showOnHome: true,
         },
       })
       expect(revalidatePathMock).toHaveBeenCalledWith('/admin')
+    })
+
+    it('creates a name-only institution (event host without logo)', async () => {
+      prismaMock.institution.create.mockResolvedValue(makeInstitution())
+      await createInstitution(createFormData({ nameKo: '과학기술정보통신부' }))
+      expect(prismaMock.institution.create).toHaveBeenCalledWith({
+        data: {
+          nameKo: '과학기술정보통신부',
+          nameEn: null,
+          url: null,
+          logoId: null,
+          showOnHome: false,
+        },
+      })
+    })
+
+    it('treats blank optional fields as null', async () => {
+      prismaMock.institution.create.mockResolvedValue(makeInstitution())
+      await createInstitution(
+        createFormData({ nameKo: '기관', nameEn: '  ', url: '', logoId: '' }),
+      )
+      expect(prismaMock.institution.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          nameEn: null,
+          url: null,
+          logoId: null,
+        }),
+      })
+    })
+
+    it('only turns showOnHome on for the checkbox value "on"', async () => {
+      prismaMock.institution.create.mockResolvedValue(makeInstitution())
+      await createInstitution(
+        createFormData({ nameKo: '기관', showOnHome: 'true' }),
+      )
+      expect(
+        prismaMock.institution.create.mock.calls[0][0].data.showOnHome,
+      ).toBe(false)
     })
 
     it('rejects an unsafe HTTP URL', async () => {
@@ -72,16 +112,16 @@ describe('institution actions', () => {
         url: 'http://example.com',
         logoId: '1',
       })
-      await expect(createInstitution(fd)).rejects.toThrow(/올바른 HTTPS URL/)
+      await expect(createInstitution(fd)).rejects.toThrow(
+        '기관 URL은(는) 올바른 HTTPS URL이어야 합니다.',
+      )
+      expect(prismaMock.institution.create).not.toHaveBeenCalled()
     })
 
-    it('throws when logoId is missing', async () => {
-      const fd = createFormData({
-        nameKo: '기관',
-        nameEn: 'Inst',
-        url: 'https://example.com',
-      })
-      await expect(createInstitution(fd)).rejects.toThrow('logoId is required')
+    it('rejects a malformed URL', async () => {
+      const fd = createFormData({ nameKo: '기관', url: 'not a url' })
+      await expect(createInstitution(fd)).rejects.toThrow(/올바른 HTTPS URL/)
+      expect(prismaMock.institution.create).not.toHaveBeenCalled()
     })
 
     it('translates P2003 from invalid logoId to relation message', async () => {
@@ -145,9 +185,40 @@ describe('institution actions', () => {
           nameEn: 'Updated',
           url: 'https://updated.example.com',
           logoId: 7,
+          showOnHome: false,
         },
       })
       expect(revalidatePathMock).toHaveBeenCalledWith('/admin')
+    })
+
+    it('clears logo, URL and home flag when emptied on update', async () => {
+      prismaMock.institution.update.mockResolvedValue(makeInstitution())
+      await updateInstitution(
+        createFormData({ id: '10', nameKo: '수정', showOnHome: 'on' }),
+      )
+      expect(prismaMock.institution.update).toHaveBeenCalledWith({
+        where: { id: 10 },
+        data: {
+          nameKo: '수정',
+          nameEn: null,
+          url: null,
+          logoId: null,
+          showOnHome: true,
+        },
+      })
+    })
+
+    it('rejects an unsafe URL on update', async () => {
+      await expect(
+        updateInstitution(
+          createFormData({
+            id: '10',
+            nameKo: '수정',
+            url: 'javascript:alert(1)',
+          }),
+        ),
+      ).rejects.toThrow(/올바른 HTTPS URL/)
+      expect(prismaMock.institution.update).not.toHaveBeenCalled()
     })
 
     it('throws when id is missing', async () => {

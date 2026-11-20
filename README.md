@@ -78,6 +78,19 @@ pnpm test:e2e:ui
 - 통합 테스트: `src/tests/**`
 - E2E 테스트: `src/e2e/**`
 
+## 노션 행사 페이지 이관
+
+event.stdev.kr(Oopy)에 있던 노션 행사 페이지는 `src/scripts/notion-import/`로 CMS에 옮긴다.
+변환 결과(`content/`)는 저장소에 있으므로 운영 반영은 마지막 단계만 실행하면 된다.
+
+```bash
+pnpm notion:import --env-file .env --dry-run   # 무엇을 넣을지 확인
+pnpm notion:import --env-file .env             # S3 업로드 + DB 반영
+```
+
+노션 원문을 다시 받아 변환하려면 `pnpm notion:fetch` 후 `pnpm notion:convert`를 실행한다.
+가져오기는 여러 번 실행해도 안전하며, 관리자 화면에서 고친 행사는 `--force` 없이는 덮어쓰지 않는다.
+
 ## How to deploy
 
 Github 레포지토리 설정에서 `Actions secrets and variables` 페이지로 이동한 후 `Repository secrets`에 아래 값을 입력합니다.

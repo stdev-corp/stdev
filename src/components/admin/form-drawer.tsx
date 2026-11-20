@@ -12,6 +12,8 @@ type Props = {
   children: ReactNode
   successMessage?: string
   formKey?: string | number
+  /** 본문 편집처럼 넓은 폼은 'xl' 이상을 쓴다. */
+  size?: 'md' | 'lg' | 'xl' | 'full'
 }
 
 export function FormDrawer({
@@ -22,6 +24,7 @@ export function FormDrawer({
   children,
   successMessage,
   formKey,
+  size = 'md',
 }: Props) {
   const [pending, startTransition] = useTransition()
 
@@ -49,7 +52,7 @@ export function FormDrawer({
       open={open}
       onOpenChange={(e) => onOpenChange(e.open)}
       placement="end"
-      size="md"
+      size={size}
       lazyMount
       unmountOnExit
     >
@@ -65,7 +68,12 @@ export function FormDrawer({
             </Drawer.Header>
             <form
               key={formKey}
-              action={submit}
+              // action 속성을 쓰면 React가 제출 뒤 입력을 초기화한다. 저장이 실패해도
+              // 입력이 남도록 직접 제출한다(성공하면 서랍이 닫히며 폼도 사라진다).
+              onSubmit={(event) => {
+                event.preventDefault()
+                submit(new FormData(event.currentTarget))
+              }}
               style={{ display: 'flex', flexDirection: 'column', flex: 1 }}
             >
               <Drawer.Body>

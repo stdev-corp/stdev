@@ -12,12 +12,16 @@ type Actions = {
   deleteMarkdown: (formData: FormData) => Promise<void>
 }
 
+const MARKDOWN_TYPE_LABELS: Record<Markdown['type'], string> = {
+  articles: '정관',
+  privacy: '개인정보처리방침',
+  terms: '이용약관',
+  hackathon: '해커톤&아이디어톤 소개',
+  conference: '컨퍼런스&프로그램 소개',
+}
+
 function markdownTypeLabel(type: Markdown['type']) {
-  return type === 'articles'
-    ? '정관'
-    : type === 'privacy'
-      ? '개인정보처리방침'
-      : '이용약관'
+  return MARKDOWN_TYPE_LABELS[type]
 }
 
 export function MarkdownListClient({

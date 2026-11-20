@@ -53,3 +53,6 @@ certificates
 # AI local files
 /.sisyphus/
 /.omo/
+
+# Notion import cache (src/scripts/notion-import/fetch-notion.ts)
+/.notion-cache/

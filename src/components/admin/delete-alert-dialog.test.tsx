@@ -30,6 +30,22 @@ describe('DeleteAlertDialog', () => {
     expect(action).not.toHaveBeenCalled()
   })
 
+  it('closes the confirmation dialog with the Escape key', async () => {
+    const action = vi.fn<(formData: FormData) => Promise<void>>(async () => {})
+    const { user } = renderWithChakra(
+      <DeleteAlertDialog action={action} recordId={3} label="행사 페이지" />,
+    )
+
+    await user.click(screen.getByRole('button', { name: '삭제' }))
+    expect(screen.getByRole('alertdialog')).toBeInTheDocument()
+
+    await user.keyboard('{Escape}')
+    await waitFor(() => {
+      expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
+    })
+    expect(action).not.toHaveBeenCalled()
+  })
+
   it('submits record id through FormData and shows success toast', async () => {
     const action = vi.fn<(formData: FormData) => Promise<void>>(async () => {})
     const { user } = renderWithChakra(
