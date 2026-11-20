@@ -16,7 +16,7 @@ function webpageTypeLabel(type: Webpage['type']) {
   return type === 'blog_post'
     ? '블로그 포스트'
     : type === 'news_article'
-      ? '신문 기사'
+      ? '뉴스 기사'
       : '보도 자료'
 }
 

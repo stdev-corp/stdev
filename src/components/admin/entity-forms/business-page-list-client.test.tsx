@@ -36,8 +36,8 @@ const actions = {
 }
 
 const businesses = [
-  { id: 1, name: 'DSF 2026', slug: 'dsf26' },
-  { id: 2, name: '옛 행사', slug: null },
+  { id: 1, name: 'DSF 2026', slug: 'dsf26', category: 'hackathon' as const },
+  { id: 2, name: '옛 행사', slug: null, category: 'conference' as const },
 ]
 
 const images = [makeImageAsset({ id: 3, filename: 'cover.png' })]
@@ -79,10 +79,14 @@ describe('BusinessPageListClient', () => {
     ])
 
     expect(screen.getByText('#1 · ❓ FAQ')).toBeInTheDocument()
-    expect(screen.getByText('DSF 2026 · /dsf26/faq')).toBeInTheDocument()
+    expect(
+      screen.getByText('DSF 2026 · 페이지 /hackathon/dsf26/faq'),
+    ).toBeInTheDocument()
     expect(screen.getByText('#2 · 팀 빌딩')).toBeInTheDocument()
     expect(
-      screen.getByText('DSF 2026 · /dsf26/notice/team-building'),
+      screen.getByText(
+        'DSF 2026 · 페이지 /hackathon/dsf26/notice/team-building',
+      ),
     ).toBeInTheDocument()
   })
 
@@ -93,10 +97,10 @@ describe('BusinessPageListClient', () => {
     ])
 
     expect(
-      screen.getByText('옛 행사 · /(슬러그 없음)/apply'),
+      screen.getByText('옛 행사 · 행사 슬러그가 없어 공개되지 않음(apply)'),
     ).toBeInTheDocument()
     expect(
-      screen.getByText('사업 #99 · /(슬러그 없음)/faq'),
+      screen.getByText('사업 #99 · 행사 슬러그가 없어 공개되지 않음(faq)'),
     ).toBeInTheDocument()
   })
 

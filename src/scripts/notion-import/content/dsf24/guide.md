@@ -26,7 +26,7 @@
 
 1. **일정**
 
-:::table{header-row="false" header-column="true"}
+:::table{header-row="false" header-column="true" widths="120,373"}
 | 10.14 (월) | 주제 공개 |
 | --- | --- |
 | 10.16 (수) \~ 10.17 (목) | 개인 참가자 자유 팀빌딩 진행 |
@@ -66,7 +66,7 @@
 
 1\) \[티켓 오픈\] 채널에서 원하는 카테고리를 선택합니다.
 
-:::table{header-row="false" header-column="true"}
+:::table{header-row="false" header-column="true" widths="117,580"}
 | 장소 | 장소(위치, 시설 등)와 관련된 문의사항입니다. |
 | --- | --- |
 | 발표 | 2차 심사 관련 문의사항입니다. |

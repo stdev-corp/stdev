@@ -10,6 +10,7 @@ import {
   requiredNumber,
   text,
 } from '@/utils/admin-form'
+import { resolvePreviewPageLinks } from '@/utils/cms'
 import { prisma } from '@/utils/prisma'
 import { deleteManagedAsset, uploadAsset } from '@/utils/s3'
 import {
@@ -353,6 +354,19 @@ function businessPageData(formData: FormData) {
     content: text(formData, 'content'),
     notionId: optionalNotionId(formData),
   }
+}
+
+/** 본문 미리보기에서 ::page 링크의 제목·아이콘·주소를 채운다. */
+export async function previewPageLinks(
+  businessId: number | null,
+  content: string,
+) {
+  await requireAdminActionSession()
+  const id = Number(businessId)
+  return resolvePreviewPageLinks(
+    Number.isInteger(id) && id > 0 ? id : null,
+    String(content ?? ''),
+  )
 }
 
 export async function createBusinessPage(formData: FormData) {

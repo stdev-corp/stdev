@@ -2,6 +2,7 @@
 
 import { Field, Input, NativeSelect, Stack } from '@chakra-ui/react'
 import type { Business, Webpage } from '@prisma/client'
+import { useState } from 'react'
 import { dateValue } from '@/utils/admin-format'
 import { FormDrawer } from '../form-drawer'
 
@@ -21,6 +22,10 @@ export function WebpageFormDrawer({
   action,
 }: Props) {
   const editing = Boolean(webpage)
+  // 뉴스 기사·블로그 포스트는 행사에 연결해야 공개 메뉴에 보인다. 서버도 막지만,
+  // 저장 전에 브라우저가 먼저 알려 주도록 유형에 따라 필수로 바꾼다.
+  const [type, setType] = useState(webpage?.type ?? 'blog_post')
+  const needsBusiness = type !== 'press_release'
   return (
     <FormDrawer
       open={open}
@@ -36,10 +41,13 @@ export function WebpageFormDrawer({
           <NativeSelect.Root>
             <NativeSelect.Field
               name="type"
-              defaultValue={webpage?.type ?? 'blog_post'}
+              value={type}
+              onChange={(event) =>
+                setType(event.currentTarget.value as Webpage['type'])
+              }
             >
               <option value="blog_post">블로그 포스트</option>
-              <option value="news_article">신문 기사</option>
+              <option value="news_article">뉴스 기사</option>
               <option value="press_release">보도 자료</option>
             </NativeSelect.Field>
             <NativeSelect.Indicator />
@@ -66,7 +74,7 @@ export function WebpageFormDrawer({
             required
           />
         </Field.Root>
-        <Field.Root>
+        <Field.Root required={needsBusiness}>
           <Field.Label>관련 행사(사업)</Field.Label>
           <NativeSelect.Root>
             <NativeSelect.Field

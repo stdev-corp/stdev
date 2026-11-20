@@ -18,6 +18,7 @@ import {
   type EventLookup,
 } from '@/utils/cms'
 import { EVENT_SECTIONS, type EventSection } from '@/utils/events'
+import { ConferenceMenu, HackathonMenu } from '@/utils/menus'
 
 // generateMetadata와 페이지가 같은 요청에서 한 번만 조회하도록 묶는다.
 const loadEventDetail = cache(getEventDetail)
@@ -64,11 +65,14 @@ export async function EventSectionView({ section }: { section: EventSection }) {
     queryEvents(section),
   ])
   const { label } = EVENT_SECTIONS[section]
+  // 제목은 다른 페이지처럼 현재 하위 메뉴('행사 소개')다. 구역 이름은 사이드 메뉴 제목이
+  // 보여 준다.
+  const menu = section === 'hackathon' ? HackathonMenu : ConferenceMenu
 
   return (
     <>
       <Breadcrumb />
-      <PageTitle title={label} />
+      <PageTitle title={menu.subMenus[0].label} />
       <div className="conts-area">
         {intro && (
           <div className="g-conts-area">

@@ -18,6 +18,7 @@ import { makeBusinessPage } from '@/tests/utils/fixtures'
 import {
   createBusinessPage,
   deleteBusinessPage,
+  previewPageLinks,
   updateBusinessPage,
 } from '@/app/(cms)/admin/actions'
 
@@ -278,6 +279,86 @@ describe('business page actions', () => {
       await expect(deleteBusinessPage(createFormData({}))).rejects.toThrow(
         'id is required',
       )
+    })
+  })
+
+  describe('previewPageLinks', () => {
+    const content = '::page{path="faq"}\n\n::page{event="skyst23"}'
+    const skystLink = {
+      'skyst23:': {
+        href: '/conference/skyst23',
+        title: 'SKYST 2023',
+        icon: '🌌',
+      },
+    }
+
+    beforeEach(() => {
+      prismaMock.business.findMany.mockResolvedValue([
+        {
+          id: 3,
+          slug: 'skyst23',
+          category: 'conference',
+          name: 'SKYST 2023',
+          icon: '🌌',
+        },
+      ] as never)
+      prismaMock.businessPage.findMany.mockResolvedValue([
+        makeBusinessPage({
+          businessId: 7,
+          path: 'faq',
+          title: 'FAQ',
+          icon: null,
+        }),
+      ])
+    })
+
+    it('throws forbidden when not admin', async () => {
+      mockAdminAuthForbidden()
+      await expect(previewPageLinks(7, content)).rejects.toThrow(
+        'NEXT_HTTP_ERROR_FALLBACK;403',
+      )
+      expect(prismaMock.business.findUnique).not.toHaveBeenCalled()
+      expect(prismaMock.businessPage.findMany).not.toHaveBeenCalled()
+    })
+
+    it('resolves same-event and other-event links for a saved business', async () => {
+      prismaMock.business.findUnique.mockResolvedValue({
+        id: 7,
+        slug: 'dsf26',
+        category: 'hackathon',
+        name: 'DSF 2026',
+        icon: null,
+      } as never)
+      expect(await previewPageLinks(7, content)).toEqual({
+        ':faq': { href: '/hackathon/dsf26/faq', title: 'FAQ', icon: null },
+        ...skystLink,
+      })
+      expect(prismaMock.business.findUnique).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { id: 7 } }),
+      )
+    })
+
+    it.each([
+      ['null', null],
+      ['zero', 0],
+      ['negative', -3],
+      ['fraction', 1.5],
+      ['NaN', Number.NaN],
+      ['non-numeric string', 'abc'],
+    ])(
+      'treats a %s business id as no business and resolves only event= links',
+      async (_label, businessId) => {
+        expect(await previewPageLinks(businessId as never, content)).toEqual(
+          skystLink,
+        )
+        expect(prismaMock.business.findUnique).not.toHaveBeenCalled()
+      },
+    )
+
+    it('treats missing content as an empty body', async () => {
+      expect(await previewPageLinks(null, undefined as never)).toEqual({})
+      expect(prismaMock.business.findMany).not.toHaveBeenCalled()
+      expect(prismaMock.businessPage.findMany).not.toHaveBeenCalled()
     })
   })
 })

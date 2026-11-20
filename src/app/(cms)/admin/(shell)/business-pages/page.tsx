@@ -3,6 +3,7 @@ import { BusinessPageListClient } from '@/components/admin/entity-forms/business
 import {
   createBusinessPage,
   deleteBusinessPage,
+  previewPageLinks,
   updateBusinessPage,
 } from '@/app/(cms)/admin/actions'
 
@@ -12,7 +13,7 @@ export default async function BusinessPagesPage() {
       orderBy: [{ businessId: 'asc' }, { path: 'asc' }],
     }),
     prisma.business.findMany({
-      select: { id: true, name: true, slug: true },
+      select: { id: true, name: true, slug: true, category: true },
       orderBy: [{ startDate: 'desc' }, { id: 'desc' }],
     }),
     prisma.imageAsset.findMany({
@@ -25,7 +26,12 @@ export default async function BusinessPagesPage() {
       pages={pages}
       businesses={businesses}
       images={images}
-      actions={{ createBusinessPage, updateBusinessPage, deleteBusinessPage }}
+      actions={{
+        createBusinessPage,
+        updateBusinessPage,
+        deleteBusinessPage,
+        previewPageLinks,
+      }}
     />
   )
 }

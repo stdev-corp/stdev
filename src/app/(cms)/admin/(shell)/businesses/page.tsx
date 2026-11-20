@@ -3,6 +3,7 @@ import { BusinessListClient } from '@/components/admin/entity-forms/business-lis
 import {
   createBusiness,
   deleteBusiness,
+  previewPageLinks,
   updateBusiness,
 } from '@/app/(cms)/admin/actions'
 
@@ -30,7 +31,12 @@ export default async function BusinessesPage() {
       businesses={businesses}
       institutions={institutions}
       images={images}
-      actions={{ createBusiness, updateBusiness, deleteBusiness }}
+      actions={{
+        createBusiness,
+        updateBusiness,
+        deleteBusiness,
+        previewPageLinks,
+      }}
     />
   )
 }

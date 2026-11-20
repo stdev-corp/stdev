@@ -27,6 +27,7 @@ import {
   queryInstitutions,
   queryReports,
   queryWebpages,
+  resolvePreviewPageLinks,
 } from '@/utils/cms'
 
 const S3_HOST = 'stdev-kr.s3.ap-northeast-2.amazonaws.com'
@@ -1249,6 +1250,135 @@ describe('getEventPage', () => {
     expect(await getEventPage('hackathon', 'dsf26', ['nope'])).toEqual({
       kind: 'missing',
     })
+  })
+})
+
+describe('resolvePreviewPageLinks', () => {
+  const linkSelect = {
+    id: true,
+    slug: true,
+    category: true,
+    name: true,
+    icon: true,
+  }
+  // 같은 행사 링크 두 개와 다른 행사(구역이 다른) 링크 두 개.
+  const content = [
+    '::page{path="faq"}',
+    '::page{event="dsf26"}',
+    '::page{event="skyst23"}',
+    '::page{event="skyst23" path="skyst"}',
+  ].join('\n\n')
+  const skyst = {
+    id: 3,
+    slug: 'skyst23',
+    category: 'conference',
+    name: 'SKYST 2023',
+    icon: '🌌',
+  }
+  const otherEventLinks = {
+    'skyst23:': {
+      href: '/conference/skyst23',
+      title: 'SKYST 2023',
+      icon: '🌌',
+    },
+    'skyst23:skyst': {
+      href: '/conference/skyst23/skyst',
+      title: 'SKYST 소개',
+      icon: null,
+    },
+  }
+
+  function mockPages() {
+    prismaMock.businessPage.findMany.mockResolvedValue([
+      makeBusinessPage({
+        businessId: 7,
+        path: 'faq',
+        title: 'FAQ',
+        icon: '❓',
+      }),
+      makeBusinessPage({
+        businessId: 3,
+        path: 'skyst',
+        title: 'SKYST 소개',
+        icon: null,
+      }),
+    ] as never)
+  }
+
+  it('resolves refs against the saved business like the public page does', async () => {
+    prismaMock.business.findUnique.mockResolvedValue({
+      id: 7,
+      slug: 'dsf26',
+      category: 'hackathon',
+      name: 'DSF 2026',
+      icon: '🚀',
+    } as never)
+    prismaMock.business.findMany.mockResolvedValue([skyst] as never)
+    mockPages()
+
+    expect(await resolvePreviewPageLinks(7, content)).toEqual({
+      ':faq': { href: '/hackathon/dsf26/faq', title: 'FAQ', icon: '❓' },
+      'dsf26:': { href: '/hackathon/dsf26', title: 'DSF 2026', icon: '🚀' },
+      ...otherEventLinks,
+    })
+    expect(prismaMock.business.findUnique).toHaveBeenCalledWith({
+      where: { id: 7 },
+      select: linkSelect,
+    })
+    // 현재 행사(dsf26)는 다시 찾지 않고 다른 행사만 슬러그로 찾는다.
+    expect(prismaMock.business.findMany).toHaveBeenCalledWith({
+      where: { slug: { in: ['skyst23'] } },
+      select: linkSelect,
+    })
+  })
+
+  it('resolves only event= refs when there is no business yet', async () => {
+    prismaMock.business.findMany.mockResolvedValue([skyst] as never)
+    mockPages()
+
+    // 새 행사 폼: 같은 행사 링크(path만, 또는 아직 없는 슬러그)는 풀 수 없다.
+    expect(await resolvePreviewPageLinks(null, content)).toEqual(
+      otherEventLinks,
+    )
+    expect(prismaMock.business.findUnique).not.toHaveBeenCalled()
+    expect(prismaMock.business.findMany).toHaveBeenCalledWith({
+      where: { slug: { in: ['dsf26', 'skyst23'] } },
+      select: linkSelect,
+    })
+  })
+
+  it('resolves only event= refs when the business id no longer exists', async () => {
+    prismaMock.business.findUnique.mockResolvedValue(null)
+    prismaMock.business.findMany.mockResolvedValue([skyst] as never)
+    mockPages()
+
+    expect(await resolvePreviewPageLinks(404, content)).toEqual(otherEventLinks)
+    expect(prismaMock.business.findUnique).toHaveBeenCalledWith({
+      where: { id: 404 },
+      select: linkSelect,
+    })
+  })
+
+  it('skips same-event refs of a business without a slug, even if its page exists', async () => {
+    prismaMock.business.findUnique.mockResolvedValue({
+      id: 7,
+      slug: null,
+      category: 'hackathon',
+      name: '슬러그 없음',
+      icon: null,
+    } as never)
+    prismaMock.business.findMany.mockResolvedValue([skyst] as never)
+    // businessId 7의 faq 페이지가 있어도 주소를 만들 슬러그가 없다.
+    mockPages()
+
+    expect(await resolvePreviewPageLinks(7, content)).toEqual(otherEventLinks)
+  })
+
+  it('returns no links and skips the page lookup when the content has no ::page refs', async () => {
+    expect(await resolvePreviewPageLinks(null, '# 제목\n\n본문')).toEqual({})
+    expect(prismaMock.business.findUnique).not.toHaveBeenCalled()
+    expect(prismaMock.business.findMany).not.toHaveBeenCalled()
+    expect(prismaMock.businessPage.findMany).not.toHaveBeenCalled()
   })
 })
 

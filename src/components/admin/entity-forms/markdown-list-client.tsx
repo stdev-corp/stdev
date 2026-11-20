@@ -34,7 +34,7 @@ export function MarkdownListClient({
   return (
     <EntityList
       title="마크다운"
-      description="정관, 개인정보처리방침, 이용약관 문서를 관리합니다."
+      description="정관, 개인정보처리방침, 이용약관과 해커톤&아이디어톤·컨퍼런스&프로그램 구역 소개를 관리합니다. 유형마다 시행일이 가장 늦은 글이 공개됩니다."
       items={markdowns}
       deleteAction={actions.deleteMarkdown}
       deleteLabel="마크다운"

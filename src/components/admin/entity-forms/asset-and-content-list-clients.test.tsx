@@ -355,7 +355,7 @@ describe('asset and content list clients', () => {
     )
 
     expect(screen.getByText(/블로그 포스트/)).toBeInTheDocument()
-    expect(screen.getByText(/신문 기사/)).toBeInTheDocument()
+    expect(screen.getByText(/뉴스 기사/)).toBeInTheDocument()
     expect(screen.getByText(/보도 자료/)).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: '추가' }))
     expect(

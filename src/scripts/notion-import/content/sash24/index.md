@@ -156,7 +156,7 @@
 
 ---
 
-:::table{header-row="false" header-column="true"}
+:::table{header-row="false" header-column="true" widths="221,208,271"}
 | **🥇** :color[**대상**]{c="gray"} | **KAIST 총장상** | :color[**200만 원**]{c="gray"} |
 | --- | --- | --- |
 | **🥈** :color[**최우수상**]{c="gray"} | **대전광역시 시장상** | :color[**100만 원**]{c="gray"} |

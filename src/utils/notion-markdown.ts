@@ -1,5 +1,11 @@
 import type { Element, ElementContent, Root as HastRoot } from 'hast'
-import type { Paragraph, PhrasingContent, Root, RootContent } from 'mdast'
+import type {
+  Image,
+  Paragraph,
+  PhrasingContent,
+  Root,
+  RootContent,
+} from 'mdast'
 import remarkDirective from 'remark-directive'
 import remarkGfm from 'remark-gfm'
 import remarkParse from 'remark-parse'
@@ -17,13 +23,15 @@ import { visit, SKIP } from 'unist-util-visit'
  *                :::toggle[제목] … :::
  *                ::::columns  /  :::column{ratio=0.5} … :::  /  ::::
  *                :::color{c="gray_background"} … :::
- *                :::table{header-row=false header-column=true}  (안에 GFM 표)
+ *                :::table{header-row=false header-column=true widths="120,373"}
+ *                  (안에 GFM 표. widths는 열 폭 px, 주면 표를 본문 폭으로 늘리지 않는다)
  *                :::database[제목] … :::  (데이터베이스 보기를 옮긴 표)
  * 한 줄(리프)     ::page{path="faq"}  /  ::page{event="dsf26" path="faq"}
  *                ::image{src="…" alt="…" width=240 caption="…"}
  *                ::bookmark{url="…" title="…" description="…" image="…"}
  *                ::video{src="…" width=144}  /  ::embed{src="…" height=320}  /  ::toc
- *                :::indent … :::  (들여쓴 블록)  /  :::gallery{size="small"} (카드 목록)
+ *                :::indent … :::  (들여쓴 블록)  /  :::gallery{size="small"} (카드 목록.
+ *                  카드 표지 ![이름](주소 "cover:15%")의 제목은 표지에서 보일 세로 위치)
  * 글자(텍스트)    :color[글자]{c="red"}  /  :u[밑줄]  /  :br{} (줄바꿈, 뒤에 글자가 붙어도
  *                이름이 끝나도록 {}를 붙인다)
  *                :b[굵게] / :i[기울임] / :s[취소선]  (** 등이 한글 문장부호와
@@ -447,7 +455,12 @@ function transform(node: DirectiveNode): boolean | 'drop' {
       if (toBoolean(attr(node, 'header-column'), false)) {
         classes.push('header-column')
       }
-      setElement(node, 'div', { className: classes.join(' ') })
+      const properties: Props = { className: classes.join(' ') }
+      const widths = attr(node, 'widths')
+      if (widths && TABLE_WIDTHS.test(widths)) {
+        properties['data-widths'] = widths
+      }
+      setElement(node, 'div', properties)
       return true
     }
     case 'indent':
@@ -459,6 +472,19 @@ function transform(node: DirectiveNode): boolean | 'drop' {
       const size = stringAttr(node, 'size')
       setElement(node, 'div', {
         className: `notion-gallery notion-gallery-${size === 'large' || size === 'medium' ? size : 'small'}`,
+      })
+      // 카드 표지 제목 "cover:N%"는 표지에서 보일 세로 위치다(노션 표지 위치).
+      visit(node, 'image', (image: Image) => {
+        const match = COVER_POSITION.exec(image.title ?? '')
+        if (!match) return
+        image.title = null
+        image.data = {
+          ...image.data,
+          hProperties: {
+            ...image.data?.hProperties,
+            'data-cover-position': Math.min(Number(match[1]), 100),
+          },
+        }
       })
       return true
     }
@@ -479,6 +505,115 @@ function transform(node: DirectiveNode): boolean | 'drop' {
     }
     default:
       return false
+  }
+}
+
+/** 갤러리 카드 표지 이미지의 제목으로 쓰는 세로 위치: "cover:15%" */
+const COVER_POSITION = /^cover:(\d{1,3})%$/
+
+/** :::table의 widths 값: 1~4자리 숫자를 쉼표로 이은 것(열 50개까지) */
+const TABLE_WIDTHS = /^\d{1,4}(?:,\d{1,4}){0,49}$/
+
+function classesOf(node: Element): string[] {
+  // setElement는 className을 문자열로 넘기므로 배열·문자열 둘 다 받는다.
+  const value: unknown = node.properties?.className
+  if (Array.isArray(value)) return value.map(String)
+  return typeof value === 'string' ? value.split(/\s+/) : []
+}
+
+function element(
+  tagName: string,
+  properties: Element['properties'] = {},
+  children: ElementContent[] = [],
+): Element {
+  return { type: 'element', tagName, properties, children }
+}
+
+function childElements(node: Element, tagName: string) {
+  return node.children.filter(
+    (child): child is Element =>
+      child.type === 'element' && child.tagName === tagName,
+  )
+}
+
+/**
+ * rehype 단계: :::table 표를 노션 설정대로 고친다.
+ * - header-row=false: GFM은 첫 줄을 늘 머리글(thead/th)로 만든다. 노션에서 머리글이
+ *   아닌 표는 첫 줄을 본문 줄(td)로 옮겨, 화면 낭독기가 머리글로 읽지 않게 한다.
+ * - header-column=true: 줄마다 첫 칸을 줄 머리글(th scope=row)로 바꾼다.
+ * - widths: 열 폭 비율(colgroup)과 노션 폭 합(--notion-table-width)을 준다. 표는 그
+ *   합만큼만 넓고(노션처럼 늘이지 않는다), 본문 칸이 더 좁으면 비율대로 줄어든다.
+ */
+export function rehypeNotionTables() {
+  return (tree: HastRoot) => {
+    visit(tree, 'element', (node: Element) => {
+      if (node.tagName !== 'div' || !classesOf(node).includes('notion-table')) {
+        return
+      }
+      const table = childElements(node, 'table')[0]
+      if (!table) return
+      const classes = classesOf(node)
+
+      if (classes.includes('no-header-row')) {
+        const thead = childElements(table, 'thead')[0]
+        if (thead) {
+          let tbody = childElements(table, 'tbody')[0]
+          if (!tbody) {
+            tbody = element('tbody')
+            table.children.push(tbody)
+          }
+          const rows = childElements(thead, 'tr')
+          for (const row of rows) {
+            for (const cell of childElements(row, 'th')) {
+              cell.tagName = 'td'
+            }
+          }
+          tbody.children.unshift(...rows)
+          table.children = table.children.filter((child) => child !== thead)
+        }
+      }
+
+      if (classes.includes('header-column')) {
+        for (const tbody of childElements(table, 'tbody')) {
+          for (const row of childElements(tbody, 'tr')) {
+            const first = row.children.find(
+              (child): child is Element => child.type === 'element',
+            )
+            if (first) {
+              first.tagName = 'th'
+              first.properties = { ...first.properties, scope: 'row' }
+            }
+          }
+        }
+      }
+
+      const raw = node.properties.dataWidths ?? node.properties['data-widths']
+      delete node.properties.dataWidths
+      delete node.properties['data-widths']
+      if (typeof raw === 'string' && TABLE_WIDTHS.test(raw)) {
+        const widths = raw
+          .split(',')
+          .map((width) => Math.min(Math.max(Number(width), 32), 2000))
+        const total = widths.reduce((sum, width) => sum + width, 0)
+        table.children.unshift(
+          element(
+            'colgroup',
+            {},
+            widths.map((width) =>
+              element('col', {
+                style: `width:${((width / total) * 100).toFixed(3)}%`,
+              }),
+            ),
+          ),
+        )
+        // 표 폭은 CSS가 min(노션 폭 합, 본문 폭)으로 정한다. 열은 그 안에서 비율을 지킨다.
+        table.properties = {
+          ...table.properties,
+          style: `--notion-table-width:${total}px`,
+        }
+        node.properties.className = [...classes, 'has-widths']
+      }
+    })
   }
 }
 

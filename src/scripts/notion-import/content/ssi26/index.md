@@ -72,7 +72,7 @@ STDev의 네트워크를 바탕으로, 창업에 열정을 가진 대학생 / �
 
 ---
 
-:::table{header-row="false" header-column="true"}
+:::table{header-row="false" header-column="true" widths="221,208,271"}
 | **🥇 대상** | **KAIST 총장상** | :color[**100만 원**]{c="gray"} |
 | --- | --- | --- |
 | **🥈 최우수상** | STDev 이사장상 | :color[**50만 원**]{c="gray"} |

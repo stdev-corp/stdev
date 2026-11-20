@@ -32,6 +32,7 @@ vi.mock('@/app/(cms)/admin/actions', () => ({
   createBusinessPage: vi.fn(),
   updateBusinessPage: vi.fn(),
   deleteBusinessPage: vi.fn(),
+  previewPageLinks: vi.fn(),
   createImageAsset: vi.fn(),
   updateImageAsset: vi.fn(),
   deleteImageAsset: vi.fn(),
@@ -142,7 +143,7 @@ describe('admin shell pages', () => {
       makeBusinessPage({ id: 4, businessId: 2, path: 'faq', title: 'FAQ' }),
     ])
     prismaMock.business.findMany.mockResolvedValue([
-      { id: 2, name: 'DSF 2026', slug: 'dsf26' },
+      { id: 2, name: 'DSF 2026', slug: 'dsf26', category: 'hackathon' },
     ] as never)
     prismaMock.imageAsset.findMany.mockResolvedValue([
       { id: 3, filename: 'cover.png', url: 'https://example.com/cover.png' },
@@ -154,7 +155,7 @@ describe('admin shell pages', () => {
       orderBy: [{ businessId: 'asc' }, { path: 'asc' }],
     })
     expect(prismaMock.business.findMany).toHaveBeenCalledWith({
-      select: { id: true, name: true, slug: true },
+      select: { id: true, name: true, slug: true, category: true },
       orderBy: [{ startDate: 'desc' }, { id: 'desc' }],
     })
     expect(prismaMock.imageAsset.findMany).toHaveBeenCalledWith({
@@ -165,7 +166,9 @@ describe('admin shell pages', () => {
       screen.getByRole('heading', { name: '행사 하위 페이지' }),
     ).toBeInTheDocument()
     expect(screen.getByText('#4 · ❓ FAQ')).toBeInTheDocument()
-    expect(screen.getByText('DSF 2026 · /dsf26/faq')).toBeInTheDocument()
+    expect(
+      screen.getByText('DSF 2026 · 페이지 /hackathon/dsf26/faq'),
+    ).toBeInTheDocument()
   })
 
   it('renders images and files pages', async () => {

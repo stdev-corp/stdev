@@ -2,13 +2,18 @@
 
 import { Field, Input, NativeSelect, Stack } from '@chakra-ui/react'
 import type { BusinessPage, ImageAsset } from '@prisma/client'
+import type { BusinessCategory } from '@/utils/cms-types'
 import { FormDrawer } from '../form-drawer'
-import { NotionContentField } from '../notion-content-field'
+import {
+  NotionContentField,
+  type PreviewPageLinks,
+} from '../notion-content-field'
 
 export type BusinessOption = {
   id: number
   name: string
   slug: string | null
+  category: BusinessCategory
 }
 
 type Props = {
@@ -18,6 +23,7 @@ type Props = {
   businesses: BusinessOption[]
   images: Pick<ImageAsset, 'id' | 'filename' | 'url'>[]
   action: (formData: FormData) => Promise<void>
+  previewPageLinks?: PreviewPageLinks
 }
 
 export function BusinessPageFormDrawer({
@@ -27,6 +33,7 @@ export function BusinessPageFormDrawer({
   businesses,
   images,
   action,
+  previewPageLinks,
 }: Props) {
   const editing = Boolean(page)
   return (
@@ -105,6 +112,8 @@ export function BusinessPageFormDrawer({
           name="content"
           label="본문"
           defaultValue={page?.content ?? ''}
+          resolvePageLinks={previewPageLinks}
+          businessIdField="businessId"
         />
         <Field.Root>
           <Field.Label>노션 페이지 ID</Field.Label>

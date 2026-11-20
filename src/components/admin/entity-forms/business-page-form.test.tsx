@@ -10,8 +10,8 @@ vi.mock('../toaster', () => ({
 }))
 
 const businesses = [
-  { id: 1, name: 'DSF 2026', slug: 'dsf26' },
-  { id: 2, name: '옛 행사', slug: null },
+  { id: 1, name: 'DSF 2026', slug: 'dsf26', category: 'hackathon' as const },
+  { id: 2, name: '옛 행사', slug: null, category: 'conference' as const },
 ]
 
 const images = [

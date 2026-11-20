@@ -10,8 +10,14 @@ import {
   Text,
   Textarea,
 } from '@chakra-ui/react'
-import { useState, type CSSProperties } from 'react'
+import { useRef, useState, type CSSProperties } from 'react'
 import NotionMarkdown from '@/components/notion/notion-markdown'
+import type { NotionPageLinks } from '@/utils/cms-types'
+
+export type PreviewPageLinks = (
+  businessId: number | null,
+  content: string,
+) => Promise<NotionPageLinks>
 
 type Props = {
   name: string
@@ -19,6 +25,10 @@ type Props = {
   defaultValue: string
   required?: boolean
   rows?: number
+  /** 미리보기에서 ::page 링크의 제목·주소를 채우는 서버 액션 */
+  resolvePageLinks?: PreviewPageLinks
+  /** 같은 폼에서 기준 행사 ID를 읽을 입력 이름('id' 또는 'businessId') */
+  businessIdField?: string
 }
 
 const SYNTAX_HELP: [string, string][] = [
@@ -38,14 +48,27 @@ const SYNTAX_HELP: [string, string][] = [
     '단 나누기',
     '::::columns\n:::column{ratio=0.5}\n왼쪽\n:::\n:::column{ratio=0.5}\n오른쪽\n:::\n::::',
   ],
-  ['글자 색', ':color[글자]{c="red"}  /  :u[밑줄]  /  표 칸 줄바꿈 :br{}'],
   [
-    '표 머리글',
-    ':::table{header-row=false header-column=true}\n| 가 | 나 |\n|---|---|\n:::',
+    '글자 꾸미기',
+    ':color[글자]{c="red"}  /  :u[밑줄]  /  표 칸 줄바꿈 :br{}\n:b[굵게]  /  :i[기울임]  /  :s[취소선]  (**·*·~~가 한글 문장부호와 붙어 풀릴 때)',
+  ],
+  ['색 블록', ':::color{c="gray_background"}\n내용\n:::'],
+  ['들여쓰기', ':::indent\n들여쓴 내용\n:::'],
+  [
+    '표 머리글·열 폭',
+    ':::table{header-row=false header-column=true widths="120,373"}\n| 가 | 나 |\n|---|---|\n:::',
+  ],
+  [
+    '데이터베이스 표',
+    ':::database[제목]\n| 이름 | 날짜 |\n|---|---|\n| 항목 | 2026년 4월 18일 |\n:::',
+  ],
+  [
+    '갤러리(카드 목록)',
+    ':::gallery{size="small"}\n- ![표지](이미지 URL "cover:30%")\\\n  [카드 제목](/hackathon/…)\n:::\n("cover:N%"는 카드 표지에서 보일 세로 위치, 빼면 가운데)',
   ],
   [
     '기타',
-    '::toc (목차)  /  ::video{src="URL"}  /  ::embed{src="지도·유튜브 URL"}',
+    '::toc (목차)  /  ::video{src="URL" width=144}  /  ::embed{src="지도·유튜브 URL"}',
   ],
 ]
 
@@ -57,7 +80,8 @@ const previewStyle = { '--notion-font-size': '16px' } as CSSProperties
 
 /**
  * 노션 확장 마크다운 입력란. 미리보기는 공개 페이지와 같은 렌더러로 그린다.
- * 하위 페이지 링크(::page)는 저장 후 공개 페이지에서만 제목이 채워진다.
+ * 하위 페이지 링크(::page)는 미리보기를 열 때 지금 DB의 하위 페이지로 풀고, 찾지
+ * 못한 링크는 '찾을 수 없는 하위 페이지'로 표시한다.
  */
 export function NotionContentField({
   name,
@@ -65,13 +89,49 @@ export function NotionContentField({
   defaultValue,
   required,
   rows = 18,
+  resolvePageLinks,
+  businessIdField,
 }: Props) {
   const [value, setValue] = useState(defaultValue)
   const [mode, setMode] = useState<'edit' | 'preview'>('edit')
   const [helpOpen, setHelpOpen] = useState(false)
+  // null이면 아직 링크를 푸는 중이다.
+  const [pageLinks, setPageLinks] = useState<NotionPageLinks | null>(null)
+  const rootRef = useRef<HTMLDivElement>(null)
+  const request = useRef(0)
+
+  async function openPreview() {
+    setMode('preview')
+    if (!resolvePageLinks) {
+      setPageLinks({})
+      return
+    }
+    setPageLinks(null)
+    const field = businessIdField
+      ? rootRef.current?.closest('form')?.elements.namedItem(businessIdField)
+      : null
+    const id = Number(
+      field instanceof HTMLInputElement || field instanceof HTMLSelectElement
+        ? field.value
+        : '',
+    )
+    const current = ++request.current
+    let links: NotionPageLinks = {}
+    try {
+      links = await resolvePageLinks(
+        Number.isInteger(id) && id > 0 ? id : null,
+        value,
+      )
+    } catch {
+      // 링크를 못 풀어도 미리보기는 보여 준다(링크는 '찾을 수 없음'으로 표시).
+    }
+    if (current === request.current) {
+      setPageLinks(links)
+    }
+  }
 
   return (
-    <Field.Root required={required}>
+    <Field.Root required={required} ref={rootRef}>
       <Flex justify="space-between" align="center" w="full" gap={2} wrap="wrap">
         <Field.Label>{label}</Field.Label>
         <Flex gap={2}>
@@ -85,7 +145,7 @@ export function NotionContentField({
           <Button
             size="xs"
             variant={mode === 'preview' ? 'solid' : 'outline'}
-            onClick={() => setMode('preview')}
+            onClick={openPreview}
           >
             미리보기
           </Button>
@@ -141,8 +201,18 @@ export function NotionContentField({
           bg="white"
           data-testid={`${name}-preview`}
         >
+          {pageLinks === null && (
+            <Text fontSize="xs" color="gray.500" mb={2}>
+              하위 페이지 링크를 불러오는 중…
+            </Text>
+          )}
           <div className="notion-page" style={previewStyle}>
-            <NotionMarkdown content={value} openLinksInNewTab />
+            <NotionMarkdown
+              content={value}
+              openLinksInNewTab
+              pageLinks={pageLinks ?? {}}
+              showMissingPageLinks={pageLinks !== null}
+            />
           </div>
         </Box>
       )}

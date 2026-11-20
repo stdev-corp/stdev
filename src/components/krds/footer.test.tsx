@@ -86,6 +86,7 @@ describe('<Footer>', () => {
       ['사업자등록번호', '169-82-00606'],
       ['통신판매업신고번호', '2025-대전서구-0117'],
       ['대표전화', '0507-1441-9392'],
+      ['이메일', 'contact@stdev.kr'],
     ]
     expect(rows.length).toBe(expected.length)
     rows.forEach((row, index) => {
@@ -94,6 +95,14 @@ describe('<Footer>', () => {
       expect(row.querySelector('dd')).toHaveTextContent(description)
       expect(row.children.length).toBe(2)
     })
+  })
+
+  it('links the contact email with mailto', () => {
+    renderWithChakra(<Footer />)
+
+    expect(
+      screen.getByRole('link', { name: 'contact@stdev.kr' }),
+    ).toHaveAttribute('href', 'mailto:contact@stdev.kr')
   })
 
   it('renders the policy shortcut links with their internal hrefs', () => {

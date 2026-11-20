@@ -558,6 +558,9 @@ function imageBlock(
   return `::image${attrs({ src, alt, width: width > 0 ? width : undefined, caption })}`
 }
 
+/** 노션 단순 표에서 폭을 정하지 않은 열의 폭 */
+const NOTION_COLUMN_WIDTH = 120
+
 function tableBlock(block: NotionBlock, ctx: ConvertContext): Rendered {
   const order = (block.format?.table_block_column_order as string[]) ?? []
   const rows = (block.content ?? [])
@@ -572,15 +575,23 @@ function tableBlock(block: NotionBlock, ctx: ConvertContext): Rendered {
   lines.splice(1, 0, `| ${order.map(() => '---').join(' | ')} |`)
   const headerRow = block.format?.table_block_column_header === true
   const headerColumn = block.format?.table_block_row_header === true
-  const table = lines.join('\n')
-  if (headerRow && !headerColumn) return table
+  // 노션 표는 열마다 폭을 기억한다(정하지 않은 열은 120px). 표를 본문 폭으로 늘리지
+  // 않고 이 폭대로 그려야 노션과 같은 비율이 된다.
+  const formats = (block.format?.table_block_column_format ?? {}) as Record<
+    string,
+    { width?: number } | undefined
+  >
+  const widths = order.map((column) =>
+    Math.round(Number(formats[column]?.width) || NOTION_COLUMN_WIDTH),
+  )
   return container(
     'table',
     attrs({
       'header-row': headerRow ? undefined : 'false',
       'header-column': headerColumn ? 'true' : undefined,
+      widths: widths.join(','),
     }),
-    table,
+    lines.join('\n'),
   )
 }
 
@@ -718,8 +729,16 @@ function collectionBlock(
     const cards = rows.map((row) => {
       const parts: string[] = []
       let image: { source: string; blockId: string } | null = null
+      // 카드 표지에서 보일 세로 위치(노션 card_cover_position: 1이 맨 위, 0이 맨 아래).
+      let position = 50
       if (cover === 'page_cover' && row.format?.page_cover) {
         image = { source: String(row.format.page_cover), blockId: row.id }
+        const raw = Number(
+          row.format.card_cover_position ?? row.format.page_cover_position,
+        )
+        if (Number.isFinite(raw)) {
+          position = Math.round((1 - Math.min(Math.max(raw, 0), 1)) * 100)
+        }
       } else if (cover === 'page_content') {
         image = firstImage(row.id, ctx)
       }
@@ -728,7 +747,8 @@ function collectionBlock(
         ? imageSource(ctx, image.source, image.blockId, name)
         : null
       if (src) {
-        parts.push(`![${escapeText(name)}](${src})`)
+        const title = position === 50 ? '' : ` "cover:${position}%"`
+        parts.push(`![${escapeText(name)}](${src}${title})`)
       }
       const urlProperty = Object.entries(schema).find(
         ([, definition]) => definition.type === 'url',
@@ -850,6 +870,28 @@ function renderBlock(
 
   switch (block.type) {
     case 'text': {
+      // 페이지 멘션 하나만 있는 줄은 노션이 아이콘을 붙여 페이지 링크처럼 그린다.
+      // 대상이 이관에서 빠진 페이지면 빈 줄이 남지 않게 줄을 뺀다.
+      const segments = segmentsOf(block.properties?.title)
+      const mentions = segments.filter((segment) =>
+        has(segment.annotations, 'p'),
+      )
+      if (
+        mentions.length === 1 &&
+        segments.every(
+          (segment) =>
+            has(segment.annotations, 'p') || segment.text.trim() === '',
+        )
+      ) {
+        const link = pageLink(
+          String(has(mentions[0].annotations, 'p')![1]),
+          ctx,
+        )
+        const children = renderChildren(block, ctx)
+        const indented = children ? container('indent', '', children) : null
+        if (!link) return indented
+        return indented ? `${link}\n\n${indented}` : link
+      }
       const empty = plainText(block.properties?.title).trim() === ''
       const text = empty
         ? ''

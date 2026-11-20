@@ -37,7 +37,7 @@
 
 ## 예시
 
-:::table{header-row="false"}
+:::table{header-row="false" widths="278,305"}
 | \[A1-B\] 박지성 | A팀의 리더, 기획자 |
 | --- | --- |
 | \[A2-PD\] 홍날두 | A팀의 팀원, 프로그래머이자 디자이너 |

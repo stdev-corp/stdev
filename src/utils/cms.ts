@@ -306,6 +306,34 @@ async function resolvePageLinks(
   return links
 }
 
+/**
+ * 관리자 미리보기: 편집 중인 본문의 ::page 링크를 지금 DB 기준으로 푼다. 행사가
+ * 아직 없거나 슬러그가 없으면 다른 행사를 가리키는 링크(event=…)만 풀린다.
+ */
+export async function resolvePreviewPageLinks(
+  businessId: number | null,
+  content: string,
+): Promise<NotionPageLinks> {
+  const business = businessId
+    ? await prisma.business.findUnique({
+        where: { id: businessId },
+        select: {
+          id: true,
+          slug: true,
+          category: true,
+          name: true,
+          icon: true,
+        },
+      })
+    : null
+  return resolvePageLinks(
+    business?.slug
+      ? { ...business, slug: business.slug }
+      : { id: -1, slug: '', category: 'hackathon', name: '', icon: null },
+    content,
+  )
+}
+
 export type EventLookup<T> =
   | { kind: 'found'; value: T }
   | { kind: 'redirect'; href: string }

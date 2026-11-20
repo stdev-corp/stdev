@@ -212,13 +212,13 @@ describe.each(sections)(
     })
 
     describe(`${base} (행사 소개)`, () => {
-      it('구역 이름을 유일한 h1으로 두고 소개와 행사 목록 제목을 그린다', async () => {
+      it('현재 하위 메뉴(행사 소개)를 유일한 h1으로 두고 소개와 행사 목록 제목을 그린다', async () => {
         getSectionIntroMock.mockResolvedValue('구역 소개 문단입니다.')
         await renderPageAt(base, SectionPage())
 
         const headings = screen.getAllByRole('heading', { level: 1 })
         expect(headings).toHaveLength(1)
-        expect(headings[0]).toHaveTextContent(label)
+        expect(headings[0]).toHaveTextContent('행사 소개')
         expect(screen.getByTestId('markdown-view')).toHaveTextContent(
           '구역 소개 문단입니다.',
         )

@@ -342,6 +342,91 @@ describe('<NotionMarkdown>', () => {
     })
   })
 
+  describe('노션 표 설정 (:::table)', () => {
+    const gfm = '| 이름 | 소속 |\n| - | - |\n| 홍길동 | STDev |'
+
+    function cellTexts(row: HTMLElement) {
+      return Array.from(row.querySelectorAll('th, td')).map(
+        (cell) => cell.textContent,
+      )
+    }
+
+    it('머리글 없는 표는 첫 줄도 본문 칸으로 그려 열 머리글로 읽히지 않는다', () => {
+      const { root } = renderMarkdown(`:::table{header-row=false}\n${gfm}\n:::`)
+
+      const table = screen.getByRole('table')
+      expect(root.querySelector('thead')).toBeNull()
+      expect(within(table).queryAllByRole('columnheader')).toHaveLength(0)
+      const rows = within(table).getAllByRole('row')
+      expect(rows.map(cellTexts)).toEqual([
+        ['이름', '소속'],
+        ['홍길동', 'STDev'],
+      ])
+      expect(within(rows[0]).getAllByRole('cell')).toHaveLength(2)
+    })
+
+    it('머리글 열이 있는 표는 줄마다 첫 칸을 줄 머리글로 그린다', () => {
+      renderMarkdown(
+        `:::table{header-column=true}\n${gfm}\n| 김철수 | KAIST |\n:::`,
+      )
+
+      const table = screen.getByRole('table')
+      expect(
+        within(table)
+          .getAllByRole('columnheader')
+          .map((cell) => cell.textContent),
+      ).toEqual(['이름', '소속'])
+      const rowHeaders = within(table).getAllByRole('rowheader')
+      expect(rowHeaders.map((cell) => cell.textContent)).toEqual([
+        '홍길동',
+        '김철수',
+      ])
+      rowHeaders.forEach((cell) => {
+        expect(cell.tagName).toBe('TH')
+        expect(cell).toHaveAttribute('scope', 'row')
+      })
+      expect(
+        within(table)
+          .getAllByRole('cell')
+          .map((cell) => cell.textContent),
+      ).toEqual(['STDev', 'KAIST'])
+    })
+
+    it('widths가 있으면 열 폭과 표 폭을 정하고 가로 스크롤 상자는 그대로 둔다', () => {
+      const { root } = renderMarkdown(`:::table{widths="120,373"}\n${gfm}\n:::`)
+
+      const wrapper = root.querySelector('div.notion-table')!
+      expect(wrapper).toHaveClass('notion-table', 'has-widths')
+      expect(wrapper).not.toHaveAttribute('data-widths')
+      const table = screen.getByRole('table')
+      expect(table.parentElement).toHaveClass('notion-table-scroll')
+      // 표 폭은 CSS가 min(노션 폭 합, 본문 폭)으로 정하고, 열은 비율을 지킨다.
+      expect(table.style.getPropertyValue('--notion-table-width')).toBe('493px')
+      const cols = Array.from(table.querySelectorAll('colgroup > col'))
+      expect(cols.map((col) => (col as HTMLElement).style.width)).toEqual([
+        '24.341%',
+        '75.659%',
+      ])
+      expect(
+        within(table)
+          .getAllByRole('columnheader')
+          .map((cell) => cell.textContent),
+      ).toEqual(['이름', '소속'])
+    })
+
+    it('잘못된 widths는 무시하고 본문 폭 표로 그린다', () => {
+      const { root } = renderMarkdown(
+        `:::table{widths="120px,373px"}\n${gfm}\n:::`,
+      )
+
+      const wrapper = root.querySelector('div.notion-table')!
+      expect(wrapper).not.toHaveClass('has-widths')
+      expect(wrapper).not.toHaveAttribute('data-widths')
+      expect(root.querySelector('colgroup')).toBeNull()
+      expect(screen.getByRole('table')).not.toHaveAttribute('style')
+    })
+  })
+
   describe('콜아웃', () => {
     it('이모지 아이콘과 색을 가진 콜아웃을 그린다', () => {
       const { root } = renderMarkdown(
@@ -470,6 +555,56 @@ describe('<NotionMarkdown>', () => {
       const withoutLinks = renderMarkdown('::page{path="faq"}')
       expect(withoutLinks.root.querySelector('.notion-page-link')).toBeNull()
       expect(screen.queryByRole('link')).toBeNull()
+    })
+
+    it('showMissingPageLinks면 표에 없는 링크를 찾을 수 없는 하위 페이지로 표시한다', () => {
+      const { container } = render(
+        <NotionMarkdown
+          showMissingPageLinks
+          content={[
+            '::page{path="faq"}',
+            '::page{path="notice/team"}',
+            '::page{event="dsf24" path="faq"}',
+            '::page{event="dsf23"}',
+          ].join('\n\n')}
+          pageLinks={pageLinks}
+        />,
+      )
+
+      // 표에 있는 링크는 평소처럼 그린다.
+      expect(
+        screen.getByRole('link', { name: '자주 묻는 질문' }),
+      ).toHaveAttribute('href', '/hackathon/dsf26/faq')
+      expect(screen.getAllByRole('link')).toHaveLength(1)
+
+      const missing = Array.from(
+        container.querySelectorAll('.notion-page-link-missing'),
+      )
+      expect(missing.map((placeholder) => placeholder.textContent)).toEqual([
+        // 같은 행사 안이면 경로만, 다른 행사면 '행사/경로'로 보인다.
+        '찾을 수 없는 하위 페이지: notice/team',
+        '찾을 수 없는 하위 페이지: dsf24/faq',
+        '찾을 수 없는 하위 페이지: dsf23',
+      ])
+      missing.forEach((placeholder) => {
+        expect(placeholder.tagName).toBe('P')
+        expect(placeholder).toHaveClass('notion-page-link')
+        expect(placeholder.querySelector('a')).toBeNull()
+        expect(
+          placeholder.querySelector('.notion-page-link-title')?.textContent,
+        ).toBe(placeholder.textContent)
+      })
+    })
+
+    it('showMissingPageLinks에 링크 표가 없으면 모든 ::page를 찾을 수 없다고 표시한다', () => {
+      const { container } = render(
+        <NotionMarkdown showMissingPageLinks content={'::page{path="faq"}'} />,
+      )
+
+      expect(screen.queryByRole('link')).toBeNull()
+      expect(
+        container.querySelector('p.notion-page-link-missing'),
+      ).toHaveTextContent(/^찾을 수 없는 하위 페이지: faq$/)
     })
   })
 

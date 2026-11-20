@@ -2,7 +2,9 @@
 
 import { Text } from '@chakra-ui/react'
 import type { BusinessPage, ImageAsset } from '@prisma/client'
+import { eventPageHref } from '@/utils/events'
 import { EntityList } from '../entity-list'
+import type { PreviewPageLinks } from '../notion-content-field'
 import {
   BusinessPageFormDrawer,
   type BusinessOption,
@@ -12,6 +14,7 @@ type Actions = {
   createBusinessPage: (formData: FormData) => Promise<void>
   updateBusinessPage: (formData: FormData) => Promise<void>
   deleteBusinessPage: (formData: FormData) => Promise<void>
+  previewPageLinks?: PreviewPageLinks
 }
 
 export function BusinessPageListClient({
@@ -43,8 +46,10 @@ export function BusinessPageListClient({
               {page.title}
             </Text>
             <Text fontSize="sm" color="gray.600">
-              {business?.name ?? `사업 #${page.businessId}`} · /
-              {business?.slug ?? '(슬러그 없음)'}/{page.path}
+              {business?.name ?? `사업 #${page.businessId}`} ·{' '}
+              {business?.slug
+                ? `페이지 ${eventPageHref(business.category, business.slug, page.path)}`
+                : `행사 슬러그가 없어 공개되지 않음(${page.path})`}
             </Text>
           </>
         )
@@ -56,6 +61,7 @@ export function BusinessPageListClient({
           businesses={businesses}
           images={images}
           action={actions.createBusinessPage}
+          previewPageLinks={actions.previewPageLinks}
         />
       )}
       renderEdit={(page, open, closeEdit) => (
@@ -68,6 +74,7 @@ export function BusinessPageListClient({
           businesses={businesses}
           images={images}
           action={actions.updateBusinessPage}
+          previewPageLinks={actions.previewPageLinks}
         />
       )}
     />

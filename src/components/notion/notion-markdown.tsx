@@ -6,6 +6,7 @@ import type { NotionPageLinks } from '@/utils/cms-types'
 import { isImageIcon } from '@/utils/events'
 import {
   rehypeNotionBreaks,
+  rehypeNotionTables,
   rehypeNotionToc,
   remarkNotion,
   safeLinkUrl,
@@ -83,8 +84,13 @@ function isInternal(href: string) {
 
 type Props = {
   content: string
-  /** ::page 지시어를 실제 주소로 바꾸는 표. 없으면 링크 대신 제목만 보인다. */
+  /** ::page 지시어를 실제 주소로 바꾸는 표. 표에 없는 링크는 그리지 않는다. */
   pageLinks?: NotionPageLinks
+  /**
+   * 표에 없는 ::page 링크를 지우지 않고 '찾을 수 없는 하위 페이지'로 표시한다.
+   * 관리자 미리보기에서 경로 오타를 알아보도록 쓴다.
+   */
+  showMissingPageLinks?: boolean
   /**
    * 모든 링크를 새 창으로 연다. 관리자 미리보기에서 링크를 눌러 편집 중인 내용을
    * 잃지 않도록 쓴다.
@@ -107,6 +113,7 @@ export default function NotionMarkdown({
   content,
   pageLinks = {},
   openLinksInNewTab = false,
+  showMissingPageLinks = false,
 }: Props) {
   const sameWindow = (url: string) =>
     !openLinksInNewTab && (isInternal(url) || url.startsWith('mailto:'))
@@ -143,13 +150,31 @@ export default function NotionMarkdown({
       node: _node,
       src,
       alt,
-    }: ComponentPropsWithoutRef<'img'> & { node?: unknown }) => {
+      ...rest
+    }: ComponentPropsWithoutRef<'img'> & {
+      node?: unknown
+      'data-cover-position'?: number | string
+    }) => {
       const url = safeUrl(typeof src === 'string' ? src : undefined)
       if (!url) {
         return null
       }
-      // eslint-disable-next-line @next/next/no-img-element
-      return <img {...responsiveImage(url)} alt={alt ?? ''} loading="lazy" />
+      // 갤러리 카드 표지: 노션에서 정한 세로 위치로 자른다. 값은 remarkNotion이
+      // "cover:N%" 제목에서 0~100 정수로만 만든다.
+      const position = rest['data-cover-position']
+      const style =
+        position === undefined
+          ? undefined
+          : { objectPosition: `center ${Number(position)}%` }
+      return (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          {...responsiveImage(url)}
+          alt={alt ?? ''}
+          loading="lazy"
+          style={style}
+        />
+      )
     },
     blockquote: ({ node: _node, ...props }: ElementProps) => (
       <blockquote {...props} className="notion-quote" />
@@ -198,7 +223,18 @@ export default function NotionMarkdown({
       const key = prop(props, 'linkKey') ?? ''
       const link = pageLinks[key]
       if (!link) {
-        return null
+        if (!showMissingPageLinks) {
+          return null
+        }
+        // 키는 'event:path'(같은 행사면 event가 빈칸)
+        const target = key.split(':').filter(Boolean).join('/')
+        return (
+          <p className="notion-page-link notion-page-link-missing">
+            <span className="notion-page-link-title">
+              찾을 수 없는 하위 페이지: {target}
+            </span>
+          </p>
+        )
       }
       return (
         <p className="notion-page-link">
@@ -304,7 +340,11 @@ export default function NotionMarkdown({
           footnoteLabel: '각주',
           footnoteBackLabel: '본문으로 돌아가기',
         }}
-        rehypePlugins={[rehypeNotionBreaks, rehypeNotionToc]}
+        rehypePlugins={[
+          rehypeNotionBreaks,
+          rehypeNotionTables,
+          rehypeNotionToc,
+        ]}
         components={components}
       >
         {content}

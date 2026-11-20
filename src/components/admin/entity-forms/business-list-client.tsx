@@ -5,12 +5,14 @@ import type { ImageAsset, Institution } from '@prisma/client'
 import { toDateString } from '@/utils/datetime'
 import { CATEGORY_LABELS, eventHref } from '@/utils/events'
 import { EntityList } from '../entity-list'
+import type { PreviewPageLinks } from '../notion-content-field'
 import { BusinessFormDrawer, type BusinessWithLinks } from './business-form'
 
 type Actions = {
   createBusiness: (formData: FormData) => Promise<void>
   updateBusiness: (formData: FormData) => Promise<void>
   deleteBusiness: (formData: FormData) => Promise<void>
+  previewPageLinks?: PreviewPageLinks
 }
 
 export function BusinessListClient({
@@ -56,6 +58,7 @@ export function BusinessListClient({
           institutions={institutions}
           images={images}
           action={actions.createBusiness}
+          previewPageLinks={actions.previewPageLinks}
         />
       )}
       renderEdit={(business, open, closeEdit) => (
@@ -68,6 +71,7 @@ export function BusinessListClient({
           institutions={institutions}
           images={images}
           action={actions.updateBusiness}
+          previewPageLinks={actions.previewPageLinks}
         />
       )}
     />

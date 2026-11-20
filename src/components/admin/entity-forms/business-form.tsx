@@ -13,7 +13,10 @@ import type { BusinessCategory, BusinessRole } from '@/utils/cms-types'
 import { CATEGORY_LABELS, fromEventInstant, ROLE_ORDER } from '@/utils/events'
 import { FormDrawer } from '../form-drawer'
 import { InstitutionRolePicker } from '../institution-role-picker'
-import { NotionContentField } from '../notion-content-field'
+import {
+  NotionContentField,
+  type PreviewPageLinks,
+} from '../notion-content-field'
 
 export type BusinessWithLinks = {
   id: number
@@ -44,6 +47,7 @@ type Props = {
   institutions: Pick<Institution, 'id' | 'nameKo'>[]
   images: Pick<ImageAsset, 'id' | 'filename' | 'url'>[]
   action: (formData: FormData) => Promise<void>
+  previewPageLinks?: PreviewPageLinks
 }
 
 function roleDefaults(business?: BusinessWithLinks) {
@@ -65,6 +69,7 @@ export function BusinessFormDrawer({
   institutions,
   images,
   action,
+  previewPageLinks,
 }: Props) {
   const editing = Boolean(business)
   const start = business
@@ -219,6 +224,8 @@ export function BusinessFormDrawer({
           name="content"
           label="행사 페이지 본문"
           defaultValue={business?.content ?? ''}
+          resolvePageLinks={previewPageLinks}
+          businessIdField="id"
         />
         <Field.Root>
           <Field.Label>노션 페이지 ID</Field.Label>

@@ -314,5 +314,31 @@ describe('asset and content entity form drawers', () => {
     expect(
       screen.getByText(/뉴스 기사·블로그 포스트는 행사를 골라야 하며/),
     ).toBeInTheDocument()
+    expect(screen.getByLabelText('관련 행사(사업)')).toBeRequired()
+  })
+
+  it('requires a related event except for press releases', async () => {
+    const { user } = renderWithChakra(
+      <WebpageFormDrawer
+        open
+        onOpenChange={onOpenChange}
+        businesses={[makeBusiness()]}
+        action={action}
+      />,
+    )
+
+    const type = screen.getByLabelText('유형')
+    const business = screen.getByLabelText('관련 행사(사업)')
+    expect(type).toHaveValue('blog_post')
+    expect(business).toBeRequired()
+    expect(
+      screen.getByRole('option', { name: '뉴스 기사' }),
+    ).toBeInTheDocument()
+
+    await user.selectOptions(type, 'press_release')
+    expect(business).not.toBeRequired()
+
+    await user.selectOptions(type, 'news_article')
+    expect(business).toBeRequired()
   })
 })

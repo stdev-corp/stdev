@@ -1,3 +1,4 @@
+import type { Element, ElementContent, Root as HastRoot } from 'hast'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
@@ -8,6 +9,7 @@ import {
   collectPageRefs,
   isNotionColor,
   pageLinkKey,
+  rehypeNotionTables,
   safeEmbedUrl,
   safeLinkUrl,
   safeUrl,
@@ -256,6 +258,156 @@ describe('collectPageRefs', () => {
     expect(collectPageRefs('')).toEqual([])
     expect(collectPageRefs('그냥 글')).toEqual([])
   })
+
+  it('빈 값은 없는 것으로 본다', () => {
+    expect(
+      collectPageRefs(
+        '::page{event="" path="faq"}\n\n::page{event="" path=""}',
+      ),
+    ).toEqual([{ event: undefined, path: 'faq' }])
+  })
+})
+
+/**
+ * 손으로 만드는 hast 요소. hast 타입은 className을 배열로만 두지만 remarkNotion은
+ * 문자열로 넘기므로 속성 타입을 넓혀 둔다.
+ */
+function h(
+  tagName: string,
+  properties: Record<string, unknown> = {},
+  children: ElementContent[] = [],
+): Element {
+  return {
+    type: 'element',
+    tagName,
+    properties: properties as Element['properties'],
+    children,
+  }
+}
+
+function t(value: string): ElementContent {
+  return { type: 'text', value }
+}
+
+function runTables(...children: ElementContent[]) {
+  const tree: HastRoot = { type: 'root', children }
+  rehypeNotionTables()(tree)
+  return tree.children
+}
+
+describe('rehypeNotionTables', () => {
+  it('rehype가 파싱한 모양(className 배열, dataWidths)도 처리한다', () => {
+    expect(
+      runTables(
+        h(
+          'div',
+          {
+            className: ['notion-table', 'no-header-row', 'header-column'],
+            dataWidths: '100,50',
+          },
+          [
+            h('table', {}, [
+              h('thead', {}, [
+                h('tr', {}, [
+                  h('th', {}, [t('a')]),
+                  h('th', { align: 'right' }, [t('b')]),
+                ]),
+              ]),
+              h('tbody', {}, [
+                h('tr', {}, [h('td', {}, [t('1')]), h('td', {}, [t('2')])]),
+              ]),
+            ]),
+          ],
+        ),
+      ),
+    ).toEqual([
+      h(
+        'div',
+        {
+          className: [
+            'notion-table',
+            'no-header-row',
+            'header-column',
+            'has-widths',
+          ],
+        },
+        [
+          h('table', { style: '--notion-table-width:150px' }, [
+            h('colgroup', {}, [
+              h('col', { style: 'width:66.667%' }),
+              h('col', { style: 'width:33.333%' }),
+            ]),
+            h('tbody', {}, [
+              h('tr', {}, [
+                h('th', { scope: 'row' }, [t('a')]),
+                h('td', { align: 'right' }, [t('b')]),
+              ]),
+              h('tr', {}, [
+                h('th', { scope: 'row' }, [t('1')]),
+                h('td', {}, [t('2')]),
+              ]),
+            ]),
+          ]),
+        ],
+      ),
+    ])
+  })
+
+  it('div.notion-table이 아니거나 안에 표가 없으면 건드리지 않는다', () => {
+    const table = () =>
+      h('table', {}, [h('thead', {}, [h('tr', {}, [h('th', {}, [t('a')])])])])
+    const nodes = [
+      h('div', { className: 'notion-database no-header-row' }, [table()]),
+      h('div', {}, [table()]),
+      h(
+        'section',
+        { className: ['notion-table', 'no-header-row'], dataWidths: '100' },
+        [table()],
+      ),
+      h('div', { className: 'notion-table no-header-row', dataWidths: '100' }, [
+        h('p', {}, [t('표 없음')]),
+      ]),
+    ]
+    const before = structuredClone(nodes)
+
+    expect(runTables(...nodes)).toEqual(before)
+  })
+
+  it('thead가 없는 표와 칸이 없는 줄은 그대로 두고, 잘못된 widths는 지운다', () => {
+    expect(
+      runTables(
+        h(
+          'div',
+          {
+            className: 'notion-table no-header-row header-column',
+            'data-widths': '120px',
+          },
+          [
+            t('\n'),
+            h('table', {}, [
+              h('tbody', {}, [
+                h('tr', {}, [t('\n')]),
+                h('tr', {}, [t('\n'), h('td', { align: 'left' }, [t('1')])]),
+              ]),
+            ]),
+          ],
+        ),
+      ),
+    ).toEqual([
+      h('div', { className: 'notion-table no-header-row header-column' }, [
+        t('\n'),
+        h('table', {}, [
+          h('tbody', {}, [
+            h('tr', {}, [t('\n')]),
+            h('tr', {}, [
+              t('\n'),
+              h('th', { align: 'left', scope: 'row' }, [t('1')]),
+            ]),
+          ]),
+        ]),
+      ]),
+    ])
+  })
 })
 
 describe('NotionMarkdown 렌더링 (remarkNotion, rehypeNotionBreaks, rehypeNotionToc)', () => {
@@ -467,6 +619,138 @@ describe('NotionMarkdown 렌더링 (remarkNotion, rehypeNotionBreaks, rehypeNoti
         '무시',
       )
     })
+
+    it('header-row=false면 첫 줄을 머리글이 아닌 본문 줄(td)로 옮긴다', () => {
+      expect(body(`:::table{header-row=false}\n${gfm}\n:::`)).toBe(
+        '<div class="notion-table no-header-row"><div class="notion-table-scroll"><table>' +
+          '<tbody><tr><td>a</td><td>b</td></tr>' +
+          '<tr><td>1</td><td>2</td></tr></tbody></table></div></div>',
+      )
+    })
+
+    it('header-row=false로 옮긴 칸도 정렬을 지킨다', () => {
+      const cells = [
+        ...dom(
+          ':::table{header-row=false}\n| a | b |\n| :- | -: |\n| 1 | 2 |\n:::',
+        ).querySelectorAll('td'),
+      ].map((cell) => [cell.textContent, cell.style.textAlign])
+      expect(cells).toEqual([
+        ['a', 'left'],
+        ['b', 'right'],
+        ['1', 'left'],
+        ['2', 'right'],
+      ])
+    })
+
+    it('머리글 줄만 있는 표는 header-row=false면 tbody를 만들어 옮긴다', () => {
+      expect(
+        body(':::table{header-row=false}\n| a | b |\n| - | - |\n:::'),
+      ).toBe(
+        '<div class="notion-table no-header-row"><div class="notion-table-scroll"><table>' +
+          '<tbody><tr><td>a</td><td>b</td></tr></tbody></table></div></div>',
+      )
+    })
+
+    it('header-column=true면 본문 줄마다 첫 칸을 줄 머리글(th scope=row)로 바꾼다', () => {
+      expect(body(`:::table{header-column=true}\n${gfm}\n| 3 | 4 |\n:::`)).toBe(
+        '<div class="notion-table header-column"><div class="notion-table-scroll"><table>' +
+          '<thead><tr><th>a</th><th>b</th></tr></thead>' +
+          '<tbody><tr><th scope="row">1</th><td>2</td></tr>' +
+          '<tr><th scope="row">3</th><td>4</td></tr></tbody></table></div></div>',
+      )
+    })
+
+    it('둘을 함께 쓰면 본문으로 옮긴 첫 줄의 첫 칸도 줄 머리글이 된다', () => {
+      expect(
+        body(`:::table{header-row=false header-column=true}\n${gfm}\n:::`),
+      ).toBe(
+        '<div class="notion-table no-header-row header-column"><div class="notion-table-scroll"><table>' +
+          '<tbody><tr><th scope="row">a</th><td>b</td></tr>' +
+          '<tr><th scope="row">1</th><td>2</td></tr></tbody></table></div></div>',
+      )
+    })
+
+    it('widths는 열 폭 비율(colgroup)과 노션 폭 합(--notion-table-width)을 준다', () => {
+      expect(body(`:::table{widths="120,373"}\n${gfm}\n:::`)).toBe(
+        '<div class="notion-table has-widths"><div class="notion-table-scroll">' +
+          '<table style="--notion-table-width:493px">' +
+          '<colgroup><col style="width:24.341%"/><col style="width:75.659%"/></colgroup>' +
+          '<thead><tr><th>a</th><th>b</th></tr></thead>' +
+          '<tbody><tr><td>1</td><td>2</td></tr></tbody></table></div></div>',
+      )
+    })
+
+    it('widths를 머리글 설정과 함께 쓸 수 있다', () => {
+      const root = dom(
+        `:::table{header-row=false header-column widths="200,100"}\n${gfm}\n:::`,
+      )
+      expect(root.querySelector('.notion-table')?.className).toBe(
+        'notion-table no-header-row header-column has-widths',
+      )
+      const table = root.querySelector('table')!
+      expect(table.getAttribute('style')).toBe('--notion-table-width:300px')
+      expect(table.querySelector('thead')).toBeNull()
+      expect(
+        [...table.querySelectorAll('th[scope="row"]')].map(
+          (cell) => cell.textContent,
+        ),
+      ).toEqual(['a', '1'])
+    })
+
+    it('열 폭은 32~2000px로 자르고 표 폭은 자른 값의 합이다', () => {
+      const table = dom(`:::table{widths="0,9999"}\n${gfm}\n:::`).querySelector(
+        'table',
+      )!
+      expect(
+        [...table.querySelectorAll('col')].map((col) =>
+          col.getAttribute('style'),
+        ),
+      ).toEqual(['width:1.575%', 'width:98.425%'])
+      expect(table.getAttribute('style')).toBe('--notion-table-width:2032px')
+    })
+
+    it('열 50개까지 받아들인다', () => {
+      const table = dom(
+        `:::table{widths="${Array(50).fill('40').join(',')}"}\n${gfm}\n:::`,
+      ).querySelector('table')!
+      expect(table.querySelectorAll('col')).toHaveLength(50)
+      expect(table.getAttribute('style')).toBe('--notion-table-width:2000px')
+    })
+
+    it.each([
+      ['숫자가 아닌 값', 'wide'],
+      ['단위가 붙은 값', '120px,373px'],
+      ['쉼표 뒤 공백', '120, 373'],
+      ['다섯 자리 숫자', '12345'],
+      ['소수', '120.5'],
+      ['음수', '-120'],
+      ['끝 쉼표', '120,'],
+      ['빈 값', ''],
+      ['열 51개', Array(51).fill('40').join(',')],
+    ])('잘못된 widths(%s)는 무시한다', (_, widths) => {
+      const root = dom(`:::table{widths="${widths}"}\n${gfm}\n:::`)
+      const wrapper = root.querySelector('.notion-table')!
+      expect(wrapper.className).toBe('notion-table')
+      expect(wrapper.hasAttribute('data-widths')).toBe(false)
+      expect(root.querySelector('colgroup')).toBeNull()
+      expect(root.querySelector('table')?.hasAttribute('style')).toBe(false)
+    })
+
+    it('표가 없는 :::table은 표 설정 없이 안쪽 블록만 그린다', () => {
+      const root = dom(':::table{header-row=false widths="120"}\n글\n:::')
+      expect(root.querySelector('.notion-table')?.className).toBe(
+        'notion-table no-header-row',
+      )
+      expect(root.querySelector('.notion-table')?.innerHTML).toBe('<p>글</p>')
+    })
+
+    it(':::table 밖의 표는 바꾸지 않는다', () => {
+      expect(body(gfm)).toBe(
+        '<div class="notion-table-scroll"><table>' +
+          '<thead><tr><th>a</th><th>b</th></tr></thead>' +
+          '<tbody><tr><td>1</td><td>2</td></tr></tbody></table></div>',
+      )
+    })
   })
 
   describe('database', () => {
@@ -519,6 +803,40 @@ describe('NotionMarkdown 렌더링 (remarkNotion, rehypeNotionBreaks, rehypeNoti
       )
       expect(root.textContent).not.toContain('무시')
       expect(root.querySelector('.notion-gallery li')?.textContent).toBe('카드')
+    })
+
+    it('카드 표지 제목 "cover:N%"는 표지의 세로 위치가 되고 제목으로 남지 않는다', () => {
+      const images = [
+        ...dom(
+          [
+            ':::gallery{size="small"}',
+            '- ![위](https://example.com/a.jpg "cover:15%")\\',
+            '  [위](/hackathon/a)',
+            '- ![넘침](https://example.com/b.jpg "cover:150%")',
+            '- ![가운데](https://example.com/c.jpg)',
+            '- ![설명](https://example.com/d.jpg "사진 설명")',
+            ':::',
+          ].join('\n'),
+        ).querySelectorAll('.notion-gallery img'),
+      ] as HTMLImageElement[]
+
+      expect(images.map((img) => [img.alt, img.style.objectPosition])).toEqual([
+        ['위', 'center 15%'],
+        ['넘침', 'center 100%'],
+        ['가운데', ''],
+        ['설명', ''],
+      ])
+      for (const img of images) {
+        expect(img).not.toHaveAttribute('data-cover-position')
+        expect(img).not.toHaveAttribute('title')
+      }
+    })
+
+    it('갤러리 밖의 이미지 제목 "cover:N%"는 표지 위치로 쓰지 않는다', () => {
+      const img = dom(
+        '![사진](https://example.com/a.jpg "cover:15%")',
+      ).querySelector('img') as HTMLImageElement
+      expect(img.style.objectPosition).toBe('')
     })
   })
 

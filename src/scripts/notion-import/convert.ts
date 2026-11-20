@@ -376,7 +376,7 @@ async function main() {
       }
     }
     for (const match of markdown.matchAll(
-      /!\[[^\]]*\]\((https:\/\/[^)\s]+)\)(\\\n[ \t]*)?/g,
+      /!\[[^\]]*\]\((https:\/\/[^)\s]+)(?: "[^"]*")?\)(\\\n[ \t]*)?/g,
     )) {
       if (!(await alive(match[1]))) {
         warnings.push(`사라진 외부 이미지 뺌: ${match[1]}`)

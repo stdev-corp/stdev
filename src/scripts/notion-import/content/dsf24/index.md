@@ -110,7 +110,7 @@
 
 ---
 
-:::table{header-row="false"}
+:::table{header-row="false" widths="230,230,230"}
 | **🥇 대상** | **대전광역시 시장상** | **200만 원** |
 | --- | --- | --- |
 | **🥈 최우수상** | **KAIST 총장상** | **100만 원** |
@@ -145,17 +145,15 @@
 
 ::page{path="apply"}
 
-&#32;
+::page{event="sash24" path="interview"}
 
-[SPARCS Service Hackathon 2024 우수 참가자 INTERVIEW](/hackathon/sash24/interview) 
+::page{event="ssh24" path="press"}
 
-[SPARCS 서비스 해커톤 2024 보도자료](/hackathon/ssh24/press) 
+::page{event="ssh24" path="reviews"}
 
-[SPARCS 서비스 해커톤 2024 참가자 후기](/hackathon/ssh24/reviews) 
+::page{event="ssh24" path="interview"}
 
-[SPARCS StartUp Hackathon 2023 우수팀 INTERVIEW](/hackathon/ssh24/interview) 
-
-[SPARCS 스타트업 해커톤 2023 참가자 후기](/hackathon/ssh23/reviews) 
+::page{event="ssh23" path="reviews"}
 
 ## QnA
 

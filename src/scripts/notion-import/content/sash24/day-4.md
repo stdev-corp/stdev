@@ -9,7 +9,7 @@
 
 **\[일정\]**
 
-:::table{header-row="false" header-column="true"}
+:::table{header-row="false" header-column="true" widths="120,453"}
 | :color[**\~10:00**]{c="red"} | **최종 산출물 및 발표 자료 제출** |
 | --- | --- |
 | 10:00 \~ 11:00 | 부스 준비 |

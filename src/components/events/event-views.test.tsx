@@ -189,7 +189,7 @@ describe('event views', () => {
       expect(getSectionIntroMock).toHaveBeenCalledWith('hackathon')
       expect(queryEventsMock).toHaveBeenCalledWith('hackathon')
       expect(
-        screen.getByRole('heading', { level: 1, name: '해커톤&아이디어톤' }),
+        screen.getByRole('heading', { level: 1, name: '행사 소개' }),
       ).toHaveClass('h-tit')
       expect(crumbs()).toEqual([
         ['홈', '/', null],
@@ -226,7 +226,7 @@ describe('event views', () => {
       expect(getSectionIntroMock).toHaveBeenCalledWith('conference')
       expect(queryEventsMock).toHaveBeenCalledWith('conference')
       expect(
-        screen.getByRole('heading', { level: 1, name: '컨퍼런스&프로그램' }),
+        screen.getByRole('heading', { level: 1, name: '행사 소개' }),
       ).toBeInTheDocument()
       const blocks = container.querySelectorAll('.conts-area > .g-conts-area')
       expect(blocks).toHaveLength(1)

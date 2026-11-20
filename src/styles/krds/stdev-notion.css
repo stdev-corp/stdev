@@ -135,6 +135,12 @@ img.notion-page-icon {
   font-weight: 600;
 }
 
+/* KRDS 초기화(address, em, i { font-style: normal })가 지운 기울임을 되살린다. */
+.notion-content em,
+.notion-content i {
+  font-style: italic;
+}
+
 .notion-content a.notion-link {
   color: inherit;
   text-decoration: underline;
@@ -287,21 +293,27 @@ img.notion-page-icon {
   padding-left: 1.7em;
 }
 
-/* 표 */
+/* 표. 노션 표 블록은 위아래로 한 줄 남짓 띄운다. */
+.notion-content .notion-table {
+  margin: var(--krds-number-7, 12px) 0;
+}
+
 .notion-content .notion-table-scroll {
   max-width: 100%;
   overflow-x: auto;
 }
 
+/* 노션 표 글자는 14px이다. 열 폭도 이 크기에 맞춰 저장돼 있다. */
 .notion-content table {
   border-collapse: collapse;
   min-width: 100%;
+  font-size: 0.875em;
 }
 
 .notion-content th,
 .notion-content td {
-  /* 노션 표 칸 여백 7px 9px */
-  padding: 0.4375em 0.5625em;
+  /* 노션 표 칸 여백 7px 9px(표 글자 14px 기준) */
+  padding: 0.5em 0.643em;
   border: var(--krds-light-border-width-static-regular, 1px) solid
     var(--notion-table-border);
   text-align: left;
@@ -309,15 +321,27 @@ img.notion-page-icon {
   white-space: pre-wrap;
 }
 
+/* 좁은 화면에서 짧은 칸('200만 원')이 글자 단위로 꺾이지 않게 칸 최소 폭을 둔다.
+   표가 더 넓어지면 .notion-table-scroll 안에서 가로로 스크롤된다. */
+.notion-content td,
+.notion-content th {
+  min-width: 6em;
+}
+
 .notion-content th {
   background: var(--notion-code-bg);
   font-weight: 500;
 }
 
-/* 첫 줄이 머리글이 아닌 표: 머리 칸도 본문 칸처럼 그린다. */
-.notion-content .notion-table.no-header-row th {
-  background: transparent;
-  font-weight: inherit;
+/*
+ * 노션에서 열 폭을 정한 표: 노션처럼 그 폭(합)대로 그리고 본문 폭으로 늘이지 않는다.
+ * 본문 칸보다 넓어지는 좁은 화면에서는 열 비율을 지킨 채 칸 폭에 맞춰, 상금처럼
+ * 오른쪽 열의 내용이 화면 밖으로 밀리지 않게 한다.
+ */
+.notion-content .notion-table.has-widths table {
+  width: min(var(--notion-table-width), 100%);
+  min-width: 0;
+  table-layout: fixed;
 }
 
 .notion-content .notion-table.header-column td:first-child,
@@ -361,6 +385,16 @@ img.notion-page-icon {
   max-width: 100%;
 }
 
+/*
+ * 블록 사이 4px. 위의 p·ul·ol·인용·이미지 규칙이 KRDS 기본 여백을 지우려고 쓴
+ * margin: 0이 맨 위 .notion-content > * + * 간격까지 지우므로, 그보다 구체적인
+ * 선택자로 되살린다. 그래야 이어진 인용 블록이 노션처럼 세로선이 끊겨 보이고,
+ * 표·이미지 다음 문단이 붙지 않는다. 제목은 각자 위 여백을 가지므로 뺀다.
+ */
+.notion-content > * + :is(p, ul, ol, .notion-quote, .notion-image) {
+  margin-top: var(--krds-number-3, 4px);
+}
+
 .notion-content .notion-image figcaption {
   padding: var(--krds-number-3, 4px) 0;
   color: var(--notion-text-light);
@@ -385,8 +419,10 @@ img.notion-page-icon {
 .notion-content .notion-page-link a {
   display: inline-flex;
   align-items: center;
-  gap: var(--krds-number-3, 4px);
+  gap: var(--krds-number-4, 6px);
   padding: var(--krds-number-2, 2px);
+  /* 첫 항목이 이미지 아이콘이면 기준선이 이미지 아래 끝으로 잡혀 줄이 높아진다. */
+  vertical-align: top;
   border-radius: var(--krds-radius-small1, 4px);
   color: inherit;
   font-weight: 500;
@@ -398,9 +434,9 @@ img.notion-page-icon {
   background: var(--notion-hover);
 }
 
-/* 페이지 링크 아이콘 칸 20px, 이모지 18px */
+/* 페이지 링크 아이콘 칸 22px, 이모지 18px(이모지 글리프 폭이 20px을 넘는다) */
 .notion-content span.notion-page-link-icon {
-  width: 1.111em;
+  width: 1.25em;
   font-size: 1.125em;
   line-height: 1;
   text-align: center;
@@ -410,6 +446,11 @@ img.notion-page-icon {
   width: 1.25em;
   height: 1.25em;
   object-fit: contain;
+}
+
+/* 관리자 미리보기에서만: 주소를 찾지 못한 ::page 링크 */
+.notion-content .notion-page-link-missing {
+  color: rgb(212, 76, 71);
 }
 
 .notion-content .notion-page-link-title {
@@ -589,17 +630,35 @@ img.notion-page-icon {
   padding-right: var(--krds-number-5, 8px);
 }
 
+/* 카드 표지: 노션처럼 16:9 칸을 채우도록 자른다('이미지 맞추기'를 켠 보기는 없다). */
 .notion-content .notion-gallery li img,
 .notion-content .notion-gallery li .notion-image {
   display: block;
   width: 100%;
   max-width: none;
-  /* 카드 표지 높이 노션 small 갤러리와 같은 128px */
-  height: 8em;
+  height: auto;
+  aspect-ratio: 16 / 9;
   margin: 0 0 var(--krds-number-3, 4px);
   padding: 0;
-  object-fit: contain;
+  object-fit: cover;
   background: var(--notion-code-bg);
+}
+
+/* 표지가 있는 갤러리에서 표지가 없는 카드도 같은 표지 칸을 비워 둬 제목 줄을 맞춘다. */
+.notion-content
+  .notion-gallery
+  ul:has(> li > img)
+  > li:not(:has(> img))::before {
+  content: '';
+  display: block;
+  aspect-ratio: 16 / 9;
+  margin: 0 0 var(--krds-number-3, 4px);
+  background: var(--notion-code-bg);
+}
+
+/* 카드는 세로 flex라 항목마다 이미 줄이 나뉜다. 마크다운 줄바꿈은 빈 줄만 만든다. */
+.notion-content .notion-gallery li > br {
+  display: none;
 }
 
 .notion-content .notion-gallery li strong,
@@ -662,6 +721,22 @@ img.notion-page-icon {
 }
 .notion-page .notion-red {
   color: rgb(212, 76, 71);
+}
+/* 색을 입힌 인라인 코드는 기본 빨강 대신 그 색을 따른다(노션과 같다). */
+.notion-page
+  :is(
+    .notion-gray,
+    .notion-brown,
+    .notion-orange,
+    .notion-yellow,
+    .notion-green,
+    .notion-blue,
+    .notion-purple,
+    .notion-pink,
+    .notion-red
+  )
+  code {
+  color: inherit;
 }
 .notion-page .notion-default_background {
   background: transparent;
@@ -808,6 +883,12 @@ img.notion-page-icon {
 
 .event-list .event-item-summary {
   margin-top: var(--krds-number-8);
+}
+
+/* 요약 마크다운의 블록 간격을 고르게 한다. .g-conts-area p { margin: 0 }이
+   .markdown-body > * + *를 이겨 문단만 붙고 목록만 떨어지던 것을 막는다. */
+.event-list .event-item-summary .markdown-body > * + * {
+  margin-top: var(--krds-number-5);
 }
 
 .event-list .event-item-more {

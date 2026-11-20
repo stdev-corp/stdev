@@ -54,6 +54,41 @@ function toggleWrapOf(trigger: HTMLElement) {
   ) as HTMLElement
 }
 
+/**
+ * 데스크탑 패널과 모바일 서랍에서 aria-current가 붙은 하위 메뉴 링크를 모은다.
+ * 표시 클래스(데스크탑 active, 모바일 selected)가 정확히 같은 링크에만 붙는지도 함께 확인한다.
+ */
+function currentSubMenuLinks(container: HTMLElement) {
+  const desktop = Array.from(
+    container.querySelectorAll<HTMLElement>('.gnb-toggle-wrap ul a'),
+  )
+  const mobile = Array.from(
+    container.querySelectorAll<HTMLElement>('.submenu-wrap ul a'),
+  )
+  const desktopCurrent = desktop.filter((link) =>
+    link.hasAttribute('aria-current'),
+  )
+  const mobileCurrent = mobile.filter((link) =>
+    link.hasAttribute('aria-current'),
+  )
+
+  expect(desktop.filter((link) => link.classList.contains('active'))).toEqual(
+    desktopCurrent,
+  )
+  expect(mobile.filter((link) => link.classList.contains('selected'))).toEqual(
+    mobileCurrent,
+  )
+  // 현재 위치가 아니어도 모바일 링크는 KRDS 기본 클래스를 잃지 않는다.
+  mobile.forEach((link) => expect(link).toHaveClass('gnb-sub-trigger'))
+
+  return { desktop: desktopCurrent, mobile: mobileCurrent }
+}
+
+/** 링크가 들어 있는 패널/서랍 구역의 제목. */
+function sectionTitleOf(link: HTMLElement) {
+  return link.closest('.gnb-sub-list')!.querySelector('.sub-title')!.textContent
+}
+
 const DESKTOP_SECTIONS = [
   '법인소개',
   '해커톤&아이디어톤',
@@ -1076,6 +1111,229 @@ describe('<Header>', () => {
         expect(link).not.toHaveClass('active')
         expect(link).not.toHaveClass('selected')
       })
+  })
+
+  it('메뉴 주소와 정확히 같은 경로에서는 그 하위 메뉴만 aria-current="page"로 표시한다', () => {
+    usePathnameMock.mockReturnValue(Links.hackathonNews)
+    const { container } = renderWithChakra(<Header />)
+
+    const { desktop, mobile } = currentSubMenuLinks(container)
+
+    expect(desktop).toHaveLength(1)
+    expect(desktop[0]).toHaveTextContent('뉴스 기사')
+    expect(desktop[0]).toHaveAttribute('href', Links.hackathonNews)
+    expect(desktop[0]).toHaveAttribute('class', 'active')
+    expect(desktop[0]).toHaveAttribute('aria-current', 'page')
+    expect(sectionTitleOf(desktop[0])).toBe(HackathonMenu.label)
+
+    expect(mobile).toHaveLength(1)
+    expect(mobile[0]).toHaveTextContent('뉴스 기사')
+    expect(mobile[0]).toHaveAttribute('href', Links.hackathonNews)
+    expect(mobile[0]).toHaveAttribute('class', 'gnb-sub-trigger selected')
+    expect(mobile[0]).toHaveAttribute('aria-current', 'page')
+    expect(mobile[0].closest('#mGnb-anchor2')).not.toBeNull()
+
+    // 접두사가 맞는 상위 '행사 소개'와 같은 이름의 컨퍼런스 메뉴는 표시하지 않는다.
+    for (const href of [Links.hackathon, Links.conferenceNews]) {
+      container
+        .querySelectorAll(
+          `.gnb-toggle-wrap a[href="${href}"], .submenu-wrap a[href="${href}"]`,
+        )
+        .forEach((link) => {
+          expect(link).not.toHaveAttribute('aria-current')
+          expect(link).not.toHaveClass('active')
+          expect(link).not.toHaveClass('selected')
+        })
+    }
+  })
+
+  it('메뉴에 없는 행사 하위 경로에서는 가장 가까운 상위 메뉴(행사 소개)를 aria-current="location"으로 표시한다', () => {
+    usePathnameMock.mockReturnValue('/hackathon/dsf26/faq')
+    const { container } = renderWithChakra(<Header />)
+
+    const { desktop, mobile } = currentSubMenuLinks(container)
+
+    expect(desktop).toHaveLength(1)
+    expect(desktop[0]).toHaveTextContent('행사 소개')
+    expect(desktop[0]).toHaveAttribute('href', Links.hackathon)
+    expect(desktop[0]).toHaveAttribute('class', 'active')
+    // 그 페이지 자체가 아니라 그 아래에 있다는 뜻이므로 page가 아니다.
+    expect(desktop[0]).toHaveAttribute('aria-current', 'location')
+    expect(sectionTitleOf(desktop[0])).toBe(HackathonMenu.label)
+
+    expect(mobile).toHaveLength(1)
+    expect(mobile[0]).toHaveTextContent('행사 소개')
+    expect(mobile[0]).toHaveAttribute('href', Links.hackathon)
+    expect(mobile[0]).toHaveAttribute('class', 'gnb-sub-trigger selected')
+    expect(mobile[0]).toHaveAttribute('aria-current', 'location')
+    expect(mobile[0].closest('#mGnb-anchor2')).not.toBeNull()
+
+    // 같은 이름의 컨퍼런스 '행사 소개'는 다른 구역이므로 표시하지 않는다.
+    container
+      .querySelectorAll(`a[href="${Links.conference}"]`)
+      .forEach((link) => {
+        expect(link).not.toHaveAttribute('aria-current')
+        expect(link).not.toHaveClass('active')
+        expect(link).not.toHaveClass('selected')
+      })
+    // 같은 주소를 가리키는 행사 참가하기 버튼은 메뉴 항목이 아니므로 현재 위치가 아니다.
+    container
+      .querySelectorAll('.header-actions a, .gnb-utils a')
+      .forEach((link) => {
+        expect(link).toHaveAttribute('href', Links.hackathon)
+        expect(link).not.toHaveAttribute('aria-current')
+      })
+  })
+
+  it('구역마다 정확한 주소는 page, 메뉴에 없는 하위 주소는 가장 긴 상위 메뉴의 location으로 표시한다', () => {
+    const { container, rerender } = renderWithChakra(<Header />)
+
+    for (const { pathname, href, current, section, anchor } of [
+      {
+        pathname: Links.introHistory,
+        href: Links.introHistory,
+        current: 'page',
+        section: IntroMenu.label,
+        anchor: 'mGnb-anchor1',
+      },
+      {
+        // '행사 소개'(/hackathon)보다 더 긴 '뉴스 기사' 접두사가 이긴다.
+        pathname: `${Links.hackathonNews}/2025-dsf`,
+        href: Links.hackathonNews,
+        current: 'location',
+        section: HackathonMenu.label,
+        anchor: 'mGnb-anchor2',
+      },
+      {
+        pathname: '/conference/ai-summit',
+        href: Links.conference,
+        current: 'location',
+        section: ConferenceMenu.label,
+        anchor: 'mGnb-anchor3',
+      },
+      {
+        pathname: Links.conferenceBlog,
+        href: Links.conferenceBlog,
+        current: 'page',
+        section: ConferenceMenu.label,
+        anchor: 'mGnb-anchor3',
+      },
+      {
+        pathname: `${Links.noticesPress}/2025`,
+        href: Links.noticesPress,
+        current: 'location',
+        section: NoticesMenu.label,
+        anchor: 'mGnb-anchor4',
+      },
+    ]) {
+      usePathnameMock.mockReturnValue(pathname)
+      rerender(<Header />)
+
+      const { desktop, mobile } = currentSubMenuLinks(container)
+      expect(desktop).toHaveLength(1)
+      expect(desktop[0]).toHaveAttribute('href', href)
+      expect(desktop[0]).toHaveAttribute('aria-current', current)
+      expect(sectionTitleOf(desktop[0])).toBe(section)
+
+      expect(mobile).toHaveLength(1)
+      expect(mobile[0]).toHaveAttribute('href', href)
+      expect(mobile[0]).toHaveAttribute('aria-current', current)
+      expect(mobile[0].closest('.gnb-sub-list')).toHaveAttribute('id', anchor)
+    }
+  })
+
+  it('안내 및 공시 경로의 현재 위치는 그 구역이 있는 모바일 서랍에만 표시한다', () => {
+    const { container, rerender } = renderWithChakra(<Header />)
+
+    for (const [pathname, current] of [
+      [Links.infoSitemap, 'page'],
+      [`${Links.infoSitemap}/old`, 'location'],
+    ]) {
+      usePathnameMock.mockReturnValue(pathname)
+      rerender(<Header />)
+
+      const { desktop, mobile } = currentSubMenuLinks(container)
+      // 데스크탑 GNB에는 안내 및 공시 구역이 없다.
+      expect(desktop).toHaveLength(0)
+      expect(mobile).toHaveLength(1)
+      expect(mobile[0]).toHaveTextContent('사이트맵')
+      expect(mobile[0]).toHaveAttribute('href', Links.infoSitemap)
+      expect(mobile[0]).toHaveAttribute('aria-current', current)
+      expect(mobile[0].closest('#mGnb-anchor5')).not.toBeNull()
+    }
+  })
+
+  it('경로가 바뀌면 현재 위치 표시도 page와 location 사이를 따라 옮겨 간다', () => {
+    usePathnameMock.mockReturnValue('/hackathon/dsf26')
+    const { container, rerender } = renderWithChakra(<Header />)
+
+    const eventIntro = container.querySelector(
+      `.gnb-toggle-wrap a[href="${Links.hackathon}"]`,
+    ) as HTMLElement
+    const news = container.querySelector(
+      `.gnb-toggle-wrap a[href="${Links.hackathonNews}"]`,
+    ) as HTMLElement
+    expect(eventIntro).toHaveAttribute('aria-current', 'location')
+    expect(news).not.toHaveAttribute('aria-current')
+
+    usePathnameMock.mockReturnValue(Links.hackathon)
+    rerender(<Header />)
+    expect(eventIntro).toHaveAttribute('aria-current', 'page')
+    expect(eventIntro).toHaveClass('active')
+    expect(news).not.toHaveAttribute('aria-current')
+
+    usePathnameMock.mockReturnValue(Links.hackathonNews)
+    rerender(<Header />)
+    expect(eventIntro).not.toHaveAttribute('aria-current')
+    expect(eventIntro).not.toHaveClass('active')
+    expect(news).toHaveAttribute('aria-current', 'page')
+    expect(news).toHaveClass('active')
+  })
+
+  it('어느 구역에도 속하지 않는 경로에서는 어떤 하위 메뉴도 현재 위치로 표시하지 않는다', () => {
+    const { container, rerender } = renderWithChakra(<Header />)
+
+    for (const pathname of [
+      Links.root,
+      '/hackathons',
+      '/conference-old',
+      '/business/hackathon',
+      '/introduction',
+      Links.admin,
+      null,
+    ]) {
+      usePathnameMock.mockReturnValue(pathname as string)
+      rerender(<Header />)
+
+      const { desktop, mobile } = currentSubMenuLinks(container)
+      expect(desktop).toHaveLength(0)
+      expect(mobile).toHaveLength(0)
+      expect(container.querySelector('a[aria-current]')).toBeNull()
+    }
+  })
+
+  it('구역은 맞지만 해당하는 하위 메뉴가 없으면 트리거만 강조하고 하위 메뉴는 표시하지 않는다', () => {
+    const { container, rerender } = renderWithChakra(<Header />)
+
+    for (const [pathname, label] of [
+      [NoticesMenu.path, NoticesMenu.label],
+      [`${NoticesMenu.path}/unknown`, NoticesMenu.label],
+      [IntroMenu.path, IntroMenu.label],
+      [`${IntroMenu.path}/unknown/deep`, IntroMenu.label],
+      [InfoMenu.path, InfoMenu.label],
+    ]) {
+      usePathnameMock.mockReturnValue(pathname)
+      rerender(<Header />)
+
+      // 구역 판별 자체는 되었는지 모바일 서랍의 구역 표시로 확인한다.
+      expect(
+        container.querySelector('.menu-wrap .gnb-main-trigger.active'),
+      ).toHaveTextContent(label)
+
+      const { desktop, mobile } = currentSubMenuLinks(container)
+      expect(desktop).toHaveLength(0)
+      expect(mobile).toHaveLength(0)
+    }
   })
 
   it('언마운트되면 body의 상태 클래스를 정리한다', async () => {

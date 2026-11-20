@@ -186,7 +186,10 @@ test.describe('event pages', () => {
     await page.setViewportSize({ width: 1280, height: 800 })
     await page.goto('/hackathon')
 
-    await expect(page.locator('h1.h-tit')).toHaveText('해커톤&아이디어톤')
+    await expect(page.locator('h1.h-tit')).toHaveText('행사 소개')
+    await expect(page.locator('.krds-side-navigation .lnb-tit')).toHaveText(
+      '해커톤&아이디어톤',
+    )
     await expect(page.getByText('E2E 해커톤 구역 소개')).toBeVisible()
     const titles = page.locator('.event-item-tit')
     await expect(titles).toHaveText(['E2E 해커톤', 'E2E 지난 해커톤'])

@@ -4,7 +4,7 @@
 
 1. **일정**
 
-:::table{header-row="false" header-column="true"}
+:::table{header-row="false" header-column="true" widths="120,373"}
 | 7.16 (화) | 최종 선발 결과 전달 |
 | --- | --- |
 | 7.17 (수) \~ 7.19 (금) | 개인 참가자 자유 팀빌딩 진행 |
@@ -35,7 +35,7 @@
 
 ::image{src="notion-asset:a0052" alt="1) [티켓 오픈] 채널에서 원하는 카테고리를 선택합니다." width=528}
 
-:::table{header-row="false" header-column="true"}
+:::table{header-row="false" header-column="true" widths="117,580"}
 | 장소 | 장소(위치, 시설 등)와 관련된 문의사항입니다. |
 | --- | --- |
 | 발표 | 2차 심사 관련 문의사항입니다. |

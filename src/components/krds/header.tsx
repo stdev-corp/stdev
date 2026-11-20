@@ -6,7 +6,11 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import Wordmark from '@/components/krds/wordmark'
 import { Links } from '@/utils/links'
-import Menus, { AllMenus, findMenuSection } from '@/utils/menus'
+import Menus, {
+  AllMenus,
+  findActiveSubMenu,
+  findMenuSection,
+} from '@/utils/menus'
 
 function anchorId(index: number) {
   return `mGnb-anchor${index + 1}`
@@ -16,7 +20,7 @@ const GNB_PANEL_ID = 'gnb-panel'
 
 export default function Header() {
   const pathname = usePathname()
-  // 데스크탑 GNB 패널을 연 1Depth의 라벨. 패널은 하나이며 세 구역을 함께 보여준다.
+  // 데스크탑 GNB 패널을 연 1Depth의 라벨. 패널은 하나이며 네 구역을 함께 보여준다.
   const [openGnb, setOpenGnb] = useState<string | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
   const openButtonRef = useRef<HTMLButtonElement>(null)
@@ -31,6 +35,17 @@ export default function Header() {
 
   // 모바일 서랍은 InfoMenu까지 보여주므로 구역 판별도 같은 집합으로 한다.
   const activeSection = findMenuSection(pathname)
+  // 행사 페이지(/hackathon/dsf26/faq)처럼 메뉴에 없는 깊은 주소는 가장 가까운 상위
+  // 메뉴('행사 소개')를 현재 위치로 표시한다. 사이드 메뉴·브레드크럼과 같은 규칙이다.
+  const activeSubMenuHref = activeSection
+    ? findActiveSubMenu(activeSection, pathname)?.href
+    : undefined
+  const currentOf = (href: string) =>
+    href !== activeSubMenuHref
+      ? undefined
+      : pathname === href
+        ? ('page' as const)
+        : ('location' as const)
 
   const closeAll = useCallback(() => {
     setOpenGnb(null)
@@ -336,7 +351,7 @@ export default function Header() {
             </div>
 
             {/*
-              어느 1Depth를 눌러도 세 구역을 함께 보여주는 공용 패널.
+              어느 1Depth를 눌러도 네 구역을 함께 보여주는 공용 패널.
               KRDS는 1Depth마다 패널을 두지만, 위치가 .krds-main-menu 기준
               절대 좌표라 li 밖에 두어도 같은 자리에 펼쳐진다.
             */}
@@ -358,11 +373,9 @@ export default function Header() {
                             <Link
                               href={subMenu.href}
                               className={
-                                pathname === subMenu.href ? 'active' : undefined
+                                currentOf(subMenu.href) ? 'active' : undefined
                               }
-                              aria-current={
-                                pathname === subMenu.href ? 'page' : undefined
-                              }
+                              aria-current={currentOf(subMenu.href)}
                               onClick={closeAll}
                             >
                               {subMenu.label}
@@ -442,13 +455,11 @@ export default function Header() {
                             <Link
                               href={subMenu.href}
                               className={
-                                pathname === subMenu.href
+                                currentOf(subMenu.href)
                                   ? 'gnb-sub-trigger selected'
                                   : 'gnb-sub-trigger'
                               }
-                              aria-current={
-                                pathname === subMenu.href ? 'page' : undefined
-                              }
+                              aria-current={currentOf(subMenu.href)}
                               onClick={closeAll}
                             >
                               {subMenu.label}
