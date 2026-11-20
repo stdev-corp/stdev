@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { resolveBreadcrumb } from '@/utils/breadcrumb'
 import { Links } from '@/utils/links'
-import { BusinessMenu, InfoMenu, IntroMenu, NoticesMenu } from '@/utils/menus'
+import {
+  ConferenceMenu,
+  HackathonMenu,
+  InfoMenu,
+  IntroMenu,
+  NoticesMenu,
+} from '@/utils/menus'
 
 describe('resolveBreadcrumb', () => {
   describe('root path', () => {
@@ -23,10 +29,19 @@ describe('resolveBreadcrumb', () => {
       ])
     })
 
-    it('resolves /business to 홈 > 행사&프로그램', () => {
-      expect(resolveBreadcrumb(BusinessMenu.path)).toEqual([
+    it('resolves /hackathon (the event list) to 홈 > 해커톤&아이디어톤 > 행사 소개', () => {
+      expect(resolveBreadcrumb(HackathonMenu.path)).toEqual([
         { label: '홈', href: Links.root },
-        { label: '행사&프로그램' },
+        { label: '해커톤&아이디어톤' },
+        { label: '행사 소개' },
+      ])
+    })
+
+    it('resolves /conference (the event list) to 홈 > 컨퍼런스&프로그램 > 행사 소개', () => {
+      expect(resolveBreadcrumb(ConferenceMenu.path)).toEqual([
+        { label: '홈', href: Links.root },
+        { label: '컨퍼런스&프로그램' },
+        { label: '행사 소개' },
       ])
     })
 
@@ -70,11 +85,19 @@ describe('resolveBreadcrumb', () => {
       ])
     })
 
-    it('resolves /business/hackathon to 홈 > 행사&프로그램 > 해커톤', () => {
-      expect(resolveBreadcrumb(Links.businessHackathon)).toEqual([
+    it('resolves /hackathon/news to 홈 > 해커톤&아이디어톤 > 뉴스 기사, not 행사 소개', () => {
+      expect(resolveBreadcrumb(Links.hackathonNews)).toEqual([
         { label: '홈', href: Links.root },
-        { label: '행사&프로그램' },
-        { label: '해커톤' },
+        { label: '해커톤&아이디어톤' },
+        { label: '뉴스 기사' },
+      ])
+    })
+
+    it('resolves /conference/blog to 홈 > 컨퍼런스&프로그램 > 참여후기', () => {
+      expect(resolveBreadcrumb(Links.conferenceBlog)).toEqual([
+        { label: '홈', href: Links.root },
+        { label: '컨퍼런스&프로그램' },
+        { label: '참여후기' },
       ])
     })
 
@@ -92,7 +115,7 @@ describe('resolveBreadcrumb', () => {
     })
 
     it('links only 홈 because sections have no page of their own', () => {
-      const crumbs = resolveBreadcrumb(Links.businessConference)
+      const crumbs = resolveBreadcrumb(Links.conferenceNews)
       expect(crumbs.map((crumb) => crumb.href)).toEqual([
         Links.root,
         undefined,
@@ -101,7 +124,7 @@ describe('resolveBreadcrumb', () => {
     })
 
     it('covers every registered sub menu of every section', () => {
-      const sections = [IntroMenu, BusinessMenu, NoticesMenu]
+      const sections = [IntroMenu, HackathonMenu, ConferenceMenu, NoticesMenu]
       sections.forEach((section) => {
         section.subMenus.forEach((subMenu) => {
           expect(resolveBreadcrumb(subMenu.href)).toEqual([
@@ -187,10 +210,9 @@ describe('resolveBreadcrumb', () => {
       ])
     })
 
-    it('stops at the section for a deeply nested page under /business', () => {
-      expect(resolveBreadcrumb('/business/hackathon/2026')).toEqual([
+    it('treats the removed /business section as unknown', () => {
+      expect(resolveBreadcrumb('/business/hackathon')).toEqual([
         { label: '홈', href: Links.root },
-        { label: '행사&프로그램' },
       ])
     })
 
@@ -204,6 +226,100 @@ describe('resolveBreadcrumb', () => {
       expect(resolveBreadcrumb(Links.admin)).toEqual([
         { label: '홈', href: Links.root },
       ])
+    })
+  })
+
+  describe('event pages below a sub menu', () => {
+    it('links the sub menu when the path is deeper than it, even without a trail', () => {
+      expect(resolveBreadcrumb('/hackathon/dsf26')).toEqual([
+        { label: '홈', href: Links.root },
+        { label: '해커톤&아이디어톤' },
+        { label: '행사 소개', href: Links.hackathon },
+      ])
+    })
+
+    it('appends the trail after a linked 행사 소개 crumb', () => {
+      expect(
+        resolveBreadcrumb('/hackathon/dsf26', [{ label: 'DSF 2026' }]),
+      ).toEqual([
+        { label: '홈', href: Links.root },
+        { label: '해커톤&아이디어톤' },
+        { label: '행사 소개', href: Links.hackathon },
+        { label: 'DSF 2026' },
+      ])
+    })
+
+    it('keeps linked ancestors from the trail for nested event pages', () => {
+      expect(
+        resolveBreadcrumb('/conference/conf26/notice/team', [
+          { label: 'Conf 2026', href: '/conference/conf26' },
+          { label: '공지', href: '/conference/conf26/notice' },
+          { label: '팀 빌딩' },
+        ]),
+      ).toEqual([
+        { label: '홈', href: Links.root },
+        { label: '컨퍼런스&프로그램' },
+        { label: '행사 소개', href: Links.conference },
+        { label: 'Conf 2026', href: '/conference/conf26' },
+        { label: '공지', href: '/conference/conf26/notice' },
+        { label: '팀 빌딩' },
+      ])
+    })
+
+    it('links the sub menu when a trail is given even if the path equals its href', () => {
+      expect(resolveBreadcrumb(Links.hackathon, [{ label: '상세' }])).toEqual([
+        { label: '홈', href: Links.root },
+        { label: '해커톤&아이디어톤' },
+        { label: '행사 소개', href: Links.hackathon },
+        { label: '상세' },
+      ])
+    })
+
+    it('treats an empty trail like no trail', () => {
+      expect(resolveBreadcrumb(Links.hackathon, [])).toEqual(
+        resolveBreadcrumb(Links.hackathon),
+      )
+    })
+
+    it('links the matching longer sub menu for pages below news or blog', () => {
+      expect(resolveBreadcrumb(`${Links.hackathonBlog}/2026`)).toEqual([
+        { label: '홈', href: Links.root },
+        { label: '해커톤&아이디어톤' },
+        { label: '참여후기', href: Links.hackathonBlog },
+      ])
+    })
+
+    it('links a static sub menu too when the path goes deeper', () => {
+      expect(resolveBreadcrumb(`${Links.introAbout}/more`)).toEqual([
+        { label: '홈', href: Links.root },
+        { label: '법인소개' },
+        { label: '사단법인 에스티데브', href: Links.introAbout },
+      ])
+    })
+
+    it('appends the trail directly after the section when no sub menu matches', () => {
+      expect(
+        resolveBreadcrumb('/intro/unknown', [{ label: '알 수 없음' }]),
+      ).toEqual([
+        { label: '홈', href: Links.root },
+        { label: '법인소개' },
+        { label: '알 수 없음' },
+      ])
+    })
+
+    it('ignores the trail on the root and on unknown paths', () => {
+      expect(resolveBreadcrumb(Links.root, [{ label: 'x' }])).toEqual([
+        { label: '홈' },
+      ])
+      expect(resolveBreadcrumb('/nope', [{ label: 'x' }])).toEqual([
+        { label: '홈', href: Links.root },
+      ])
+    })
+
+    it('does not mutate the trail it is given', () => {
+      const trail = [{ label: 'DSF 2026' }]
+      resolveBreadcrumb('/hackathon/dsf26', trail)
+      expect(trail).toEqual([{ label: 'DSF 2026' }])
     })
   })
 

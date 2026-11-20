@@ -3,17 +3,40 @@ import { BusinessListClient } from '@/components/admin/entity-forms/business-lis
 import {
   createBusiness,
   deleteBusiness,
+  previewPageLinks,
   updateBusiness,
 } from '@/app/(cms)/admin/actions'
 
 export default async function BusinessesPage() {
-  const businesses = await prisma.business.findMany({
-    orderBy: { id: 'asc' },
-  })
+  const [businesses, institutions, images] = await Promise.all([
+    prisma.business.findMany({
+      include: {
+        institutions: {
+          select: { institutionId: true, role: true, sortOrder: true },
+        },
+      },
+      orderBy: [{ startDate: 'desc' }, { id: 'desc' }],
+    }),
+    prisma.institution.findMany({
+      select: { id: true, nameKo: true },
+      orderBy: { nameKo: 'asc' },
+    }),
+    prisma.imageAsset.findMany({
+      select: { id: true, filename: true, url: true },
+      orderBy: { id: 'asc' },
+    }),
+  ])
   return (
     <BusinessListClient
       businesses={businesses}
-      actions={{ createBusiness, updateBusiness, deleteBusiness }}
+      institutions={institutions}
+      images={images}
+      actions={{
+        createBusiness,
+        updateBusiness,
+        deleteBusiness,
+        previewPageLinks,
+      }}
     />
   )
 }

@@ -2,7 +2,12 @@ import type { ReactNode } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { renderWithChakra, screen, within } from '@/tests/utils/render'
 import SiteLayout from '@/components/krds/site-layout'
-import { BusinessMenu, IntroMenu, type Menu } from '@/utils/menus'
+import {
+  ConferenceMenu,
+  HackathonMenu,
+  IntroMenu,
+  type Menu,
+} from '@/utils/menus'
 
 // 헤더/푸터/브레드크럼/LNB는 각자 테스트가 있으므로 여기서는 골격 조립만 검증한다.
 vi.mock('@/components/krds/header', () => ({
@@ -93,14 +98,24 @@ describe('<SiteLayout>', () => {
   })
 
   it('passes the given menu through to the side navigation', () => {
-    renderWithChakra(
-      <SiteLayout menu={BusinessMenu}>
+    const { rerender } = renderWithChakra(
+      <SiteLayout menu={HackathonMenu}>
         <p>본문</p>
       </SiteLayout>,
     )
     expect(screen.getByTestId('krds-side-navigation')).toHaveAttribute(
       'data-menu',
-      BusinessMenu.label,
+      '해커톤&아이디어톤',
+    )
+
+    rerender(
+      <SiteLayout menu={ConferenceMenu}>
+        <p>본문</p>
+      </SiteLayout>,
+    )
+    expect(screen.getByTestId('krds-side-navigation')).toHaveAttribute(
+      'data-menu',
+      '컨퍼런스&프로그램',
     )
   })
 

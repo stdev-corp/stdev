@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { renderWithChakra, screen, waitFor } from '@/tests/utils/render'
+import { act, renderWithChakra, screen, waitFor } from '@/tests/utils/render'
 import {
   makeBusiness,
   makeFileAsset,
@@ -17,8 +17,28 @@ import { InstitutionListClient } from './institution-list-client'
 import { MarkdownListClient } from './markdown-list-client'
 import { ReportListClient } from './report-list-client'
 import { WebpageListClient } from './webpage-list-client'
+import { FormDrawer } from '../form-drawer'
+
+// 실제 드로어를 그대로 그리되, 받은 props를 꺼내 쓸 수 있게 감싼다.
+vi.mock('../form-drawer', async (importOriginal) => {
+  const mod = await importOriginal<typeof import('../form-drawer')>()
+  return { ...mod, FormDrawer: vi.fn(mod.FormDrawer) }
+})
 
 const noop = vi.fn(async () => {})
+
+/**
+ * 수정 드로어는 닫기 요청(false)에만 반응해야 한다. 열기 요청(true)이 와도
+ * 편집 대상이 바뀌거나 닫히지 않는지 확인한다.
+ */
+function expectEditDrawerIgnoresOpenRequest(title: string) {
+  const props = vi
+    .mocked(FormDrawer)
+    .mock.calls.map(([drawerProps]) => drawerProps)
+    .findLast((drawerProps) => drawerProps.title === title)!
+  act(() => props.onOpenChange(true))
+  expect(screen.getByRole('heading', { name: title })).toBeInTheDocument()
+}
 
 describe('asset and content list clients', () => {
   it('renders file list and opens edit drawer', async () => {
@@ -44,12 +64,57 @@ describe('asset and content list clients', () => {
     expect(
       screen.getByRole('heading', { name: '파일 수정 #1' }),
     ).toBeInTheDocument()
+    expectEditDrawerIgnoresOpenRequest('파일 수정 #1')
     await user.click(screen.getByRole('button', { name: '취소' }))
     await waitFor(() =>
       expect(
         screen.queryByRole('heading', { name: '파일 수정 #1' }),
       ).not.toBeInTheDocument(),
     )
+  })
+
+  it('shows fallbacks for files without a MIME type', () => {
+    renderWithChakra(
+      <FileListClient
+        files={[
+          makeFileAsset({ id: 1, mimeType: null }),
+          makeFileAsset({ id: 2, filename: 'no-url.pdf', url: null }),
+        ]}
+        actions={{
+          createFileAsset: noop,
+          updateFileAsset: noop,
+          deleteFileAsset: noop,
+        }}
+      />,
+    )
+
+    expect(
+      screen.getByText(
+        'mime 없음 · https://stdev-kr.s3.ap-northeast-2.amazonaws.com/files/report.pdf',
+      ),
+    ).toBeInTheDocument()
+    expect(screen.getByText('application/pdf · URL 없음')).toBeInTheDocument()
+  })
+
+  it('shows fallbacks for images without filename or alt text', () => {
+    renderWithChakra(
+      <ImageListClient
+        images={[
+          makeImageAsset({ id: 1, filename: null, alt: null }),
+          makeImageAsset({ id: 2, filename: 'broken.png', url: null }),
+        ]}
+        actions={{
+          createImageAsset: noop,
+          updateImageAsset: noop,
+          deleteImageAsset: noop,
+        }}
+      />,
+    )
+
+    expect(screen.getByText('#1 · (no filename)')).toBeInTheDocument()
+    expect(screen.getByText('alt 없음 · 연결됨')).toBeInTheDocument()
+    expect(screen.getByText('Logo · URL 없음')).toBeInTheDocument()
+    expect(screen.getAllByText('URL 없음')).toHaveLength(1)
   })
 
   it('renders image list and opens create drawer', async () => {
@@ -75,6 +140,7 @@ describe('asset and content list clients', () => {
     expect(
       screen.getByRole('heading', { name: '이미지 수정 #1' }),
     ).toBeInTheDocument()
+    expectEditDrawerIgnoresOpenRequest('이미지 수정 #1')
     await user.click(screen.getByRole('button', { name: '취소' }))
     await waitFor(() =>
       expect(
@@ -108,6 +174,7 @@ describe('asset and content list clients', () => {
     expect(
       screen.getByRole('heading', { name: '연혁 수정 #1' }),
     ).toBeInTheDocument()
+    expectEditDrawerIgnoresOpenRequest('연혁 수정 #1')
     await user.click(screen.getByRole('button', { name: '취소' }))
     await waitFor(() =>
       expect(
@@ -132,7 +199,7 @@ describe('asset and content list clients', () => {
     expect(screen.getByRole('heading', { name: '기관' })).toBeInTheDocument()
     expect(screen.getByText('#1 · 기관명')).toBeInTheDocument()
     expect(
-      screen.getByText('Institution · https://example.com'),
+      screen.getByText('Institution · https://example.com · 홈 노출'),
     ).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: '추가' }))
     expect(
@@ -143,12 +210,58 @@ describe('asset and content list clients', () => {
     expect(
       screen.getByRole('heading', { name: '기관 수정 #1' }),
     ).toBeInTheDocument()
+    expectEditDrawerIgnoresOpenRequest('기관 수정 #1')
     await user.click(screen.getByRole('button', { name: '취소' }))
     await waitFor(() =>
       expect(
         screen.queryByRole('heading', { name: '기관 수정 #1' }),
       ).not.toBeInTheDocument(),
     )
+  })
+
+  it('summarizes optional institution fields and the home flag', () => {
+    renderWithChakra(
+      <InstitutionListClient
+        institutions={[
+          makeInstitution({
+            id: 1,
+            nameKo: '이름만',
+            nameEn: null,
+            url: null,
+            logoId: null,
+            showOnHome: true,
+          }),
+          makeInstitution({
+            id: 2,
+            nameKo: 'URL만',
+            nameEn: null,
+            url: 'https://only-url.example.com',
+            logoId: 3,
+            showOnHome: false,
+          }),
+          makeInstitution({
+            id: 3,
+            nameKo: '영문만',
+            nameEn: 'English Only',
+            url: null,
+            logoId: 4,
+            showOnHome: true,
+          }),
+        ]}
+        images={[makeImageAsset()]}
+        actions={{
+          createInstitution: noop,
+          updateInstitution: noop,
+          deleteInstitution: noop,
+        }}
+      />,
+    )
+
+    // 로고가 없으면 홈 노출을 켜도 홈에 나오지 않으므로 표시하지 않는다.
+    expect(screen.getByText('영문명·URL 없음')).toBeInTheDocument()
+    expect(screen.getByText('https://only-url.example.com')).toBeInTheDocument()
+    expect(screen.getByText('English Only · 홈 노출')).toBeInTheDocument()
+    expect(screen.getAllByText(/홈 노출/)).toHaveLength(1)
   })
 
   it('renders all markdown type labels and opens drawers', async () => {
@@ -158,6 +271,8 @@ describe('asset and content list clients', () => {
           makeMarkdown({ id: 1, type: 'articles' }),
           makeMarkdown({ id: 2, type: 'privacy' }),
           makeMarkdown({ id: 3, type: 'terms' }),
+          makeMarkdown({ id: 4, type: 'hackathon' }),
+          makeMarkdown({ id: 5, type: 'conference' }),
         ]}
         actions={{
           createMarkdown: noop,
@@ -170,6 +285,8 @@ describe('asset and content list clients', () => {
     expect(screen.getByText('#1 · 정관')).toBeInTheDocument()
     expect(screen.getByText('#2 · 개인정보처리방침')).toBeInTheDocument()
     expect(screen.getByText('#3 · 이용약관')).toBeInTheDocument()
+    expect(screen.getByText('#4 · 해커톤&아이디어톤 소개')).toBeInTheDocument()
+    expect(screen.getByText('#5 · 컨퍼런스&프로그램 소개')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: '추가' }))
     expect(
       screen.getByRole('heading', { name: '마크다운 추가' }),
@@ -179,6 +296,7 @@ describe('asset and content list clients', () => {
     expect(
       screen.getByRole('heading', { name: '마크다운 수정 #1' }),
     ).toBeInTheDocument()
+    expectEditDrawerIgnoresOpenRequest('마크다운 수정 #1')
     await user.click(screen.getByRole('button', { name: '취소' }))
     await waitFor(() =>
       expect(
@@ -210,6 +328,7 @@ describe('asset and content list clients', () => {
     expect(
       screen.getByRole('heading', { name: '보고서 수정 #1' }),
     ).toBeInTheDocument()
+    expectEditDrawerIgnoresOpenRequest('보고서 수정 #1')
     await user.click(screen.getByRole('button', { name: '취소' }))
     await waitFor(() =>
       expect(
@@ -236,7 +355,7 @@ describe('asset and content list clients', () => {
     )
 
     expect(screen.getByText(/블로그 포스트/)).toBeInTheDocument()
-    expect(screen.getByText(/신문 기사/)).toBeInTheDocument()
+    expect(screen.getByText(/뉴스 기사/)).toBeInTheDocument()
     expect(screen.getByText(/보도 자료/)).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: '추가' }))
     expect(
@@ -247,6 +366,7 @@ describe('asset and content list clients', () => {
     expect(
       screen.getByRole('heading', { name: '웹페이지 수정 #1' }),
     ).toBeInTheDocument()
+    expectEditDrawerIgnoresOpenRequest('웹페이지 수정 #1')
     await user.click(screen.getByRole('button', { name: '취소' }))
     await waitFor(() =>
       expect(

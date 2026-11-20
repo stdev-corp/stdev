@@ -3,7 +3,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import '@/tests/mocks/navigation'
 import { renderWithChakra, screen } from '@/tests/utils/render'
 import { resetNavigationMocks, usePathnameMock } from '@/tests/mocks/navigation'
-import { InfoMenu, IntroMenu, type Menu } from '@/utils/menus'
+import {
+  ConferenceMenu,
+  HackathonMenu,
+  InfoMenu,
+  IntroMenu,
+  type Menu,
+} from '@/utils/menus'
 import SideNavigation from './side-navigation'
 
 vi.mock('next/link', () => ({
@@ -121,5 +127,86 @@ describe('<SideNavigation>', () => {
       'aria-current',
       'page',
     )
+  })
+
+  describe('행사 구역', () => {
+    /** 강조된 항목의 [라벨, aria-current] */
+    function activeItems(container: HTMLElement) {
+      return lnbItems(container)
+        .filter((item) => item.classList.contains('active'))
+        .map((item) => {
+          const link = item.querySelector('a')!
+          expect(link).toHaveClass('lnb-btn', 'lnb-link', 'active')
+          return [link.textContent, link.getAttribute('aria-current')]
+        })
+    }
+
+    it('renders the 해커톤&아이디어톤 sub menus', () => {
+      const { container } = renderMenu(HackathonMenu, '/hackathon')
+
+      expect(
+        screen.getByRole('navigation', { name: '해커톤&아이디어톤 메뉴' }),
+      ).toBeInTheDocument()
+      expect(
+        lnbItems(container).map((item) => [
+          item.textContent,
+          item.querySelector('a')!.getAttribute('href'),
+        ]),
+      ).toEqual([
+        ['행사 소개', '/hackathon'],
+        ['뉴스 기사', '/hackathon/news'],
+        ['참여후기', '/hackathon/blog'],
+      ])
+    })
+
+    it('marks 행사 소개 as the current page on the section landing', () => {
+      const { container } = renderMenu(HackathonMenu, '/hackathon')
+
+      expect(activeItems(container)).toEqual([['행사 소개', 'page']])
+    })
+
+    it('prefers the longest matching sub menu over 행사 소개', () => {
+      const { container } = renderMenu(HackathonMenu, '/hackathon/news')
+
+      // /hackathon/news는 /hackathon 접두사로도 맞지만 뉴스 기사 하나만 강조한다.
+      expect(activeItems(container)).toEqual([['뉴스 기사', 'page']])
+      expect(container.querySelectorAll('.lnb-item.active')).toHaveLength(1)
+    })
+
+    it('highlights 행사 소개 as the location on an event page that is not in the menu', () => {
+      const { container } = renderMenu(HackathonMenu, '/hackathon/dsf26')
+
+      expect(activeItems(container)).toEqual([['행사 소개', 'location']])
+      expect(container.querySelector('[aria-current="page"]')).toBeNull()
+    })
+
+    it('keeps 행사 소개 as the location on nested event sub pages', () => {
+      const { container } = renderMenu(
+        ConferenceMenu,
+        '/conference/ai/notice/team-building',
+      )
+
+      expect(activeItems(container)).toEqual([['행사 소개', 'location']])
+    })
+
+    it('marks a deeper path under 참여후기 as its location', () => {
+      const { container } = renderMenu(ConferenceMenu, '/conference/blog/2026')
+
+      expect(activeItems(container)).toEqual([['참여후기', 'location']])
+    })
+
+    it('does not treat a lookalike prefix as part of the section', () => {
+      const { container } = renderMenu(HackathonMenu, '/hackathons')
+
+      expect(activeItems(container)).toEqual([])
+      expect(container.querySelector('[aria-current]')).toBeNull()
+    })
+
+    it('marks nothing when the pathname is unavailable', () => {
+      const { container } = renderMenu(HackathonMenu, null as unknown as string)
+
+      expect(activeItems(container)).toEqual([])
+      expect(container.querySelector('[aria-current]')).toBeNull()
+    })
   })
 })

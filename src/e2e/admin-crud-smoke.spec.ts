@@ -21,7 +21,8 @@ test.describe('admin CRUD smoke', () => {
     ).toBeVisible()
 
     for (const [label, href] of [
-      ['사업', '/admin/businesses'],
+      ['사업(행사)', '/admin/businesses'],
+      ['행사 하위 페이지', '/admin/business-pages'],
       ['이미지', '/admin/images'],
       ['파일', '/admin/files'],
       ['기관', '/admin/institutions'],
@@ -34,6 +35,29 @@ test.describe('admin CRUD smoke', () => {
       await expect(
         page.getByRole('term').getByRole('link', { name: label, exact: true }),
       ).toHaveAttribute('href', href)
+    }
+  })
+
+  test('long edit drawers scroll down to their save button', async ({
+    context,
+    page,
+  }) => {
+    await seedAdminSession(context)
+    // 행사 폼(기관 선택, 본문 편집기)은 화면보다 길다. 서랍 본문이 스크롤되어야 아래쪽
+    // 입력란과 저장 버튼에 닿는다.
+    await page.setViewportSize({ width: 1280, height: 720 })
+
+    for (const path of ['/admin/businesses', '/admin/business-pages']) {
+      await page.goto(path)
+      await page.getByRole('button', { name: '수정' }).first().click()
+      const dialog = page.getByRole('dialog')
+      const save = dialog.getByRole('button', { name: '저장' })
+
+      await expect(save).toBeVisible()
+      await save.scrollIntoViewIfNeeded()
+      await expect(save).toBeInViewport()
+      await dialog.getByRole('button', { name: '취소' }).click()
+      await expect(dialog).toHaveCount(0)
     }
   })
 })

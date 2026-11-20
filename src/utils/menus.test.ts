@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import Menus, {
   AllMenus,
-  BusinessMenu,
+  ConferenceMenu,
+  HackathonMenu,
   InfoMenu,
   IntroMenu,
   NoticesMenu,
+  findActiveSubMenu,
   findMenuSection,
 } from '@/utils/menus'
 import { Links } from '@/utils/links'
@@ -51,37 +53,47 @@ describe('menus', () => {
     })
   })
 
-  describe('BusinessMenu', () => {
-    it('has label 행사&프로그램', () => {
-      expect(BusinessMenu.label).toBe('행사&프로그램')
+  describe('HackathonMenu', () => {
+    it('has label 해커톤&아이디어톤', () => {
+      expect(HackathonMenu.label).toBe('해커톤&아이디어톤')
     })
 
-    it('has path /business', () => {
-      expect(BusinessMenu.path).toBe('/business')
+    it('has path /hackathon', () => {
+      expect(HackathonMenu.path).toBe('/hackathon')
     })
 
-    it('has exactly 4 subMenus', () => {
-      expect(BusinessMenu.subMenus).toHaveLength(4)
+    it('lists 행사 소개, 뉴스 기사, 참여후기 in order', () => {
+      expect(HackathonMenu.subMenus).toEqual([
+        { label: '행사 소개', href: Links.hackathon },
+        { label: '뉴스 기사', href: Links.hackathonNews },
+        { label: '참여후기', href: Links.hackathonBlog },
+      ])
     })
 
-    it('subMenu 해커톤 points to Links.businessHackathon', () => {
-      const item = BusinessMenu.subMenus.find((m) => m.label === '해커톤')
-      expect(item?.href).toBe(Links.businessHackathon)
+    it('행사 소개 is the section path itself (the event list page)', () => {
+      expect(HackathonMenu.subMenus[0].href).toBe(HackathonMenu.path)
+    })
+  })
+
+  describe('ConferenceMenu', () => {
+    it('has label 컨퍼런스&프로그램', () => {
+      expect(ConferenceMenu.label).toBe('컨퍼런스&프로그램')
     })
 
-    it('subMenu 컨퍼런스 points to Links.businessConference', () => {
-      const item = BusinessMenu.subMenus.find((m) => m.label === '컨퍼런스')
-      expect(item?.href).toBe(Links.businessConference)
+    it('has path /conference', () => {
+      expect(ConferenceMenu.path).toBe('/conference')
     })
 
-    it('subMenu 뉴스 기사 points to Links.businessNews', () => {
-      const item = BusinessMenu.subMenus.find((m) => m.label === '뉴스 기사')
-      expect(item?.href).toBe(Links.businessNews)
+    it('lists 행사 소개, 뉴스 기사, 참여후기 in order', () => {
+      expect(ConferenceMenu.subMenus).toEqual([
+        { label: '행사 소개', href: Links.conference },
+        { label: '뉴스 기사', href: Links.conferenceNews },
+        { label: '참여후기', href: Links.conferenceBlog },
+      ])
     })
 
-    it('subMenu 참여후기 points to Links.businessBlog', () => {
-      const item = BusinessMenu.subMenus.find((m) => m.label === '참여후기')
-      expect(item?.href).toBe(Links.businessBlog)
+    it('행사 소개 is the section path itself (the event list page)', () => {
+      expect(ConferenceMenu.subMenus[0].href).toBe(ConferenceMenu.path)
     })
   })
 
@@ -148,20 +160,24 @@ describe('menus', () => {
   })
 
   describe('default Menus export', () => {
-    it('contains exactly 3 items', () => {
-      expect(Menus).toHaveLength(3)
+    it('is 법인소개, 해커톤&아이디어톤, 컨퍼런스&프로그램, 공지사항 in order', () => {
+      expect(Menus).toEqual([
+        IntroMenu,
+        HackathonMenu,
+        ConferenceMenu,
+        NoticesMenu,
+      ])
+      expect(Menus.map((menu) => menu.label)).toEqual([
+        '법인소개',
+        '해커톤&아이디어톤',
+        '컨퍼런스&프로그램',
+        '공지사항',
+      ])
     })
 
-    it('first entry is IntroMenu', () => {
-      expect(Menus[0]).toBe(IntroMenu)
-    })
-
-    it('second entry is BusinessMenu', () => {
-      expect(Menus[1]).toBe(BusinessMenu)
-    })
-
-    it('third entry is NoticesMenu', () => {
-      expect(Menus[2]).toBe(NoticesMenu)
+    it('no longer has the 행사&프로그램 (/business) section', () => {
+      expect(AllMenus.map((menu) => menu.path)).not.toContain('/business')
+      expect(AllMenus.map((menu) => menu.label)).not.toContain('행사&프로그램')
     })
 
     it('does NOT contain InfoMenu', () => {
@@ -176,17 +192,26 @@ describe('menus', () => {
       })
     })
 
-    it('every subMenu href lives under its section path', () => {
+    it('every subMenu href is its section path or lives under it', () => {
       AllMenus.forEach((menu) => {
         menu.subMenus.forEach((sub) => {
-          expect(sub.href.startsWith(`${menu.path}/`)).toBe(true)
+          expect(
+            sub.href === menu.path || sub.href.startsWith(`${menu.path}/`),
+          ).toBe(true)
         })
       })
+    })
+
+    it('subMenu hrefs are unique across the site', () => {
+      const hrefs = AllMenus.flatMap((menu) =>
+        menu.subMenus.map((sub) => sub.href),
+      )
+      expect(new Set(hrefs).size).toBe(hrefs.length)
     })
   })
 
   describe('AllMenus', () => {
-    it('is the three nav menus plus InfoMenu', () => {
+    it('is the four nav menus plus InfoMenu', () => {
       expect(AllMenus).toEqual([...Menus, InfoMenu])
     })
   })
@@ -194,7 +219,8 @@ describe('menus', () => {
   describe('findMenuSection', () => {
     it('matches a bare section path even though it has no page', () => {
       expect(findMenuSection(IntroMenu.path)).toBe(IntroMenu)
-      expect(findMenuSection(BusinessMenu.path)).toBe(BusinessMenu)
+      expect(findMenuSection(HackathonMenu.path)).toBe(HackathonMenu)
+      expect(findMenuSection(ConferenceMenu.path)).toBe(ConferenceMenu)
       expect(findMenuSection(NoticesMenu.path)).toBe(NoticesMenu)
       expect(findMenuSection(InfoMenu.path)).toBe(InfoMenu)
     })
@@ -202,7 +228,11 @@ describe('menus', () => {
     it('matches a path nested under a section', () => {
       expect(findMenuSection(Links.introAbout)).toBe(IntroMenu)
       expect(findMenuSection(Links.introHistory)).toBe(IntroMenu)
-      expect(findMenuSection('/business/hackathon/2026')).toBe(BusinessMenu)
+      expect(findMenuSection('/hackathon/dsf26')).toBe(HackathonMenu)
+      expect(findMenuSection('/hackathon/dsf26/notice/team')).toBe(
+        HackathonMenu,
+      )
+      expect(findMenuSection(Links.conferenceBlog)).toBe(ConferenceMenu)
     })
 
     it('matches InfoMenu pages under /info', () => {
@@ -217,12 +247,67 @@ describe('menus', () => {
 
     it('does not match a path that merely shares a section prefix', () => {
       expect(findMenuSection('/introduction')).toBeUndefined()
+      expect(findMenuSection('/hackathons')).toBeUndefined()
+      expect(findMenuSection('/conference-2026')).toBeUndefined()
     })
 
     it('returns undefined for an unknown or missing path', () => {
       expect(findMenuSection('/nope')).toBeUndefined()
+      expect(findMenuSection('/business/hackathon')).toBeUndefined()
       expect(findMenuSection(null)).toBeUndefined()
       expect(findMenuSection(undefined)).toBeUndefined()
+      expect(findMenuSection('')).toBeUndefined()
+    })
+  })
+
+  describe('findActiveSubMenu', () => {
+    it('returns the sub menu whose href equals the path', () => {
+      expect(findActiveSubMenu(IntroMenu, Links.introHistory)).toBe(
+        IntroMenu.subMenus[1],
+      )
+      expect(findActiveSubMenu(HackathonMenu, Links.hackathon)).toBe(
+        HackathonMenu.subMenus[0],
+      )
+    })
+
+    it('prefers the longest matching prefix over the section list page', () => {
+      // /hackathon/news matches both 행사 소개(/hackathon) and 뉴스 기사(/hackathon/news)
+      expect(findActiveSubMenu(HackathonMenu, Links.hackathonNews)?.label).toBe(
+        '뉴스 기사',
+      )
+      expect(
+        findActiveSubMenu(ConferenceMenu, Links.conferenceBlog)?.label,
+      ).toBe('참여후기')
+      expect(
+        findActiveSubMenu(ConferenceMenu, `${Links.conferenceBlog}/2026`)
+          ?.label,
+      ).toBe('참여후기')
+    })
+
+    it('puts an event page under 행사 소개', () => {
+      expect(findActiveSubMenu(HackathonMenu, '/hackathon/dsf26')).toBe(
+        HackathonMenu.subMenus[0],
+      )
+      expect(
+        findActiveSubMenu(ConferenceMenu, '/conference/conf26/notice/team'),
+      ).toBe(ConferenceMenu.subMenus[0])
+    })
+
+    it('does not match a sibling that merely shares a prefix', () => {
+      expect(findActiveSubMenu(HackathonMenu, '/hackathon/newsletter')).toBe(
+        HackathonMenu.subMenus[0],
+      )
+      expect(findActiveSubMenu(IntroMenu, '/intro/abouts')).toBeUndefined()
+      expect(findActiveSubMenu(HackathonMenu, '/hackathons')).toBeUndefined()
+    })
+
+    it('returns undefined when nothing matches or the path is missing', () => {
+      expect(findActiveSubMenu(IntroMenu, '/intro')).toBeUndefined()
+      expect(findActiveSubMenu(IntroMenu, '/intro/unknown')).toBeUndefined()
+      expect(findActiveSubMenu(IntroMenu, Links.hackathon)).toBeUndefined()
+      expect(findActiveSubMenu(IntroMenu, null)).toBeUndefined()
+      expect(findActiveSubMenu(IntroMenu, undefined)).toBeUndefined()
+      expect(findActiveSubMenu(IntroMenu, '')).toBeUndefined()
     })
   })
 })

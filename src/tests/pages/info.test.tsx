@@ -1,11 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { getLatestMarkdownByTypeMock, resetCmsMocks } from '@/tests/mocks/cms'
-import { renderAsyncServerComponent, screen } from '@/tests/utils/render'
+import {
+  renderAsyncServerComponent,
+  screen,
+  within,
+} from '@/tests/utils/render'
 import PrivacyPage from '@/app/(stdev)/info/privacy/page'
 import TermsPage from '@/app/(stdev)/info/terms/page'
 import SitemapPage from '@/app/(stdev)/info/sitemap/page'
 import { makeMarkdown } from '@/tests/utils/fixtures'
-import { AllMenus, IntroMenu } from '@/utils/menus'
+import {
+  AllMenus,
+  ConferenceMenu,
+  HackathonMenu,
+  IntroMenu,
+} from '@/utils/menus'
 
 vi.mock('next/link', () => ({
   default: ({
@@ -159,6 +168,48 @@ describe('SitemapPage', () => {
         'href',
         subMenu.href,
       )
+    }
+  })
+
+  it('lists sections in the top menu order: 법인소개, 해커톤&아이디어톤, 컨퍼런스&프로그램, 공지사항, 안내 및 공시', async () => {
+    await renderAsyncServerComponent(() => SitemapPage())
+    expect(
+      screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent),
+    ).toEqual([
+      '법인소개',
+      '해커톤&아이디어톤',
+      '컨퍼런스&프로그램',
+      '공지사항',
+      '안내 및 공시',
+    ])
+  })
+
+  it.each([
+    { menu: HackathonMenu, base: '/hackathon' },
+    { menu: ConferenceMenu, base: '/conference' },
+  ])(
+    'links $menu.label sub menus to its own section pages',
+    async ({ menu, base }) => {
+      await renderAsyncServerComponent(() => SitemapPage())
+      const column = screen
+        .getByRole('heading', { level: 2, name: menu.label })
+        .closest('.sitemap-col') as HTMLElement
+      expect(
+        within(column)
+          .getAllByRole('link')
+          .map((link) => [link.textContent, link.getAttribute('href')]),
+      ).toEqual([
+        ['행사 소개', base],
+        ['뉴스 기사', `${base}/news`],
+        ['참여후기', `${base}/blog`],
+      ])
+    },
+  )
+
+  it('no longer links to the removed /business pages', async () => {
+    await renderAsyncServerComponent(() => SitemapPage())
+    for (const link of screen.getAllByRole('link')) {
+      expect(link.getAttribute('href')).not.toMatch(/^\/business/)
     }
   })
 

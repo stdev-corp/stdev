@@ -44,20 +44,35 @@ describe('links', () => {
       expect(Links.introHistory).toBe('/intro/history')
     })
 
-    it('businessHackathon is /business/hackathon', () => {
-      expect(Links.businessHackathon).toBe('/business/hackathon')
+    it('hackathon is /hackathon (the event list page)', () => {
+      expect(Links.hackathon).toBe('/hackathon')
     })
 
-    it('businessConference is /business/conference', () => {
-      expect(Links.businessConference).toBe('/business/conference')
+    it('hackathonNews is /hackathon/news', () => {
+      expect(Links.hackathonNews).toBe('/hackathon/news')
     })
 
-    it('businessBlog is /business/blog', () => {
-      expect(Links.businessBlog).toBe('/business/blog')
+    it('hackathonBlog is /hackathon/blog', () => {
+      expect(Links.hackathonBlog).toBe('/hackathon/blog')
     })
 
-    it('businessNews is /business/news', () => {
-      expect(Links.businessNews).toBe('/business/news')
+    it('conference is /conference (the event list page)', () => {
+      expect(Links.conference).toBe('/conference')
+    })
+
+    it('conferenceNews is /conference/news', () => {
+      expect(Links.conferenceNews).toBe('/conference/news')
+    })
+
+    it('conferenceBlog is /conference/blog', () => {
+      expect(Links.conferenceBlog).toBe('/conference/blog')
+    })
+
+    it('no longer exposes the removed /business links', () => {
+      expect(Links).not.toHaveProperty('businessHackathon')
+      expect(Links).not.toHaveProperty('businessConference')
+      expect(Links).not.toHaveProperty('businessBlog')
+      expect(Links).not.toHaveProperty('businessNews')
     })
 
     it('noticesPress is /notices/press', () => {
@@ -96,8 +111,9 @@ describe('links', () => {
       expect(Links.acrc).toBe('https://www.acrc.go.kr')
     })
 
-    it('event is https://event.stdev.kr', () => {
-      expect(Links.event).toBe('https://event.stdev.kr')
+    it('no longer links out to the old event.stdev.kr site', () => {
+      expect(Links).not.toHaveProperty('event')
+      expect(Object.values(Links)).not.toContain('https://event.stdev.kr')
     })
 
     it('admin is /admin', () => {
@@ -114,7 +130,6 @@ describe('links', () => {
       expect(Links.msit.startsWith('https://')).toBe(true)
       expect(Links.nts.startsWith('https://')).toBe(true)
       expect(Links.acrc.startsWith('https://')).toBe(true)
-      expect(Links.event.startsWith('https://')).toBe(true)
     })
   })
 })

@@ -23,7 +23,7 @@ export function InstitutionListClient({
   return (
     <EntityList
       title="기관"
-      description="협력 기관의 이름, 링크, 로고 이미지를 관리합니다."
+      description="협력 기관과 행사 주최·주관·후원·협력 기관의 이름, 링크, 로고 이미지를 관리합니다."
       items={institutions}
       deleteAction={actions.deleteInstitution}
       deleteLabel="기관"
@@ -33,7 +33,10 @@ export function InstitutionListClient({
             #{institution.id} · {institution.nameKo}
           </Text>
           <Text fontSize="sm" color="gray.600">
-            {institution.nameEn} · {institution.url}
+            {[institution.nameEn, institution.url]
+              .filter(Boolean)
+              .join(' · ') || '영문명·URL 없음'}
+            {institution.showOnHome && institution.logoId ? ' · 홈 노출' : ''}
           </Text>
         </>
       )}

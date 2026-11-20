@@ -15,7 +15,8 @@ app/
 │   ├── sitemap.ts        # Reads menus.ts → MetadataRoute.Sitemap
 │   ├── {forbidden,unauthorized,not-found,loading}.tsx
 │   ├── intro/            # 법인소개   (subtree has own layout + KRDS side nav)
-│   ├── business/         # 행사&프로그램 (same pattern)
+│   ├── hackathon/        # 해커톤&아이디어톤: page (intro+list), news/, blog/, [slug]/, [slug]/[...path]/
+│   ├── conference/       # 컨퍼런스&프로그램 (same routes as hackathon/)
 │   ├── notices/          # 공지사항    (same pattern)
 │   └── info/             # 안내 및 공시 (same pattern)
 ├── (cms)/                # DIY CMS admin pages
@@ -29,8 +30,9 @@ app/
 │       └── (shell)/                  # auth-gated dashboard chrome
 │           ├── layout.tsx            # session guard + sidebar
 │           ├── page.tsx              # /admin landing
-│           └── {aws,businesses,files,histories,images,institutions,markdowns,reports,settings,webpages}/page.tsx
-└── api/auth/[...all]/route.ts # better-auth endpoint
+│           └── {aws,businesses,business-pages,files,histories,images,institutions,markdowns,reports,settings,webpages}/page.tsx
+├── api/auth/[...all]/route.ts # better-auth endpoint
+└── api/legacy-notion/[id]/route.ts # 308 from old Notion page IDs to migrated event pages
 ```
 
 ## WHERE TO LOOK
@@ -49,7 +51,8 @@ Admin access is limited by `src/utils/admin-auth.ts`: the user must have a Googl
 ## CONVENTIONS
 
 - **Page components are `async` server components** that `await` helpers from `@/utils/cms.ts`. Only declare `'use client'` when you need hooks/state (see `components/krds/header.tsx`, `components/krds/side-navigation.tsx`).
-- **Section layouts are one line**: `return <SiteLayout menu={XxxMenu}>{props.children}</SiteLayout>`. `SiteLayout` supplies the whole KRDS shell (skip link, header, breadcrumb, LNB, footer). Copy `intro/layout.tsx` verbatim for new sections.
+- **Section layouts are one line**: `return <SiteLayout menu={XxxMenu}>{props.children}</SiteLayout>`. `SiteLayout` supplies the whole KRDS shell (skip link, header, breadcrumb, LNB, footer). Copy `intro/layout.tsx` verbatim for new sections. Exception: `hackathon/` and `conference/` pass `breadcrumb={false}` and each page renders `<Breadcrumb trail={…}/>` itself, because event titles come from the DB.
+- **Event pages own their `h1`**: they render `h1.notion-title` (Notion layout) instead of `PageTitle`. The section list pages still use `PageTitle`.
 - **Page bodies follow a fixed shape**: `<PageTitle …/>` then `<div className="conts-area"><div className="g-conts-area"> … </div></div>`. One `g-conts-area` per logical block; `conts-area` supplies the spacing between blocks.
 - **Landing `page.tsx` is the only page that uses `MainLayout`** (full-bleed, no breadcrumb or LNB). Do not replicate this pattern for subpages.
 - **Metadata** lives on `(stdev)/layout.tsx` globally. Only override per-page via `export const metadata` if strictly needed.
@@ -70,4 +73,5 @@ Admin access is limited by `src/utils/admin-auth.ts`: the user must have a Googl
 - `sitemap.ts` must stay in sync with `utils/menus.ts` - there is no other registration.
 - `authInterrupts` is enabled (`next.config.ts`), so `forbidden()`/`unauthorized()` from `next/navigation` work and are rendered by the sibling files.
 - `(stdev)/not-found.tsx` is the single 404 UI. It wraps itself in `SiteLayout` because the nearest not-found boundary is the `(stdev)` root, so section layouts (and their LNB/breadcrumb) are not rendered around it. `global-not-found.tsx` reuses it for unmatched URLs; an in-group `notFound()` call reuses it too, but streams via `loading.tsx` and therefore responds 200 (Next.js streaming semantics), while unmatched URLs respond 404.
-- The breadcrumb is derived, not passed: `components/krds/breadcrumb.tsx` resolves `usePathname()` through `utils/breadcrumb.ts`, which reads `utils/menus.ts`. A new page shows up in the breadcrumb only once it is registered as a sub-menu there.
+- Event routes are dynamic segments under the `(stdev)/loading.tsx` boundary, so an unknown slug renders the 404 UI with status 200, and a section mismatch (`/conference/<hackathon slug>`) is an in-page `permanentRedirect` that the browser follows after streaming starts (Next.js streaming semantics, see the note above). Old Oopy URLs that use a Notion page ID (`/hackathon/<32 hex>`) are rewritten in `next.config.ts` to `api/legacy-notion/[id]/route.ts`, which sits outside that boundary and answers a real 308 (relative `Location`) or 404.
+- The breadcrumb is derived, not passed: `components/krds/breadcrumb.tsx` resolves `usePathname()` through `utils/breadcrumb.ts`, which reads `utils/menus.ts`. A new page shows up in the breadcrumb only once it is registered as a sub-menu there, except event pages, which pass their own `trail`; `findActiveSubMenu` picks the longest matching sub-menu prefix so `/hackathon/dsf26` highlights '행사 소개'.

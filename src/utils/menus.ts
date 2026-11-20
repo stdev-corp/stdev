@@ -25,14 +25,23 @@ export const IntroMenu: Menu = {
   ],
 }
 
-export const BusinessMenu: Menu = {
-  label: '행사&프로그램',
-  path: '/business',
+export const HackathonMenu: Menu = {
+  label: '해커톤&아이디어톤',
+  path: '/hackathon',
   subMenus: [
-    { label: '해커톤', href: Links.businessHackathon },
-    { label: '컨퍼런스', href: Links.businessConference },
-    { label: '뉴스 기사', href: Links.businessNews },
-    { label: '참여후기', href: Links.businessBlog },
+    { label: '행사 소개', href: Links.hackathon },
+    { label: '뉴스 기사', href: Links.hackathonNews },
+    { label: '참여후기', href: Links.hackathonBlog },
+  ],
+}
+
+export const ConferenceMenu: Menu = {
+  label: '컨퍼런스&프로그램',
+  path: '/conference',
+  subMenus: [
+    { label: '행사 소개', href: Links.conference },
+    { label: '뉴스 기사', href: Links.conferenceNews },
+    { label: '참여후기', href: Links.conferenceBlog },
   ],
 }
 
@@ -56,7 +65,7 @@ export const InfoMenu: Menu = {
   ],
 }
 
-const Menus: Menu[] = [IntroMenu, BusinessMenu, NoticesMenu]
+const Menus: Menu[] = [IntroMenu, HackathonMenu, ConferenceMenu, NoticesMenu]
 
 /** 주 메뉴에 InfoMenu까지 더한, 사이트의 모든 구역. */
 export const AllMenus: Menu[] = [...Menus, InfoMenu]
@@ -74,6 +83,25 @@ export function findMenuSection(pathname: string | null | undefined) {
   return AllMenus.find(
     (menu) => pathname === menu.path || pathname.startsWith(`${menu.path}/`),
   )
+}
+
+/**
+ * 경로에 해당하는 하위 메뉴를 찾는다. 정확히 같은 주소가 없으면 가장 긴 접두사를
+ * 고른다. 행사 페이지(/hackathon/dsf26)는 '행사 소개'(/hackathon) 아래에 있다.
+ */
+export function findActiveSubMenu(
+  menu: Menu,
+  pathname: string | null | undefined,
+) {
+  if (!pathname) {
+    return undefined
+  }
+  return menu.subMenus
+    .filter(
+      (subMenu) =>
+        pathname === subMenu.href || pathname.startsWith(`${subMenu.href}/`),
+    )
+    .sort((a, b) => b.href.length - a.href.length)[0]
 }
 
 export default Menus

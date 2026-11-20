@@ -1,0 +1,2784 @@
+{
+  "institutions": [
+    {
+      "nameKo": "AWS Korea",
+      "url": null
+    },
+    {
+      "nameKo": "KAIST",
+      "url": "https://www.kaist.ac.kr"
+    },
+    {
+      "nameKo": "KAIST SW 교육센터",
+      "url": null
+    },
+    {
+      "nameKo": "Krew Capital",
+      "url": null
+    },
+    {
+      "nameKo": "NAVER Cloud",
+      "url": null
+    },
+    {
+      "nameKo": "NAVER D2",
+      "url": null
+    },
+    {
+      "nameKo": "SKYST",
+      "url": null
+    },
+    {
+      "nameKo": "SPARCS",
+      "url": null
+    },
+    {
+      "nameKo": "대전관광공사",
+      "url": null
+    },
+    {
+      "nameKo": "대전광역시",
+      "url": "https://www.daejeon.go.kr"
+    },
+    {
+      "nameKo": "대전정보문화산업진흥원",
+      "url": null
+    },
+    {
+      "nameKo": "두나무앤파트너스",
+      "url": null
+    },
+    {
+      "nameKo": "래블업",
+      "url": null
+    },
+    {
+      "nameKo": "루센트블록",
+      "url": null
+    },
+    {
+      "nameKo": "매쉬업벤처스",
+      "url": null
+    },
+    {
+      "nameKo": "보이저엑스",
+      "url": null
+    },
+    {
+      "nameKo": "사단법인 STDev",
+      "url": null
+    },
+    {
+      "nameKo": "쎄트렉아이",
+      "url": null
+    },
+    {
+      "nameKo": "알고릭스",
+      "url": null
+    },
+    {
+      "nameKo": "에이티넘인베스트먼트",
+      "url": null
+    },
+    {
+      "nameKo": "엘리스",
+      "url": null
+    },
+    {
+      "nameKo": "위메이드",
+      "url": null
+    },
+    {
+      "nameKo": "채널코퍼레이션",
+      "url": null
+    },
+    {
+      "nameKo": "카이스트청년창업투자지주",
+      "url": null
+    },
+    {
+      "nameKo": "카카오벤처스",
+      "url": null
+    },
+    {
+      "nameKo": "카펜스트리트",
+      "url": null
+    },
+    {
+      "nameKo": "코르카",
+      "url": null
+    },
+    {
+      "nameKo": "코아텍",
+      "url": null
+    },
+    {
+      "nameKo": "쿼드마이너",
+      "url": null
+    },
+    {
+      "nameKo": "클라썸",
+      "url": null
+    },
+    {
+      "nameKo": "프라이머",
+      "url": null
+    },
+    {
+      "nameKo": "프라이머사제파트너스",
+      "url": null
+    },
+    {
+      "nameKo": "호랑에듀",
+      "url": null
+    }
+  ],
+  "intros": {
+    "hackathon": "STDev는 참가자들에게 단기간 프로젝트를 통한 성장과 개발자 간의 네트워킹을 위해, 꾸준히 해커톤을 주최해왔습니다.\n\n# STDev Hackathon Vision\n\n## 지속 가능성\n\n해커톤이 끝나고 난 후에도, 개발한 프로젝트를 창업 또는 개인 프로젝트로 고도화 시킬 수 있는 지속 가능한 프로젝트의 탄생을 추구합니다.\\\n이를 위해 Demo day, 부스 심사를 통한 산출물에 대한 심층적 피드백, VC 연결 지원 등 다양한 시도를 해왔습니다.\n\n## 네트워크 형성\n\nSTDev는 해커톤을 통해 참가자들에게 개발 실력의 성장 뿐 아니라, 새로운 팀원과의 협업을 통한 네트워크 형성의 경험을 제공하고자 합니다.\\\n실제 참가자들로부터 이전 해커톤의 팀빌딩과 네트워킹 경험에 대해 긍정적인 피드백을 얻었습니다.\\\n양질의 네트워킹 경험을 제공하기 위해, 참가자 선발부터 팀 빌딩까지 협업 시에 기대되는 팀원 간 시너지 효과를 가장 우선 순위에 두어 참가자 매니징을 진행하고 있습니다.\n\n## 개발자 중심 기획\n\n행사를 기획하는 인원이 개발자임을 바탕으로, STDev의 해커톤은 개발자의 시각에서 양질의 개발 환경, 개발자에게 필요한 지원을 하는 운영진이 되도록 노력하고 있습니다.\\\n개발 플랫폼을 운영하는 기업의 후원을 통해 API를 제공하거나, 원활한 개발을 위한 IT 지원을 진행하는 등 최상의 개발 경험을 제공하기 위해 기획 단계부터 운영까지 최선을 다하고 있습니다.",
+    "conference": "STDev는 개발자 간 네트워킹을 증진하고, 상호 교류를 통한 인사이트를 제공하기 위해 컨퍼런스를 진행하고 있습니다."
+  },
+  "assets": [
+    {
+      "key": "a0001",
+      "kind": "image",
+      "source": "attachment:72e67e13-c745-4c1f-bc62-62b0ca5ea640:image.png",
+      "blockId": "32d3ff07-ff5b-802c-97aa-e56009acb90d",
+      "filename": "image.png",
+      "alt": "STDev Science Hackathon 2026"
+    },
+    {
+      "key": "a0002",
+      "kind": "image",
+      "source": "attachment:2d6dd88f-a9c1-4388-82ee-9331ccbea550:image.png",
+      "blockId": "32d3ff07-ff5b-8034-9829-eaf7b42ceb64",
+      "filename": "image.png",
+      "alt": "행사 지원 ~ 본행사 일정"
+    },
+    {
+      "key": "a0003",
+      "kind": "image",
+      "source": "attachment:47af97c2-1dd5-46be-a5e4-ee04d6ec837b:image.png",
+      "blockId": "32d3ff07-ff5b-80af-8a37-c975693cbbed",
+      "filename": "image.png",
+      "alt": "본행사 세부 일정"
+    },
+    {
+      "key": "a0004",
+      "kind": "image",
+      "source": "attachment:de3181ef-b5fb-4c6f-842c-d75e42f1b833:노션_배너.png",
+      "blockId": "32d3ff07-ff5b-8001-ae54-c458f8571ea3",
+      "filename": "노션_배너.png",
+      "alt": ""
+    },
+    {
+      "key": "a0005",
+      "kind": "image",
+      "source": "attachment:792d2212-aab3-4659-abef-faa24d3fba85:스크린샷_2026-04-09_오전_2.50.40.png",
+      "blockId": "33c3ff07-ff5b-80b0-a42f-e2d3a9e74f80",
+      "filename": "스크린샷_2026-04-09_오전_2.50.40.png",
+      "alt": "전체 시간표"
+    },
+    {
+      "key": "a0006",
+      "kind": "image",
+      "source": "attachment:bc376d07-b3b8-4b59-9c62-79b680f55ef6:스크린샷_2026-04-09_오전_2.55.16.png",
+      "blockId": "33c3ff07-ff5b-80e1-ba41-d5777f36d188",
+      "filename": "스크린샷_2026-04-09_오전_2.55.16.png",
+      "alt": "[DSF26] 행사 안내"
+    },
+    {
+      "key": "a0007",
+      "kind": "image",
+      "source": "attachment:3d3ea585-405b-4927-bd84-b35e96e45dc1:스크린샷_2025-04-16_오후_9.30.50.png",
+      "blockId": "33c3ff07-ff5b-80c0-8463-c01136bcc31e",
+      "filename": "스크린샷_2025-04-16_오후_9.30.50.png",
+      "alt": "[DSF26] 행사 안내"
+    },
+    {
+      "key": "a0008",
+      "kind": "image",
+      "source": "attachment:3ee26350-ce48-427e-8fd0-a2035cd0a4ca:스크린샷_2025-04-16_오후_9.47.03.png",
+      "blockId": "33c3ff07-ff5b-80b7-85c2-ca8e66086d2b",
+      "filename": "스크린샷_2025-04-16_오후_9.47.03.png",
+      "alt": "[DSF26] 행사 안내"
+    },
+    {
+      "key": "a0009",
+      "kind": "image",
+      "source": "attachment:1a288c65-f233-4e41-8964-041196984953:스크린샷_2026-04-09_오전_3.01.16.png",
+      "blockId": "33c3ff07-ff5b-80a0-9b46-d795e7a5ffa1",
+      "filename": "스크린샷_2026-04-09_오전_3.01.16.png",
+      "alt": "[DSF26] 행사 안내"
+    },
+    {
+      "key": "a0010",
+      "kind": "image",
+      "source": "attachment:72377a49-e2ad-4792-a4dd-6c0cefd25826:스크린샷_2026-04-09_오전_3.01.44.png",
+      "blockId": "33c3ff07-ff5b-8028-9781-eb7a4dc1c647",
+      "filename": "스크린샷_2026-04-09_오전_3.01.44.png",
+      "alt": "[DSF26] 행사 안내"
+    },
+    {
+      "key": "a0011",
+      "kind": "image",
+      "source": "attachment:697772b7-bdc2-4ccc-bbce-1fb16472fbad:image.png",
+      "blockId": "30d3ff07-ff5b-80f9-b73e-e83da8de694f",
+      "filename": "image.png",
+      "alt": "[SSI26] 행사 상세 안내"
+    },
+    {
+      "key": "a0012",
+      "kind": "image",
+      "source": "attachment:8aff10e4-aa9b-43af-82f1-405b04df4a28:image.png",
+      "blockId": "30d3ff07-ff5b-801a-9cca-e9e8496a00e6",
+      "filename": "image.png",
+      "alt": "[SSI26] 행사 상세 안내"
+    },
+    {
+      "key": "a0013",
+      "kind": "image",
+      "source": "attachment:55d0b116-2cb4-479a-b940-becde9fc4b35:image.png",
+      "blockId": "30d3ff07-ff5b-8077-bb7d-e175fbfd696d",
+      "filename": "image.png",
+      "alt": "[SSI26] 행사 상세 안내"
+    },
+    {
+      "key": "a0014",
+      "kind": "image",
+      "source": "attachment:51793e7b-396e-4c6e-82cc-b7ead1210daa:노션_배너.png",
+      "blockId": "1bb3ff07-ff5b-80c6-9cbc-e2867063ca22",
+      "filename": "노션_배너.png",
+      "alt": "STDev Science Hackathon 2025"
+    },
+    {
+      "key": "a0015",
+      "kind": "image",
+      "source": "attachment:6f452ac0-c18e-4db1-87f5-d2b093e655bb:Frame_1.png",
+      "blockId": "1b93ff07-ff5b-80de-b6bb-eff7447d620e",
+      "filename": "Frame_1.png",
+      "alt": "행사 지원 ~ 본행사 일정"
+    },
+    {
+      "key": "a0016",
+      "kind": "image",
+      "source": "attachment:bd40d0d0-113c-49c1-abd5-27f9a19427bf:Group_258.png",
+      "blockId": "1c63ff07-ff5b-8008-95e9-e295477451f4",
+      "filename": "Group_258.png",
+      "alt": "본행사 세부 일정"
+    },
+    {
+      "key": "a0017",
+      "kind": "image",
+      "source": "attachment:3bbc95a3-a5a1-4a6a-ace8-101209dec51d:노션_배너.png",
+      "blockId": "1b83ff07-ff5b-804e-9f14-f05f372fad50",
+      "filename": "노션_배너.png",
+      "alt": ""
+    },
+    {
+      "key": "a0018",
+      "kind": "image",
+      "source": "attachment:3af71727-8260-43a6-8b21-2fac2afbfe83:스크린샷_2025-04-16_오후_9.48.16.png",
+      "blockId": "1d73ff07-ff5b-8033-bc6d-cd9f88e911bb",
+      "filename": "스크린샷_2025-04-16_오후_9.48.16.png",
+      "alt": "전체 시간표"
+    },
+    {
+      "key": "a0019",
+      "kind": "image",
+      "source": "attachment:f6e2c2f6-a50b-4da5-a1ad-068d279590b3:IMG_4443.jpg",
+      "blockId": "1d73ff07-ff5b-805c-9039-ecc7beedda55",
+      "filename": "IMG_4443.jpg",
+      "alt": "STDev 과학 해커톤 2025 본행사 안내"
+    },
+    {
+      "key": "a0020",
+      "kind": "image",
+      "source": "attachment:a9181528-2317-4028-b8ad-2847a3328c03:IMG_4442.jpg",
+      "blockId": "1d73ff07-ff5b-804c-9bb0-e4996ba63272",
+      "filename": "IMG_4442.jpg",
+      "alt": "STDev 과학 해커톤 2025 본행사 안내"
+    },
+    {
+      "key": "a0021",
+      "kind": "image",
+      "source": "attachment:495d5ee6-13ed-4463-a827-9f8acade2f13:IMG_4447.jpg",
+      "blockId": "1d73ff07-ff5b-808e-9c4b-e12ef38e0bad",
+      "filename": "IMG_4447.jpg",
+      "alt": "STDev 과학 해커톤 2025 본행사 안내"
+    },
+    {
+      "key": "a0022",
+      "kind": "image",
+      "source": "attachment:6ce3e96d-90b7-4be9-b140-a3e30b3beb69:스크린샷_2025-04-16_오후_9.40.58.png",
+      "blockId": "1d73ff07-ff5b-8012-9370-f2b37dda7972",
+      "filename": "스크린샷_2025-04-16_오후_9.40.58.png",
+      "alt": "STDev 과학 해커톤 2025 본행사 안내"
+    },
+    {
+      "key": "a0023",
+      "kind": "image",
+      "source": "attachment:b63b53de-33cd-4ff2-8745-7b32ed238515:스크린샷_2025-04-16_오후_9.41.23.png",
+      "blockId": "1d73ff07-ff5b-8034-aaa8-f9df05fbe3c6",
+      "filename": "스크린샷_2025-04-16_오후_9.41.23.png",
+      "alt": "STDev 과학 해커톤 2025 본행사 안내"
+    },
+    {
+      "key": "local-hellothon24-recap-jpg",
+      "kind": "image",
+      "source": "local:hellothon24-recap.jpg",
+      "blockId": "",
+      "filename": "hellothon24-recap.jpg",
+      "alt": "AI Hellothon 2024 행사 사진"
+    },
+    {
+      "key": "a0025",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/9531b301-b5a9-456f-8463-2adf3eb605ac/%E1%84%82%E1%85%A9%E1%84%89%E1%85%A7%E1%86%AB_%E1%84%87%E1%85%A2%E1%84%82%E1%85%A5.png",
+      "blockId": "17e3ff07-ff5b-815a-852b-c4332db1fbd1",
+      "filename": "노션_배너.png",
+      "alt": "SPARCS 과학 해커톤 2024"
+    },
+    {
+      "key": "a0026",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/50d653fa-d93d-42cc-a5e2-dc5a91bd9138/image.png",
+      "blockId": "17e3ff07-ff5b-81b9-b2e5-ebad1674cc29",
+      "filename": "image.png",
+      "alt": "SPARCS 과학 해커톤 2024"
+    },
+    {
+      "key": "a0027",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/a4cd8619-0517-4270-bce4-fa6d1521d681/image.png",
+      "blockId": "17e3ff07-ff5b-81eb-b7b2-d78a9a0afb52",
+      "filename": "image.png",
+      "alt": "SPARCS 과학 해커톤 2024"
+    },
+    {
+      "key": "a0028",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/e684d7ea-7114-49b9-b120-6dbbe0ccaf48/image.png",
+      "blockId": "17e3ff07-ff5b-8116-acf2-ec9435e015a2",
+      "filename": "image.png",
+      "alt": "SPARCS 과학 해커톤 2024"
+    },
+    {
+      "key": "a0029",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/273c5183-3355-45c9-80d9-66da551fa72e/image.png",
+      "blockId": "17e3ff07-ff5b-81ae-a13b-f7651b0c8d5f",
+      "filename": "image.png",
+      "alt": "SPARCS 과학 해커톤 2024"
+    },
+    {
+      "key": "a0030",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/d823d145-154b-4a43-80d2-c31a7806ab59/%E1%84%8A%E1%85%A6%E1%84%90%E1%85%B3%E1%84%85%E1%85%A6%E1%86%A8%E1%84%8B%E1%85%A1%E1%84%8B%E1%85%B5.png",
+      "blockId": "17e3ff07-ff5b-81c9-a766-d4d9ff85a90a",
+      "filename": "쎄트렉아이.png",
+      "alt": "SPARCS 과학 해커톤 2024"
+    },
+    {
+      "key": "a0031",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/9dfa9c6e-5809-45d6-915a-b1e6d0766664/%E1%84%85%E1%85%A2%E1%84%87%E1%85%B3%E1%86%AF%E1%84%8B%E1%85%A5%E1%86%B8.png",
+      "blockId": "17e3ff07-ff5b-8164-8163-e6d8d002f437",
+      "filename": "래블업.png",
+      "alt": "SPARCS 과학 해커톤 2024"
+    },
+    {
+      "key": "a0032",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/79d7c7fc-a5c9-4343-a5a8-efe640430294/%E1%84%8B%E1%85%A1%E1%86%AF%E1%84%80%E1%85%A9%E1%84%85%E1%85%B5%E1%86%A8%E1%84%89%E1%85%B3.png",
+      "blockId": "17e3ff07-ff5b-8118-bf7f-f0d38b83cf47",
+      "filename": "알고릭스.png",
+      "alt": "SPARCS 과학 해커톤 2024"
+    },
+    {
+      "key": "a0033",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/3e349761-0227-4c22-9a2b-d96f0d75815a/%E1%84%92%E1%85%A9%E1%84%85%E1%85%A3%E1%86%BC%E1%84%8B%E1%85%A6%E1%84%83%E1%85%B2.png",
+      "blockId": "17e3ff07-ff5b-8138-a825-fc90afcfa253",
+      "filename": "호량에듀.png",
+      "alt": "SPARCS 과학 해커톤 2024"
+    },
+    {
+      "key": "a0034",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/306bef56-0285-4b9d-8d24-33d279912d2d/image.png",
+      "blockId": "17e3ff07-ff5b-8192-abe2-c3ffd686d78c",
+      "filename": "image.png",
+      "alt": "현장 일정표"
+    },
+    {
+      "key": "a0035",
+      "kind": "file",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/49af1f5a-e301-4a40-bea7-05fce05449ba/My_Alchemy.pdf",
+      "blockId": "17e3ff07-ff5b-81bf-81bf-eb629378d6ff",
+      "filename": "My_Alchemy.pdf",
+      "alt": "My Alchemy.pdf"
+    },
+    {
+      "key": "a0036",
+      "kind": "file",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/64ad7f9d-f01e-4ef6-9ab3-494877eaeb03/(%E1%84%92%E1%85%A2%E1%84%8F%E1%85%A5%E1%84%90%E1%85%A9%E1%86%AB)_SPARCS_%E1%84%80%E1%85%AA%E1%84%92%E1%85%A1%E1%86%A8_%E1%84%92%E1%85%A2%E1%84%8F%E1%85%A5%E1%84%90%E1%85%A9%E1%86%AB_2024_%E1%84%8E%E1%85%A1%E1%86%B7%E1%84%80%E1%85%A1_%E1%84%92%E1%85%AE%E1%84%80%E1%85%B5_%E1%84%86%E1%85%B5%E1%86%BE_%E1%84%92%E1%85%AC%E1%84%80%E1%85%A9_(by_Gumgum).pdf",
+      "blockId": "17e3ff07-ff5b-8165-8291-c7c754b6c221",
+      "filename": "(해커톤)_SPARCS_과학_해커톤_2024_참가_후기_및_회고_(by_Gumgum).pdf",
+      "alt": "(해커톤) SPARCS 과학 해커톤 2024 참가 후기 및 회고 (by Gumgum).pdf"
+    },
+    {
+      "key": "a0037",
+      "kind": "file",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/2fb23734-f0a2-474f-8410-49d6862367d9/%E1%84%86%E1%85%AE%E1%84%87%E1%85%A1%E1%86%A8_2%E1%84%8B%E1%85%B5%E1%86%AF_%E1%84%92%E1%85%A2%E1%84%8F%E1%85%A5%E1%84%90%E1%85%A9%E1%86%AB_%E1%84%8E%E1%85%A1%E1%86%B7%E1%84%8B%E1%85%A7_%E1%84%92%E1%85%AE%E1%84%80%E1%85%B5_-_%E1%84%83%E1%85%A2%E1%84%8C%E1%85%A5%E1%86%AB%E1%84%8B%E1%85%A6_%E1%84%83%E1%85%A1%E1%84%82%E1%85%A7%E1%84%8B%E1%85%A9%E1%84%83%E1%85%A1_(%E1%84%82%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%87%E1%85%A5_%E1%84%87%E1%85%B3%E1%86%AF%E1%84%85%E1%85%A9%E1%84%80%E1%85%B3).pdf",
+      "blockId": "17e3ff07-ff5b-8121-9540-c2c8e16e4178",
+      "filename": "무박_2일_해커톤_참여_후기_-_대전에_다녀오다_(네이버_블로그).pdf",
+      "alt": "무박 2일 해커톤 참여 후기 - 대전에 다녀오다 (네이버 블로그).pdf"
+    },
+    {
+      "key": "a0038",
+      "kind": "file",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/8f86c286-c95f-4dcd-b0b1-735aee451a41/SPARCS_%E1%84%80%E1%85%AA%E1%84%92%E1%85%A1%E1%86%A8_%E1%84%92%E1%85%A2%E1%84%8F%E1%85%A5%E1%84%90%E1%85%A9%E1%86%AB_2024_%E1%84%92%E1%85%AE%E1%84%80%E1%85%B5.pdf",
+      "blockId": "17e3ff07-ff5b-8142-bf87-c2a42bc5cbf3",
+      "filename": "SPARCS_과학_해커톤_2024_후기.pdf",
+      "alt": "SPARCS 과학 해커톤 2024 후기.pdf"
+    },
+    {
+      "key": "a0039",
+      "kind": "file",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/58f89679-e1fa-436d-b2ad-67b07b6a6f56/SPARCS_%E1%84%92%E1%85%A2%E1%84%8F%E1%85%A5%E1%84%90%E1%85%A9%E1%86%AB_2024_%E1%84%8E%E1%85%A1%E1%86%B7%E1%84%80%E1%85%A1_%E1%84%92%E1%85%AE%E1%84%80%E1%85%B5_%E1%84%83%E1%85%A2%E1%84%8C%E1%85%A5%E1%86%AB_DCC_(%E1%84%82%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%87%E1%85%A5%E1%84%87%E1%85%B3%E1%86%AF%E1%84%85%E1%85%A9%E1%84%80%E1%85%B3).pdf",
+      "blockId": "17e3ff07-ff5b-817c-b629-ef5afd9192a1",
+      "filename": "SPARCS_해커톤_2024_참가_후기_대전_DCC_(네이버블로그).pdf",
+      "alt": "SPARCS 해커톤 2024 참가 후기 대전 DCC (네이버블로그).pdf"
+    },
+    {
+      "key": "local-dsf24-recap-jpg",
+      "kind": "image",
+      "source": "local:dsf24-recap.jpg",
+      "blockId": "",
+      "filename": "dsf24-recap.jpg",
+      "alt": "SPARCS 과학 해커톤 2024 행사 사진"
+    },
+    {
+      "key": "a0041",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/8fd086ad-0f84-45be-a74a-26116d6b53e2/2024_%E1%84%92%E1%85%A2%E1%84%8F%E1%85%A5%E1%84%90%E1%85%A9%E1%86%AB_%E1%84%87%E1%85%A2%E1%84%82%E1%85%A5_%E1%84%83%E1%85%B5%E1%84%8C%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%AB-03_2.png",
+      "blockId": "17e3ff07-ff5b-81a6-99b9-f0ea26efb23f",
+      "filename": "2024_해커톤_배너_디자인-03_2.png",
+      "alt": "SPARCS AI 스타트업 해커톤 2024"
+    },
+    {
+      "key": "a0042",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/4343fb1b-b247-4ca9-9835-905cc0213c6a/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81b9-bcca-f176c5c6f7a6",
+      "filename": "Untitled.png",
+      "alt": "SPARCS AI 스타트업 해커톤 2024"
+    },
+    {
+      "key": "a0043",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/c7283fde-3c81-4654-88f2-3be5c9673389/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81dc-95e0-c1ffc2385a08",
+      "filename": "Untitled.png",
+      "alt": "SPARCS AI 스타트업 해커톤 2024"
+    },
+    {
+      "key": "a0044",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/04897006-3417-4b14-a8f7-7bde76f46a5d/Untitled.png",
+      "blockId": "17e3ff07-ff5b-812a-8993-fcc7e4ce3bb7",
+      "filename": "Untitled.png",
+      "alt": "SPARCS AI 스타트업 해커톤 2024"
+    },
+    {
+      "key": "a0045",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/5945d0f0-189d-44e5-b346-78686cfad140/3b38ffb1-fd71-4a04-a6eb-ec785ebd199c.png",
+      "blockId": "17e3ff07-ff5b-8110-99bb-f5b563ccc60f",
+      "filename": "3b38ffb1-fd71-4a04-a6eb-ec785ebd199c.png",
+      "alt": "SPARCS AI 스타트업 해커톤 2024"
+    },
+    {
+      "key": "a0046",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/4f0ef753-ad60-48e3-aee6-dc8d808ab459/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8125-9b58-f1b5944037f5",
+      "filename": "Untitled.png",
+      "alt": "SPARCS AI 스타트업 해커톤 2024"
+    },
+    {
+      "key": "a0047",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/9592bce0-3184-404b-b115-a425f671e023/Untitled.png",
+      "blockId": "17e3ff07-ff5b-819b-aa6c-f40008cb08b4",
+      "filename": "Untitled.png",
+      "alt": "SPARCS AI 스타트업 해커톤 2024"
+    },
+    {
+      "key": "a0048",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/ece071e6-6d48-463b-8118-8218a4e359d0/primer-sazze-logo_1.png",
+      "blockId": "17e3ff07-ff5b-8185-a2db-e08bac33ae0f",
+      "filename": "primer-sazze-logo_1.png",
+      "alt": "SPARCS AI 스타트업 해커톤 2024"
+    },
+    {
+      "key": "a0049",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/48b42200-acbe-482c-82bb-3bbda2b8d5c4/65bfcdaca1b156aad41f9c70_MashupVentures_Logo.svg",
+      "blockId": "17e3ff07-ff5b-81d7-b8c1-e0fa01d97f91",
+      "filename": "65bfcdaca1b156aad41f9c70_MashupVentures_Logo.svg",
+      "alt": "SPARCS AI 스타트업 해커톤 2024"
+    },
+    {
+      "key": "a0050",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/a16cbb5d-97a3-4209-871d-edb2b46b8f59/%E1%84%8F%E1%85%A1%E1%84%87%E1%85%A6%E1%86%AB_4_1.png",
+      "blockId": "17e3ff07-ff5b-811b-847f-f99b06081ace",
+      "filename": "카벤_4_1.png",
+      "alt": "SPARCS AI 스타트업 해커톤 2024"
+    },
+    {
+      "key": "a0051",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/94ad6633-308e-4a8c-bfd8-828defd9b661/%E1%84%8F%E1%85%B3%E1%84%8F%E1%85%A2_2_1.png",
+      "blockId": "17e3ff07-ff5b-8113-97aa-c9afcb18150f",
+      "filename": "크캐_2_1.png",
+      "alt": "SPARCS AI 스타트업 해커톤 2024"
+    },
+    {
+      "key": "a0052",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/6ee52dbd-43a8-4d1e-8d6a-0d1b0f6ba1c6/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81c0-818b-d5d83e816a37",
+      "filename": "Untitled.png",
+      "alt": "1) [티켓 오픈] 채널에서 원하는 카테고리를 선택합니다."
+    },
+    {
+      "key": "a0053",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/e2cbb4a6-6fd6-46ce-8f7d-d7462b8128c5/Untitled.png",
+      "blockId": "17e3ff07-ff5b-810f-86f3-d4a05d1fcd3f",
+      "filename": "Untitled.png",
+      "alt": "2) 카테고리를 선택하면 자동으로 티켓 채널이 만들어집니다. 해당 채널은 매칭된 운영진과 질문자만 볼 수 있는 비공개 채널입니다."
+    },
+    {
+      "key": "a0054",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/0bae56d0-cc78-426e-a5b9-616998ede5bc/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8106-a6aa-f7c316149392",
+      "filename": "Untitled.png",
+      "alt": "3) 질문이 종료되면, [종료]를 누른 후 [수락]을 눌러 채널을 종료해주세요!"
+    },
+    {
+      "key": "a0055",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/81eec98c-5bf4-4a37-b29e-4145fafd7cd0/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8100-b2fa-da9d120f8d66",
+      "filename": "Untitled.png",
+      "alt": "전체 공지 2"
+    },
+    {
+      "key": "a0056",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/503bb6f2-ce38-4fcb-9549-44b3531dbf08/Untitled.png",
+      "blockId": "17e3ff07-ff5b-812d-8c5b-db92782d9ca4",
+      "filename": "Untitled.png",
+      "alt": "네이버 클라우드 플랫폼 크레딧 발급 방법"
+    },
+    {
+      "key": "a0057",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/2bbbd6d8-ea0d-4027-b817-be385ba03766/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81e6-8603-fe84ad41bfdb",
+      "filename": "Untitled.png",
+      "alt": "스킬 활용하기"
+    },
+    {
+      "key": "a0058",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/a32cadf3-f5e2-42b9-82ce-a4db3a87bacb/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81b7-9281-c6ffc03ecc9c",
+      "filename": "Untitled.png",
+      "alt": "API 활용하기"
+    },
+    {
+      "key": "a0059",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/19b1ba81-4629-4e34-ac6d-1d80fc99f716/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81d9-b6aa-c3d2c9498b5c",
+      "filename": "Untitled.png",
+      "alt": "익스플로러 활용하기"
+    },
+    {
+      "key": "a0060",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/2360c009-5260-43bf-8cf3-e44ffaaf1a8e/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81ac-8456-d15305751beb",
+      "filename": "Untitled.png",
+      "alt": "네이버 클라우드 플랫폼 크레딧 발급 방법"
+    },
+    {
+      "key": "a0061",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/51a52148-5395-4559-90b7-5bb7187705b4/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8120-9930-d5eee2503008",
+      "filename": "Untitled.png",
+      "alt": "API 활용하기"
+    },
+    {
+      "key": "a0062",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/ab0dd2d4-86b5-48d9-a546-ab427d59c23b/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8121-8491-fd0860c1055e",
+      "filename": "Untitled.png",
+      "alt": "N19 아름관"
+    },
+    {
+      "key": "a0063",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/e4edbadc-688f-45a1-9ddc-f3a4aaae2ce4/Untitled.png",
+      "blockId": "17e3ff07-ff5b-813c-a2e6-e6eefbc1992b",
+      "filename": "Untitled.png",
+      "alt": "N14 사랑관"
+    },
+    {
+      "key": "a0064",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/386b51af-c835-4c77-809d-305569355885/Untitled.png",
+      "blockId": "17e3ff07-ff5b-818b-be38-f52406a1052a",
+      "filename": "Untitled.png",
+      "alt": "행사 장소 지도"
+    },
+    {
+      "key": "a0065",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/44017392-846a-40ac-85f9-fc35eed99acb/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8143-a84f-fe0c0448ec59",
+      "filename": "Untitled.png",
+      "alt": "메뉴는 변동될 수 있습니다."
+    },
+    {
+      "key": "a0066",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/ad16d58c-87ae-4f0b-9879-7f2826f8b3b3/Group_2.png",
+      "blockId": "17e3ff07-ff5b-81e0-8ff2-d2b656815495",
+      "filename": "Group_2.png",
+      "alt": "그림 1. N1, N6 교수회관 장소 안내"
+    },
+    {
+      "key": "a0067",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/2b9ab0ff-3253-4db6-8328-90a5ce567e02/Group_1.png",
+      "blockId": "17e3ff07-ff5b-81ed-bd44-cebb4e76e5fd",
+      "filename": "Group_1.png",
+      "alt": "그림 2. N1 1층 시설 안내"
+    },
+    {
+      "key": "a0068",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/ab464326-aa1a-459e-9d84-b52837a6c6ad/Untitled.png",
+      "blockId": "17e3ff07-ff5b-810e-9450-e0bdd407be02",
+      "filename": "Untitled.png",
+      "alt": "출석 패스 발급 안내"
+    },
+    {
+      "key": "a0069",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/fa111982-4d85-441f-8a06-a04ab3eab90b/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81fa-aefb-e68aa3bf23da",
+      "filename": "Untitled.png",
+      "alt": "SPARCS 봇이 보낸 메시지에서 ‘Get Attend code’를 누릅니다."
+    },
+    {
+      "key": "a0070",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/c63ba2c5-5db3-465f-8a68-24eb69472c33/CleanShot_2024-07-29_at_01.08.582x.png",
+      "blockId": "17e3ff07-ff5b-81bf-b3bd-c017ebc2ec15",
+      "filename": "CleanShot_2024-07-29_at_01.08.582x.png",
+      "alt": "출석 패스 발급 안내"
+    },
+    {
+      "key": "a0071",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/07e17480-81ee-4843-bd14-2073c93ed87e/KakaoTalk_Photo_2024-07-29-01-32-57.jpeg",
+      "blockId": "17e3ff07-ff5b-81f7-ab96-f5354104867b",
+      "filename": "KakaoTalk_Photo_2024-07-29-01-32-57.jpeg",
+      "alt": "출석 패스 발급 안내"
+    },
+    {
+      "key": "a0072",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/82421317-bbfd-44b6-935c-3004902a5d27/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8164-8718-c497fab5cc11",
+      "filename": "Untitled.png",
+      "alt": "출석 패스 발급 안내"
+    },
+    {
+      "key": "a0073",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/56905432-0195-40f8-acb0-d2128af0d4dd/KakaoTalk_Photo_2024-07-29-01-29-10.jpeg",
+      "blockId": "17e3ff07-ff5b-8135-ba68-ef7441230bbf",
+      "filename": "KakaoTalk_Photo_2024-07-29-01-29-10.jpeg",
+      "alt": "출석 패스 발급 안내"
+    },
+    {
+      "key": "a0074",
+      "kind": "video",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/920dff21-1d07-4410-92aa-719ae9c709b4/KakaoTalk_Video_2024-07-29-01-31-46.mp4",
+      "blockId": "17e3ff07-ff5b-81ee-81d5-c1c49fcdf763",
+      "filename": "KakaoTalk_Video_2024-07-29-01-31-46.mp4",
+      "alt": ""
+    },
+    {
+      "key": "a0075",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/2e656ef6-3644-4d01-8a8a-4639d227d2cb/98b4c1b2-175f-411e-91b2-9669d6296b0f.png",
+      "blockId": "17e3ff07-ff5b-81c5-b43c-f6a1642e9ec7",
+      "filename": "98b4c1b2-175f-411e-91b2-9669d6296b0f.png",
+      "alt": "대전 지역사회 문제 해결을 위한 다양한 아이디어를 바탕으로 한 이번 해커톤에서는 특히 협업과 혁신의 중요성이 강조되었다. 본 기사는 김수미, 최종윤, 현채정, 이동현 네 명의 우수 참가자 인터뷰를 통해 참가자들의 해커톤을 진행한 후 느낀 소감을 돌아본다."
+    },
+    {
+      "key": "local-ash24-recap-jpg",
+      "kind": "image",
+      "source": "local:ash24-recap.jpg",
+      "blockId": "",
+      "filename": "ash24-recap.jpg",
+      "alt": "SPARCS AI 스타트업 해커톤 2024 행사 사진"
+    },
+    {
+      "key": "a0077",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/f3850039-75e0-4237-b816-a6e6b8b7f869/%E1%84%87%E1%85%A2%E1%84%82%E1%85%A5.svg",
+      "blockId": "17e3ff07-ff5b-81bf-b107-f326b867c7d6",
+      "filename": "배너.svg",
+      "alt": "SPARCS 서비스 해커톤 2024"
+    },
+    {
+      "key": "a0078",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/b43eafda-1d12-4782-9aad-bcc0d6a951b7/kaist_logo.png",
+      "blockId": "17e3ff07-ff5b-81ad-a319-f77ede2cb713",
+      "filename": "kaist_logo.png",
+      "alt": "SPARCS 서비스 해커톤 2024"
+    },
+    {
+      "key": "a0079",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/178c12c6-b904-407f-827f-fa68f0a2460f/SPARCS.png",
+      "blockId": "17e3ff07-ff5b-8164-9a9c-fb138258264a",
+      "filename": "SPARCS.png",
+      "alt": "SPARCS 서비스 해커톤 2024"
+    },
+    {
+      "key": "a0080",
+      "kind": "file",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/49bbb6f7-6183-401b-b718-b736a81419cb/SPARCS_%E1%84%89%E1%85%A5%E1%84%87%E1%85%B5%E1%84%89%E1%85%B3_%E1%84%92%E1%85%A2%E1%84%8F%E1%85%A5%E1%84%90%E1%85%A9%E1%86%AB_2024_%E1%84%92%E1%85%AE%E1%84%80%E1%85%B5_%E1%84%83%E1%85%A2%E1%84%89%E1%85%A1%E1%86%BC%E1%84%8B%E1%85%B3%E1%86%AF_%E1%84%87%E1%85%A1%E1%86%AE%E1%84%83%E1%85%A1_-_te6.in_%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%83%E1%85%B5%E1%84%8C%E1%85%A1%E1%84%8B%E1%85%B5%E1%86%AB_%E1%84%87%E1%85%B3%E1%86%AF%E1%84%85%E1%85%A9%E1%84%80%E1%85%B3.pdf",
+      "blockId": "17e3ff07-ff5b-81f9-adf9-e29fa4c9937a",
+      "filename": "SPARCS_서비스_해커톤_2024_후기_대상을_받다_-_te6.in_개발디자인_블로그.pdf",
+      "alt": "SPARCS 서비스 해커톤 2024 후기: 대상을 받다 - te6.in 개발·디자인 블로그.pdf"
+    },
+    {
+      "key": "a0081",
+      "kind": "file",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/63fb9c89-ecfd-4024-8de5-a848493aa51e/%E1%84%85%E1%85%B5%E1%84%87%E1%85%B2_SPARCS_Service_Hackathon_2024_%E1%84%8E%E1%85%A1%E1%86%B7%E1%84%80%E1%85%A1_%E1%84%92%E1%85%AE%E1%84%80%E1%85%B5_-_%E1%84%8E%E1%85%AC%E1%84%8B%E1%85%AE%E1%84%89%E1%85%AE%E1%84%89%E1%85%A1%E1%86%BC_%E1%84%89%E1%85%AE%E1%84%89%E1%85%A1%E1%86%BC!.pdf",
+      "blockId": "17e3ff07-ff5b-8177-9003-f959fba54298",
+      "filename": "리뷰_SPARCS_Service_Hackathon_2024_참가_후기_-_최우수상_수상!.pdf",
+      "alt": "[리뷰] SPARCS Service Hackathon 2024 참가 후기 - 최우수상 수상!.pdf"
+    },
+    {
+      "key": "a0082",
+      "kind": "file",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/22dcd9d0-b1c3-4541-944a-4e96ba7f1216/%E1%84%92%E1%85%A2%E1%84%8F%E1%85%A5%E1%84%90%E1%85%A9%E1%86%AB_SPARCS_%E1%84%89%E1%85%A5%E1%84%87%E1%85%B5%E1%84%89%E1%85%B3_%E1%84%92%E1%85%A2%E1%84%8F%E1%85%A5%E1%84%90%E1%85%A9%E1%86%AB_2024_%E1%84%8E%E1%85%A1%E1%86%B7%E1%84%80%E1%85%A1_%E1%84%86%E1%85%B5%E1%86%BE_%E1%84%8E%E1%85%AC%E1%84%8B%E1%85%AE%E1%84%89%E1%85%AE%E1%84%89%E1%85%A1%E1%86%BC_%E1%84%89%E1%85%AE%E1%84%89%E1%85%A1%E1%86%BC_%E1%84%92%E1%85%AE%E1%84%80%E1%85%B5.pdf",
+      "blockId": "17e3ff07-ff5b-8162-b04a-e8ea0838eb12",
+      "filename": "해커톤_SPARCS_서비스_해커톤_2024_참가_및_최우수상_수상_후기.pdf",
+      "alt": "[해커톤] SPARCS 서비스 해커톤 2024 참가 및 최우수상 수상 후기.pdf"
+    },
+    {
+      "key": "a0083",
+      "kind": "file",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/3223241d-5f59-4ca3-8236-bf626b1b1ffb/2024_SPARCS_Hackathon_%E1%84%92%E1%85%AE%E1%84%80%E1%85%B5_(feat._%E1%84%91%E1%85%A1%E1%84%90%E1%85%B5%E1%84%88%E1%85%A1%E1%86%BC%E1%84%88%E1%85%A1%E1%86%BC).pdf",
+      "blockId": "17e3ff07-ff5b-8197-b7fa-e9fa734e75cd",
+      "filename": "2024_SPARCS_Hackathon_후기_(feat._파티빵빵).pdf",
+      "alt": "2024 SPARCS Hackathon 후기 (feat. 파티빵빵).pdf"
+    },
+    {
+      "key": "a0084",
+      "kind": "file",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/340649d7-3f96-4f9c-aab3-b3241efc7f33/%E1%84%92%E1%85%AC%E1%84%80%E1%85%A9_SPARCS_2024_Service_Hackathon.pdf",
+      "blockId": "17e3ff07-ff5b-8141-b117-c6c0d325ed46",
+      "filename": "회고_SPARCS_2024_Service_Hackathon.pdf",
+      "alt": "[회고] SPARCS 2024 Service Hackathon.pdf"
+    },
+    {
+      "key": "a0085",
+      "kind": "file",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/9cc35a11-2355-4599-8aee-bd8ef87351d0/LLM%E1%84%8B%E1%85%B3%E1%86%AF_%E1%84%92%E1%85%AA%E1%86%AF%E1%84%8B%E1%85%AD%E1%86%BC%E1%84%92%E1%85%A1%E1%86%AB_%E1%84%8C%E1%85%B5%E1%86%B8_%E1%84%8E%E1%85%AE%E1%84%8E%E1%85%A5%E1%86%AB_%E1%84%89%E1%85%B5%E1%84%89%E1%85%B3%E1%84%90%E1%85%A6%E1%86%B7.pdf",
+      "blockId": "17e3ff07-ff5b-8146-a224-daa060ebcfcc",
+      "filename": "LLM을_활용한_집_추천_시스템.pdf",
+      "alt": "LLM을 활용한 집 추천 시스템.pdf"
+    },
+    {
+      "key": "a0086",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/eec21777-cd9a-40c2-9f57-322de9ffc76e/Untitled.png",
+      "blockId": "17e3ff07-ff5b-818e-a0e2-da856e6f33b8",
+      "filename": "Untitled.png",
+      "alt": "Preat CEO 강명오 대표, COO 김원석 님"
+    },
+    {
+      "key": "a0087",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/ad2141a7-d00d-4580-9715-79df3e533bda/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8133-a187-cf9dfff52df9",
+      "filename": "Untitled.png",
+      "alt": "Preat의 인스타그램 게시물. 맛에 대한 평가를 남기지 않음을 강조하고 있다."
+    },
+    {
+      "key": "a0088",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/1eb1552f-a74d-45bc-a7db-d8ab108f9b4b/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81c6-a2c4-e98589ed03d3",
+      "filename": "Untitled.png",
+      "alt": "자신의 서비스를 설명하는 Preat 강명오 대표"
+    },
+    {
+      "key": "a0089",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/00fbf6de-a964-413b-87f2-b9b1271ddcba/Untitled.png",
+      "blockId": "17e3ff07-ff5b-818e-ab1e-f19d59942e65",
+      "filename": "Untitled.png",
+      "alt": "망고 플레이트 로고. 망고 플레이트는 2023년 10월 31일 서비스를 종료한다."
+    },
+    {
+      "key": "a0090",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/e23eb991-7acb-4873-9888-3a616cf761c1/%E1%84%89%E1%85%B5%E1%84%80%E1%85%A1%E1%86%AB%E1%84%91%E1%85%AD.svg",
+      "blockId": "17e3ff07-ff5b-81c1-b0ca-fb03d80fee82",
+      "filename": "시간표.svg",
+      "alt": "상세 일정 및 장소"
+    },
+    {
+      "key": "a0091",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/b79f0669-2f9a-428f-a183-07a6cb7f9cb7/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8133-bc6d-cf0d2bfdf932",
+      "filename": "Untitled.png",
+      "alt": "청담에일"
+    },
+    {
+      "key": "a0092",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/e10293f3-3306-40d8-bba8-e3d145738604/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8114-a436-f0818be17ab3",
+      "filename": "Untitled.png",
+      "alt": "조림"
+    },
+    {
+      "key": "a0093",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/cd0bd2ce-92a1-45b9-b67b-05adc7e92456/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8101-862f-f7c0e205fa1f",
+      "filename": "Untitled.png",
+      "alt": "장호덕손만두 엑스포점"
+    },
+    {
+      "key": "a0094",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/af4acdb9-1068-4376-b7c6-f67d6ccd0b6c/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81d2-b11f-f08c663477d8",
+      "filename": "Untitled.png",
+      "alt": "장호덕손만두 엑스포점"
+    },
+    {
+      "key": "a0095",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/684e10e5-7991-4ea7-994d-4bbac324ed37/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81d5-85d7-df8a41c50b56",
+      "filename": "Untitled.png",
+      "alt": "성심당 DCC점"
+    },
+    {
+      "key": "a0096",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/6e32c034-bdb3-4022-9ab4-72a07d4e972d/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81e4-a660-e1e86d1e9b25",
+      "filename": "Untitled.png",
+      "alt": "브롱스 대전도룡점"
+    },
+    {
+      "key": "a0097",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/5c477c5b-5679-4d2b-9b80-b906dc73b4cd/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8148-ba4d-d4a5d0760174",
+      "filename": "Untitled.png",
+      "alt": "만리장성"
+    },
+    {
+      "key": "a0098",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/f54327fa-e1f2-4ec2-8954-dce6a0ad13b0/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81e7-982e-f25a278712e5",
+      "filename": "Untitled.png",
+      "alt": "LANGOLO"
+    },
+    {
+      "key": "a0099",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/43502da9-a22f-48ff-9d56-1908e5e8adef/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8188-8a3b-e6f464326ec7",
+      "filename": "Untitled.png",
+      "alt": "오씨 칼국수"
+    },
+    {
+      "key": "a0100",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/98144c08-5d37-4074-8668-bb79d4c2eb57/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81a8-9b7d-c1a86225e2db",
+      "filename": "Untitled.png",
+      "alt": "한밭수목원"
+    },
+    {
+      "key": "a0101",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/bfb597e3-20e8-4f13-bcf2-ed74ca9259b2/Untitled.png",
+      "blockId": "17e3ff07-ff5b-813b-84b0-e133e9fa4b19",
+      "filename": "Untitled.png",
+      "alt": "유성옥 도룡점"
+    },
+    {
+      "key": "a0102",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/c6b03418-5d17-4043-b7b9-98169a646ff0/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8168-9f33-c5b9a115d43b",
+      "filename": "Untitled.png",
+      "alt": "노이"
+    },
+    {
+      "key": "a0103",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/aa76f0ad-842b-408c-b260-40f95109df3b/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8110-ad49-c36bc0be93d0",
+      "filename": "Untitled.png",
+      "alt": "엑스포 과학공원"
+    },
+    {
+      "key": "a0104",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/bf5123d7-05b7-4003-a9bc-c783f561b87f/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8154-abb6-daae013e738f",
+      "filename": "Untitled.png",
+      "alt": "국립중앙과학관"
+    },
+    {
+      "key": "a0105",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/04d4e0a0-a1a1-47e8-87c4-7b2cd9d10564/Untitled.png",
+      "blockId": "17e3ff07-ff5b-817b-a7b6-cd297c37c216",
+      "filename": "Untitled.png",
+      "alt": "참이맛감자탕&순대국"
+    },
+    {
+      "key": "a0106",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/d0d3b666-69ef-4cb3-8467-64a06fe96935/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8179-a143-dec66808a3f8",
+      "filename": "Untitled.png",
+      "alt": "더 위스키"
+    },
+    {
+      "key": "a0107",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/521bf2cb-02b2-4b45-9655-5dffcc0cb622/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8181-8002-de9f79cb3151",
+      "filename": "Untitled.png",
+      "alt": "신세계 백화점"
+    },
+    {
+      "key": "a0108",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/99a30a46-4ce8-4044-8371-84a5022e9720/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81c7-81ce-ea71a15bc40b",
+      "filename": "Untitled.png",
+      "alt": "엑스포 수상공원"
+    },
+    {
+      "key": "a0109",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/cdb9d0e3-2f93-4bee-b44c-3665dd04c2c6/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8193-9341-c6349e4c2d8b",
+      "filename": "Untitled.png",
+      "alt": "편백연가 도룡점"
+    },
+    {
+      "key": "local-ssh24-recap-jpg",
+      "kind": "image",
+      "source": "local:ssh24-recap.jpg",
+      "blockId": "",
+      "filename": "ssh24-recap.jpg",
+      "alt": "SPARCS 서비스 해커톤 2024 행사 사진"
+    },
+    {
+      "key": "a0111",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/c1b4d98b-d21b-4240-a240-83a57ecce621/KakaoTalk_Photo_2023-09-12-16-41-09.png",
+      "blockId": "17e3ff07-ff5b-816d-bc63-f30692202692",
+      "filename": "KakaoTalk_Photo_2023-09-12-16-41-09.png",
+      "alt": "SKYST Conference 2023"
+    },
+    {
+      "key": "a0112",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/4683ab2b-04c5-402c-bf63-cb559ff18d08/Frame_31.png",
+      "blockId": "17e3ff07-ff5b-811b-a18b-e35adece1940",
+      "filename": "Frame_31.png",
+      "alt": "SKYST Conference 2023"
+    },
+    {
+      "key": "a0113",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/54e95815-fb04-439d-a112-8098c6b35b52/Frame_34.png",
+      "blockId": "17e3ff07-ff5b-811a-bbb8-d3562bd6e614",
+      "filename": "Frame_34.png",
+      "alt": "SKYST Conference 2023"
+    },
+    {
+      "key": "a0114",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/78710f4a-3d40-4850-85c9-9fed6ab5e1a6/Frame_32.png",
+      "blockId": "17e3ff07-ff5b-81d4-8514-c5a223ef7780",
+      "filename": "Frame_32.png",
+      "alt": "SKYST Conference 2023"
+    },
+    {
+      "key": "a0115",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/58238c07-0080-4a0a-8cff-7f3513454052/Frame_35.png",
+      "blockId": "17e3ff07-ff5b-813f-8f9a-d3c541f5b8f4",
+      "filename": "Frame_35.png",
+      "alt": "SKYST Conference 2023"
+    },
+    {
+      "key": "a0116",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/10192e8c-58cc-4f09-bde1-9e5e8b8497d6/Frame_33.png",
+      "blockId": "17e3ff07-ff5b-8146-9b07-e992a5bf8e8f",
+      "filename": "Frame_33.png",
+      "alt": "SKYST Conference 2023"
+    },
+    {
+      "key": "a0117",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/93265736-5006-44b6-abc3-302122a449af/Frame_36.png",
+      "blockId": "17e3ff07-ff5b-816e-9229-dc307b938c4c",
+      "filename": "Frame_36.png",
+      "alt": "SKYST Conference 2023"
+    },
+    {
+      "key": "a0118",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/a7d98a84-a046-4e3e-9ad6-9ade0620820b/Frame_37.png",
+      "blockId": "17e3ff07-ff5b-81ca-af31-cc8359d4e938",
+      "filename": "Frame_37.png",
+      "alt": "SKYST Conference 2023"
+    },
+    {
+      "key": "a0119",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/1f936969-af45-422f-84a7-a632a30c0578/devkor.png",
+      "blockId": "17e3ff07-ff5b-8181-bdbd-f0806e0e7d29",
+      "filename": "devkor.png",
+      "alt": "SKYST Conference 2023"
+    },
+    {
+      "key": "a0120",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/c3326193-cbac-4e7d-a9ab-effc83771843/Frame_38.png",
+      "blockId": "17e3ff07-ff5b-8118-9217-c63fbb7562a2",
+      "filename": "Frame_38.png",
+      "alt": "SKYST Conference 2023"
+    },
+    {
+      "key": "a0121",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/5e99e8b1-5f0d-467f-a080-37467f19dcd8/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81f8-809a-fb9d13d13869",
+      "filename": "Untitled.png",
+      "alt": "SKYST Conference 2023"
+    },
+    {
+      "key": "a0122",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/aa21c122-1e14-4515-89e5-4502a82ba304/Frame_39.png",
+      "blockId": "17e3ff07-ff5b-8117-a485-ca7356a168a4",
+      "filename": "Frame_39.png",
+      "alt": "SKYST Conference 2023"
+    },
+    {
+      "key": "a0123",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/ef26608b-d2dd-4344-a073-d94593a9f84c/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8199-a143-f72e5a91dfbc",
+      "filename": "Untitled.png",
+      "alt": "SKYST Conference 2023"
+    },
+    {
+      "key": "a0124",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/e2d18d4f-e022-45da-b2d2-2f30590c191e/Frame_45.png",
+      "blockId": "17e3ff07-ff5b-8114-b0a8-ee4d48d82fe3",
+      "filename": "Frame_45.png",
+      "alt": "SKYST Conference 2023"
+    },
+    {
+      "key": "a0125",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/9999c70b-5af1-493b-83e3-a98ea402e89d/Frame_48.png",
+      "blockId": "17e3ff07-ff5b-81fc-92d7-c2ce3fc2c583",
+      "filename": "Frame_48.png",
+      "alt": "SKYST Conference 2023"
+    },
+    {
+      "key": "a0126",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/c9c21efe-827e-4b25-8ccc-6a284cac215c/Frame_46.png",
+      "blockId": "17e3ff07-ff5b-818f-9a46-ccb8575f1b9c",
+      "filename": "Frame_46.png",
+      "alt": "SKYST Conference 2023"
+    },
+    {
+      "key": "a0127",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/ba63aa78-6074-4d40-99b9-558ea560c566/Frame_47.png",
+      "blockId": "17e3ff07-ff5b-8156-b553-f3c619f88184",
+      "filename": "Frame_47.png",
+      "alt": "SKYST Conference 2023"
+    },
+    {
+      "key": "a0128",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/b1a9bb1e-fb5d-42dc-8853-c9b845268fe1/SPARCS.png",
+      "blockId": "17e3ff07-ff5b-81da-935a-fb0e110ede55",
+      "filename": "SPARCS.png",
+      "alt": "SKYST"
+    },
+    {
+      "key": "a0129",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/c68bd89c-8e2d-49af-bc8b-4337dea8e8d0/SCSC-01-2.png",
+      "blockId": "17e3ff07-ff5b-816e-9ef5-f3d2cd879551",
+      "filename": "SCSC-01-2.png",
+      "alt": "SKYST"
+    },
+    {
+      "key": "a0130",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/5eb4be0b-ad94-4f5f-97f6-19ae8957d9a6/1.png",
+      "blockId": "17e3ff07-ff5b-81a8-8bc5-c3d8a87e6367",
+      "filename": "1.png",
+      "alt": "SKYST"
+    },
+    {
+      "key": "a0131",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/f4583523-07b5-4fce-ae61-040ea1174be3/KakaoTalk_20230919_135617002_05.png",
+      "blockId": "17e3ff07-ff5b-8131-9ddf-f7343d128074",
+      "filename": "KakaoTalk_20230919_135617002_05.png",
+      "alt": "SKYST"
+    },
+    {
+      "key": "local-skyst23-recap-jpg",
+      "kind": "image",
+      "source": "local:skyst23-recap.jpg",
+      "blockId": "",
+      "filename": "skyst23-recap.jpg",
+      "alt": "SKYST Conference 2023 행사 사진"
+    },
+    {
+      "key": "a0133",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/22386c80-996e-4666-8e34-1b5e3095a79d/5%EC%B0%A8_%ED%9D%91.png",
+      "blockId": "17e3ff07-ff5b-8131-ba51-c4971f9e5437",
+      "filename": "5차_흑.png",
+      "alt": "SPARCS 스타트업 해커톤 2023"
+    },
+    {
+      "key": "a0134",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/ce02fd38-c69e-4a40-a1c5-785cc213ff3d/bigText3px_19201080_%E1%84%89%E1%85%A2%E1%86%A8%E1%84%89%E1%85%AE%E1%84%8C%E1%85%A5%E1%86%BC2.png",
+      "blockId": "17e3ff07-ff5b-81de-aaa1-dee533ba7306",
+      "filename": "bigText3px_19201080_색수정2.png",
+      "alt": ""
+    },
+    {
+      "key": "a0135",
+      "kind": "file",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/c217d211-7c40-4dea-8110-077a6a5fe7d4/%E1%84%8F%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%89%E1%85%B3%E1%84%90%E1%85%B3_SPARCS_2023_StartUp_Hackathon_%E1%84%8C%E1%85%AE%E1%86%AB%E1%84%8B%E1%85%AE%E1%84%89%E1%85%B3%E1%86%BC_%E1%84%89%E1%85%AE%E1%84%89%E1%85%A1%E1%86%BC_%E1%84%92%E1%85%AE%E1%84%80%E1%85%B5.pdf",
+      "blockId": "17e3ff07-ff5b-8106-93e3-eac41541973f",
+      "filename": "카이스트_SPARCS_2023_StartUp_Hackathon_준우승_수상_후기.pdf",
+      "alt": "카이스트 SPARCS 2023 StartUp Hackathon 준우승 수상 후기.pdf"
+    },
+    {
+      "key": "a0136",
+      "kind": "file",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/1c96afd8-a19a-4a5d-9b8f-fef274e705e5/%E1%84%92%E1%85%A2%E1%84%8F%E1%85%A5%E1%84%90%E1%85%A9%E1%86%AB_%E1%84%8E%E1%85%A1%E1%86%B7%E1%84%80%E1%85%A1_%E1%84%92%E1%85%AE%E1%84%80%E1%85%B5_(SPARCS_2023_StartUp_Hackathon)_-_%E1%84%8B%E1%85%B5%E1%84%8C%E1%85%A2%E1%84%8E%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B4_%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF_%E1%84%87%E1%85%B3%E1%86%AF%E1%84%85%E1%85%A9%E1%84%80%E1%85%B3.pdf",
+      "blockId": "17e3ff07-ff5b-81b9-b9c6-c160b7b7a4b7",
+      "filename": "해커톤_참가_후기_(SPARCS_2023_StartUp_Hackathon)_-_이재찬의_개발_블로그.pdf",
+      "alt": "해커톤 참가 후기 (SPARCS 2023 StartUp Hackathon) - 이재찬의 개발 블로그.pdf"
+    },
+    {
+      "key": "a0137",
+      "kind": "file",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/38e1dd1e-717d-48eb-aa24-7bf658d9301b/SPARCS_2023_StartUp_Hackathon_%E1%84%8E%E1%85%A1%E1%86%B7%E1%84%8B%E1%85%A7_%E1%84%92%E1%85%AE%E1%84%80%E1%85%B5.pdf",
+      "blockId": "17e3ff07-ff5b-8148-b6b1-fbcd158a8f4a",
+      "filename": "SPARCS_2023_StartUp_Hackathon_참여_후기.pdf",
+      "alt": "SPARCS 2023 StartUp Hackathon 참여 후기.pdf"
+    },
+    {
+      "key": "a0138",
+      "kind": "file",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/5fc8e056-8a7c-4427-b273-14bf9165819e/SPARCS_2023_StartUp_Hackathon_%E1%84%8E%E1%85%A1%E1%86%B7%E1%84%8B%E1%85%A7_%E1%84%92%E1%85%AE%E1%84%80%E1%85%B5.pdf",
+      "blockId": "17e3ff07-ff5b-8199-91a9-d2d8853a2ac2",
+      "filename": "SPARCS_2023_StartUp_Hackathon_참여_후기.pdf",
+      "alt": "SPARCS 2023 StartUp Hackathon 참여 후기.pdf"
+    },
+    {
+      "key": "a0139",
+      "kind": "file",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/8ebd9238-4af7-4b61-9a79-8af2268c461b/SPARCS_%E1%84%92%E1%85%A2%E1%84%8F%E1%85%A5%E1%84%90%E1%85%A9%E1%86%AB_%E1%84%8E%E1%85%A1%E1%86%B7%E1%84%80%E1%85%A1_%E1%84%92%E1%85%AE%E1%84%80%E1%85%B5.pdf",
+      "blockId": "17e3ff07-ff5b-818c-b771-fe977780433f",
+      "filename": "SPARCS_해커톤_참가_후기.pdf",
+      "alt": "SPARCS 해커톤 참가 후기.pdf"
+    },
+    {
+      "key": "a0140",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/332ac5dc-20fc-498f-9d7e-718c9177f0ae/aws-banner.png",
+      "blockId": "17e3ff07-ff5b-81f0-97ae-ca7c4fcb3051",
+      "filename": "aws-banner.png",
+      "alt": "AWS Korea"
+    },
+    {
+      "key": "a0141",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/b7d0002e-f391-4fa1-9600-75e9693498ab/channel-banner.png",
+      "blockId": "17e3ff07-ff5b-8182-b834-f1c1cc625329",
+      "filename": "channel-banner.png",
+      "alt": "채널코퍼레이션"
+    },
+    {
+      "key": "a0142",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/c126cd0f-4a6b-4ad0-b2ac-bdf9a552f24c/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81ef-93a3-f397b436bb2a",
+      "filename": "Untitled.png",
+      "alt": "보이저엑스"
+    },
+    {
+      "key": "a0143",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/b9dd644c-d627-4845-813a-b9bd6b813e6a/quad-banner.png",
+      "blockId": "17e3ff07-ff5b-81b0-a645-d06aaade7106",
+      "filename": "quad-banner.png",
+      "alt": "쿼드마이너"
+    },
+    {
+      "key": "a0144",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/b78e576c-0ffd-4221-bdf4-af5bf97eb8c5/carpen-banner.png",
+      "blockId": "17e3ff07-ff5b-8144-b928-e815c893a73f",
+      "filename": "carpen-banner.png",
+      "alt": "카펜스트리트"
+    },
+    {
+      "key": "a0145",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/69781e37-2b8c-486a-900f-1b9bce2d2515/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8100-9704-eaeb16b2ffcb",
+      "filename": "Untitled.png",
+      "alt": "코르카"
+    },
+    {
+      "key": "a0146",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/28c53b72-8717-44c7-a7c5-c5ead42c5427/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8102-9be7-ec8aee8f91f6",
+      "filename": "Untitled.png",
+      "alt": "프라이머"
+    },
+    {
+      "key": "a0147",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/ee9f8a77-e02b-47d0-a615-da47569f67c5/classum-banner.png",
+      "blockId": "17e3ff07-ff5b-8151-9474-d3adba793a5b",
+      "filename": "classum-banner.png",
+      "alt": "클라썸"
+    },
+    {
+      "key": "a0148",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/ce6edddf-d5c5-481a-81ed-81d7b045132a/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81e9-a503-e214df3c49bb",
+      "filename": "Untitled.png",
+      "alt": "NAVER D2"
+    },
+    {
+      "key": "a0149",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/574bc9d0-ab34-4984-a1d7-cf9fa6d77d8d/primer-banner.png",
+      "blockId": "17e3ff07-ff5b-81d0-8324-f3e3b10ef683",
+      "filename": "primer-banner.png",
+      "alt": "프라이머사제파트너스"
+    },
+    {
+      "key": "a0150",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/d013dc4c-a70a-4db0-b702-82889a349f16/kaist-banner.png",
+      "blockId": "17e3ff07-ff5b-8189-9408-fd2a4575264e",
+      "filename": "kaist-banner.png",
+      "alt": "카이스트청년창업투자지주"
+    },
+    {
+      "key": "a0151",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/9b749ce8-c2b7-4b6f-80b9-35c29e2d3ef8/atinum-banner.png",
+      "blockId": "17e3ff07-ff5b-814a-8720-d6eca07bf7eb",
+      "filename": "atinum-banner.png",
+      "alt": "에이티넘인베스트먼트"
+    },
+    {
+      "key": "a0152",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/6a3388cb-f4bc-467d-9c39-d2e32fc0dde3/dunamu-banner.png",
+      "blockId": "17e3ff07-ff5b-813c-b446-c059e926dcef",
+      "filename": "dunamu-banner.png",
+      "alt": "두나무앤파트너스"
+    },
+    {
+      "key": "a0153",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/4b33315a-6ce2-4b24-9108-b228d996853b/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.04.19.png",
+      "blockId": "17e3ff07-ff5b-81c3-8e5a-d72f98549c75",
+      "filename": "스크린샷_2023-01-10_오후_7.04.19.png",
+      "alt": "메인 화면"
+    },
+    {
+      "key": "a0154",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/1ac272a4-44ed-4e01-9066-a683705a06c5/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.04.37.png",
+      "blockId": "17e3ff07-ff5b-8179-bfbc-e9526fed6837",
+      "filename": "스크린샷_2023-01-10_오후_7.04.37.png",
+      "alt": "회원 가입 1"
+    },
+    {
+      "key": "a0155",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/24e66252-619b-46ce-991a-715170c8a6c3/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.04.48.png",
+      "blockId": "17e3ff07-ff5b-8196-91e0-fbd392b90bdb",
+      "filename": "스크린샷_2023-01-10_오후_7.04.48.png",
+      "alt": "회원 가입 2"
+    },
+    {
+      "key": "a0156",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/0426cf04-e6ad-4933-865d-18ddd0947d57/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.05.21.png",
+      "blockId": "17e3ff07-ff5b-81ca-879e-ca363d499ebb",
+      "filename": "스크린샷_2023-01-10_오후_7.05.21.png",
+      "alt": "회원 가입 3"
+    },
+    {
+      "key": "a0157",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/023183ce-45ce-48e3-87aa-072330e46e84/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.06.52.png",
+      "blockId": "17e3ff07-ff5b-81b2-9101-dbbffb719715",
+      "filename": "스크린샷_2023-01-10_오후_7.06.52.png",
+      "alt": "회원 가입 4 - 혹시 위 화면이 뜨면 hack.primer.kr로 돌아가주세요"
+    },
+    {
+      "key": "a0158",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/a4293daa-dd1d-4f35-8601-949f36713370/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.07.18.png",
+      "blockId": "17e3ff07-ff5b-812c-9d21-ea21b412612e",
+      "filename": "스크린샷_2023-01-10_오후_7.07.18.png",
+      "alt": "회원 가입 5 - 휴대폰 본인 인증을 해주세요"
+    },
+    {
+      "key": "a0159",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/53d8532a-11ca-480d-be08-dd0f1240e694/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.08.01.png",
+      "blockId": "17e3ff07-ff5b-81f5-88c5-e97cd6543256",
+      "filename": "스크린샷_2023-01-10_오후_7.08.01.png",
+      "alt": "회원 가입 6"
+    },
+    {
+      "key": "a0160",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/d0a26d33-8db1-425f-8347-079dc19762d9/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.08.09.png",
+      "blockId": "17e3ff07-ff5b-8123-8139-edc6278ad5a3",
+      "filename": "스크린샷_2023-01-10_오후_7.08.09.png",
+      "alt": "회원 가입 7"
+    },
+    {
+      "key": "a0161",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/1b1ecb4c-e6b5-4f2b-8f39-047fa281a92e/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.08.12.png",
+      "blockId": "17e3ff07-ff5b-818f-b99b-c4e36e054085",
+      "filename": "스크린샷_2023-01-10_오후_7.08.12.png",
+      "alt": "회원 가입 8"
+    },
+    {
+      "key": "a0162",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/bdc3ab4d-7210-481d-a22f-ea4a3a44b36d/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.13.31.png",
+      "blockId": "17e3ff07-ff5b-8185-9d23-c88b3ad19a67",
+      "filename": "스크린샷_2023-01-10_오후_7.13.31.png",
+      "alt": "회원 가입 9 - 팀리더/팀원 구분을 선택해주세요 (실수하신 경우 내정보에서 수정하실 수 있습니다)"
+    },
+    {
+      "key": "a0163",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/16c8a904-ed7d-46f2-971d-e2f3be796865/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.14.10.png",
+      "blockId": "17e3ff07-ff5b-810b-8639-c744d6b774b3",
+      "filename": "스크린샷_2023-01-10_오후_7.14.10.png",
+      "alt": "내정보 1 - 들어가는 법"
+    },
+    {
+      "key": "a0164",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/25785eb3-127a-493f-9959-e5d93ab98abe/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.14.17.png",
+      "blockId": "17e3ff07-ff5b-8183-a675-fc158b388b88",
+      "filename": "스크린샷_2023-01-10_오후_7.14.17.png",
+      "alt": "내정보 2 - 들어가는 법"
+    },
+    {
+      "key": "a0165",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/eb54bfc1-09e4-4e70-a4c4-92d7327a0d44/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.14.28.png",
+      "blockId": "17e3ff07-ff5b-811b-b8e8-e26150e0bd4e",
+      "filename": "스크린샷_2023-01-10_오후_7.14.28.png",
+      "alt": "내정보 3 - 프로필 수정하기"
+    },
+    {
+      "key": "a0166",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/f592896b-179f-4c47-a2cb-eef8a159a6a0/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.44.04.png",
+      "blockId": "17e3ff07-ff5b-81d7-83f9-c56270b53cab",
+      "filename": "스크린샷_2023-01-10_오후_7.44.04.png",
+      "alt": "내정보 4 - 메세지"
+    },
+    {
+      "key": "a0167",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/a01c9ef2-5cf5-4213-8753-24dc5b2372d8/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.17.38.png",
+      "blockId": "17e3ff07-ff5b-81cb-a7ed-d3dfc0c76a3c",
+      "filename": "스크린샷_2023-01-10_오후_7.17.38.png",
+      "alt": "참가자 목록 1"
+    },
+    {
+      "key": "a0168",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/3e40ee30-1a09-48a4-8001-02376c8657fd/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.17.21.png",
+      "blockId": "17e3ff07-ff5b-8136-bb1c-e3758e38f49a",
+      "filename": "스크린샷_2023-01-10_오후_7.17.21.png",
+      "alt": "게시물 작성하기 1"
+    },
+    {
+      "key": "a0169",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/6e427575-9ee9-4b17-8363-7067ecafc641/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.27.49.png",
+      "blockId": "17e3ff07-ff5b-81e2-8237-e1bddf1cc89e",
+      "filename": "스크린샷_2023-01-10_오후_7.27.49.png",
+      "alt": "게시물 작성하기 2"
+    },
+    {
+      "key": "a0170",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/a44f32e2-3775-4778-a48e-cdc342bdd6c5/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.59.13.png",
+      "blockId": "17e3ff07-ff5b-8135-8312-eaa065e6d5f8",
+      "filename": "스크린샷_2023-01-10_오후_7.59.13.png",
+      "alt": "팀원에게 참가 요청 보내기 1 - 보내기 전"
+    },
+    {
+      "key": "a0171",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/a653c818-5bd0-4359-8553-6d32a88c4731/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.59.21.png",
+      "blockId": "17e3ff07-ff5b-812e-9832-d20299dae3e4",
+      "filename": "스크린샷_2023-01-10_오후_7.59.21.png",
+      "alt": "팀원에게 참가 요청 보내기 2 - 보낸 후"
+    },
+    {
+      "key": "a0172",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/82e5cad5-eef0-424e-aa9e-5bc5b44ace83/Untitled.png",
+      "blockId": "17e3ff07-ff5b-817d-86b9-f4ccff349905",
+      "filename": "Untitled.png",
+      "alt": "팀원이 보낸 참가 요청 받기 1 - 로켓 모양 이모지가 있는 버튼을 눌러주세요"
+    },
+    {
+      "key": "a0173",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/7cbc0e87-d454-4545-a3ea-2eb54ccaba61/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81f1-ad35-ef46ac9a45bb",
+      "filename": "Untitled.png",
+      "alt": "팀원이 보낸 참가 요청 받기 2 - 초대장을 보내신 참가자 옆에 있는 O 혹은 X 버튼을 누르시면 됩니다"
+    },
+    {
+      "key": "a0174",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/6b2ec4db-7785-4724-b147-a1427a7a972c/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81ca-98f0-f74b3fcaf2f2",
+      "filename": "Untitled.png",
+      "alt": "팀원이 보낸 참가 요청 받기 3 - X 버튼을 누르면 팀원이 보낸 요청을 거절할 수 있습니다. 요청을 거절할 경우"
+    },
+    {
+      "key": "a0175",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/8eed3780-8754-468a-8a91-0481a4b41cd2/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.46.16.png",
+      "blockId": "17e3ff07-ff5b-810f-8ee7-eacc96bba281",
+      "filename": "스크린샷_2023-01-10_오후_7.46.16.png",
+      "alt": "팀에서 팀원 방출하기 1 - 팀원 옆에 있는 X 버튼을 눌러주세요"
+    },
+    {
+      "key": "a0176",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/b5d949f2-0dac-4e5b-818d-6ff28488534d/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8144-bfc0-cd2bebcf5ab6",
+      "filename": "Untitled.png",
+      "alt": "게시물 조회하기 1 - 첫인상평가"
+    },
+    {
+      "key": "a0177",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/a4a1c644-813e-4069-8c4c-e97bdaae20ed/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81dc-8aaf-fdadb0985452",
+      "filename": "Untitled.png",
+      "alt": "게시물 조회하기 2 - 첫인상평가를 한 경우"
+    },
+    {
+      "key": "a0178",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/2d2a7c80-6fbb-46a0-b14b-2d4d8f1dd464/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8110-a317-e3d272af7a9b",
+      "filename": "Untitled.png",
+      "alt": "게시물 조회하기 3 - 첫인상평가를 하지 않은 경우"
+    },
+    {
+      "key": "a0179",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/7e800864-9049-48c2-9980-ce2402ce0f97/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2023-01-10_%EC%98%A4%ED%9B%84_7.28.12.png",
+      "blockId": "17e3ff07-ff5b-8178-9dfb-c859b05d1a12",
+      "filename": "스크린샷_2023-01-10_오후_7.28.12.png",
+      "alt": "게시물 조회하기 4 - NDA 동의(혹시 동의가 되지 않는 버그가 발생하면 운영진에게 알려주세요)"
+    },
+    {
+      "key": "a0180",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/16ad93cd-9432-42e7-9943-fcc4263328c7/Untitled.png",
+      "blockId": "17e3ff07-ff5b-815a-9f2a-e1a822929ef7",
+      "filename": "Untitled.png",
+      "alt": "팀리더가 보낸 참가 요청 받기 1 - 초대 승인 혹은 초대 거절을 누르시면 됩니다"
+    },
+    {
+      "key": "a0181",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/bc2e3f62-02f9-4417-bca1-da635f9276d2/Untitled.png",
+      "blockId": "17e3ff07-ff5b-812e-a557-cde7d32f821c",
+      "filename": "Untitled.png",
+      "alt": "팀리더에게 참가 요청 보내기 1 - 팀 멤버 지원 클릭"
+    },
+    {
+      "key": "a0182",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/db266391-147c-407f-8ba4-b2b566f4974e/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81a4-a0c4-cee45f7df171",
+      "filename": "Untitled.png",
+      "alt": "팀리더에게 참가 요청 보내기 2 - 내 정보에 들어간다"
+    },
+    {
+      "key": "a0183",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/292365e1-0b0a-4cd2-8e30-31a424365465/Untitled.png",
+      "blockId": "17e3ff07-ff5b-813e-ba43-ce2545c1ebea",
+      "filename": "Untitled.png",
+      "alt": "팀리더에게 참가 요청 보내기 3 - 지원이 재대로 전달되었는지 확인한다"
+    },
+    {
+      "key": "a0184",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/69224912-49f5-4a50-856a-ae46babfa98b/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81fa-941a-f7fa3927d381",
+      "filename": "Untitled.png",
+      "alt": "팀리더에게 참가 요청 보내기 4 - 지원을 받게 되면 다음과 같이 확인할 수 있다"
+    },
+    {
+      "key": "a0185",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/ad497916-ecef-45fa-8d49-1974dd1c1bf5/channeltalk-logo.png",
+      "blockId": "17e3ff07-ff5b-8183-85a4-db1026537bd2",
+      "filename": "channeltalk-logo.png",
+      "alt": ""
+    },
+    {
+      "key": "a0186",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/4173e94d-6af6-4998-a614-b17478399d79/Screenshot_2023-01-28_at_8.30.24_AM.png",
+      "blockId": "17e3ff07-ff5b-81e7-bb82-c81dae97f448",
+      "filename": "Screenshot_2023-01-28_at_8.30.24_AM.png",
+      "alt": "좌측 상단의 ‘+’ 아이콘을 클릭한 후 신청하신 데이터베이스 종류를 선택합니다."
+    },
+    {
+      "key": "a0187",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/0958db58-2077-46ef-a464-555808055cde/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81c5-a7eb-fd597490b04c",
+      "filename": "Untitled.png",
+      "alt": "제공한 Host, Port, User, Password, Database를 입력합니다."
+    },
+    {
+      "key": "a0188",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/60033865-143b-4965-9615-a4ea6f9a9e6d/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81a7-95ac-e569da1f6f78",
+      "filename": "Untitled.png",
+      "alt": "하단의 ‘Test Connection’을 클릭하여 접속이 되는지 확인합니다."
+    },
+    {
+      "key": "a0189",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/28cf9c07-440d-4b26-9556-126fa18be52e/Untitled.png",
+      "blockId": "17e3ff07-ff5b-814f-881f-ca25b11c5346",
+      "filename": "Untitled.png",
+      "alt": "https://aws.amazon.com 접속 후 우측 상단의 ‘Sign In’ 버튼을 클릭합니다."
+    },
+    {
+      "key": "a0190",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/37eba40a-8d86-4a2f-b0b4-4213d861fba7/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81b0-aa03-d3910f06a390",
+      "filename": "Untitled.png",
+      "alt": "‘IAM user’ 클릭 후 Account ID에 sparcs-hackathon을 입력합니다."
+    },
+    {
+      "key": "a0191",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/6d115c75-d60f-45b4-9674-5684450ace6f/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81f6-b844-ff6e833105f7",
+      "filename": "Untitled.png",
+      "alt": "클라우드 자원 이용 방법"
+    },
+    {
+      "key": "a0192",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/4dabe498-a5f2-4c04-9dbe-a267b22f2e8f/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81a8-b553-e1d486875503",
+      "filename": "Untitled.png",
+      "alt": "우측 상단 계정명 좌측의 Region을 Seoul로 변경합니다."
+    },
+    {
+      "key": "a0193",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/96af0b93-e12b-427d-9b8a-507d4598ca80/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8123-98d4-e6f37cefe221",
+      "filename": "Untitled.png",
+      "alt": "Services 중 S3를 선택합니다."
+    },
+    {
+      "key": "a0194",
+      "kind": "image",
+      "source": "https://images.unsplash.com/photo-1488229297570-58520851e868?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb",
+      "blockId": "17e3ff07-ff5b-8145-b527-e73424fb6dd5",
+      "filename": "photo-1488229297570-58520851e868",
+      "alt": ""
+    },
+    {
+      "key": "a0195",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/f813b4e0-9733-4e2a-8ffb-a7ed346f7fc9/Untitled.png",
+      "blockId": "17e3ff07-ff5b-814f-b694-c98660df8aba",
+      "filename": "Untitled.png",
+      "alt": "각 팀장 여러분들께서는 GitHub organization 내에서 팀원 분들을 포함한 team을 생성해주시기를 부탁드립니다. “SPARCS 2023 StartUp Hackathon” GitHub organization 페이지의 “Teams” 탭에서 팀을 생성하고 닉네임을 통해 팀원 분들을 추가할 수 있습니다. 팀명은 “Team X” (X: 팀에 부여된 알파벳)으로 설정하셔야 합니다. 자세한 방법은 아래 스크린샷을 참조해주시면 감사하겠습니다."
+    },
+    {
+      "key": "a0196",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/0c87bc6b-e607-4970-903c-0ec6a8fec395/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81df-8248-c99ec390b382",
+      "filename": "Untitled.png",
+      "alt": "각 팀장 여러분들께서는 GitHub organization 내에서 팀원 분들을 포함한 team을 생성해주시기를 부탁드립니다. “SPARCS 2023 StartUp Hackathon” GitHub organization 페이지의 “Teams” 탭에서 팀을 생성하고 닉네임을 통해 팀원 분들을 추가할 수 있습니다. 팀명은 “Team X” (X: 팀에 부여된 알파벳)으로 설정하셔야 합니다. 자세한 방법은 아래 스크린샷을 참조해주시면 감사하겠습니다."
+    },
+    {
+      "key": "a0197",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/11fcf269-3cb8-4a6d-91cf-cd9acf724ad7/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8139-a755-ea863161baad",
+      "filename": "Untitled.png",
+      "alt": "각 팀장 여러분들께서는 GitHub organization 내에서 팀원 분들을 포함한 team을 생성해주시기를 부탁드립니다. “SPARCS 2023 StartUp Hackathon” GitHub organization 페이지의 “Teams” 탭에서 팀을 생성하고 닉네임을 통해 팀원 분들을 추가할 수 있습니다. 팀명은 “Team X” (X: 팀에 부여된 알파벳)으로 설정하셔야 합니다. 자세한 방법은 아래 스크린샷을 참조해주시면 감사하겠습니다."
+    },
+    {
+      "key": "a0198",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/802fce48-12f2-49ef-8477-a6231251ab8e/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8102-9b8a-db6d176544e4",
+      "filename": "Untitled.png",
+      "alt": "각 팀장 여러분들께서는 GitHub organization 내에서 팀원 분들을 포함한 team을 생성해주시기를 부탁드립니다. “SPARCS 2023 StartUp Hackathon” GitHub organization 페이지의 “Teams” 탭에서 팀을 생성하고 닉네임을 통해 팀원 분들을 추가할 수 있습니다. 팀명은 “Team X” (X: 팀에 부여된 알파벳)으로 설정하셔야 합니다. 자세한 방법은 아래 스크린샷을 참조해주시면 감사하겠습니다."
+    },
+    {
+      "key": "a0199",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/390bbe15-c2e5-49b7-848e-b58deff3fdd2/Untitled.png",
+      "blockId": "17e3ff07-ff5b-815e-9f07-d45e5865e75d",
+      "filename": "Untitled.png",
+      "alt": "각 팀의 팀장 여러분들께서는 organization 내에서 팀장 여러분들께서 만드신 팀이 소속된 repository를 생성해주시기 바랍니다. 팀장 여러분들께서는 repository의 읽기 권한(public/private)을 자유롭게 설정하실 수 있습니다. 생성하신 repository가 private repository더라도 운영진은 repository를 확인할 수 있습니다."
+    },
+    {
+      "key": "a0200",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/d30990df-579a-49a4-9bea-581de7e8b006/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81f9-b861-c28c71930836",
+      "filename": "Untitled.png",
+      "alt": "레포지토리를 생성하신 이후, 아래 스크린샷과 같이 생성하신 레포지토리를 team repository에 추가해주시면 감사하겠습니다. (팀 페이지 내부 > Repositories)"
+    },
+    {
+      "key": "a0201",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/3b8ad7e6-12b1-4b7b-bdfa-897b70f2046c/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8171-bdef-f82aa3cda1f7",
+      "filename": "Untitled.png",
+      "alt": "레포지토리를 생성하신 이후, 아래 스크린샷과 같이 생성하신 레포지토리를 team repository에 추가해주시면 감사하겠습니다. (팀 페이지 내부 > Repositories)"
+    },
+    {
+      "key": "a0202",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/dcbc01df-c35b-4046-9ccc-8c2b74c1104e/github.png",
+      "blockId": "17e3ff07-ff5b-81e3-b88b-e1e301c6569f",
+      "filename": "github.png",
+      "alt": ""
+    },
+    {
+      "key": "a0203",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/b4f2e690-3152-4f2d-98fd-835d0706dbd8/github.png",
+      "blockId": "17e3ff07-ff5b-8184-8702-ea91245f1cc5",
+      "filename": "github.png",
+      "alt": ""
+    },
+    {
+      "key": "a0204",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/6d97880f-fc06-42fe-b1d3-c8b6c5da48f1/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8110-a364-db25436303ad",
+      "filename": "Untitled.png",
+      "alt": "2.1 새로운 Issue 생성 및 제출"
+    },
+    {
+      "key": "a0205",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/3bf9e16b-9562-4694-9074-8023f63f0ad1/Untitled.png",
+      "blockId": "17e3ff07-ff5b-8193-bcaa-ee886786ffdc",
+      "filename": "Untitled.png",
+      "alt": "제출 Repository (2023-Hackathon-Submission) Issues 으로 이동 후 New Issue 를 클릭하여 새로운 Issue를 생성합니다."
+    },
+    {
+      "key": "a0206",
+      "kind": "image",
+      "source": "https://prod-files-secure.s3.us-west-2.amazonaws.com/c2aa3bf3-0be7-43d8-933c-be4300a79d70/6a4e0d86-cc7e-4e4c-815b-a81b1ee53b9f/Untitled.png",
+      "blockId": "17e3ff07-ff5b-81e3-aeb9-f753929b8414",
+      "filename": "Untitled.png",
+      "alt": "최종 기획 / 개발 / 디자인 제출 템플릿의 Get Started 버튼을 클릭합니다."
+    },
+    {
+      "key": "a0207",
+      "kind": "image",
+      "source": "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb",
+      "blockId": "17e3ff07-ff5b-8199-bb63-ed17810f574f",
+      "filename": "photo-1606326608606-aa0b62935f2b",
+      "alt": ""
+    },
+    {
+      "key": "local-sh23-recap-jpg",
+      "kind": "image",
+      "source": "local:sh23-recap.jpg",
+      "blockId": "",
+      "filename": "sh23-recap.jpg",
+      "alt": "SPARCS 스타트업 해커톤 2023 행사 사진"
+    }
+  ],
+  "events": [
+    {
+      "slug": "dsf26",
+      "code": "dsf26",
+      "name": "STDev Science Hackathon 2026",
+      "category": "hackathon",
+      "startDate": "2026-04-18",
+      "endDate": "2026-04-19",
+      "startTime": null,
+      "endTime": null,
+      "location": "대전컨벤션센터(DCC) 제2전시장 301호",
+      "roles": {},
+      "icon": "🌸",
+      "cover": "a0004",
+      "notionId": "32d3ff07-ff5b-8001-ae54-c458f8571ea3",
+      "summary": null,
+      "file": "dsf26/index.md",
+      "pages": [
+        {
+          "path": "faq",
+          "title": "FAQ",
+          "icon": "❓",
+          "cover": null,
+          "notionId": "32d3ff07-ff5b-802e-9590-d11a59608612",
+          "file": "dsf26/faq.md"
+        },
+        {
+          "path": "apply",
+          "title": "저 이제 지원하고 싶어요!!",
+          "icon": "🔗",
+          "cover": null,
+          "notionId": "32d3ff07-ff5b-8036-b482-f8b4bc27da00",
+          "file": "dsf26/apply.md"
+        },
+        {
+          "path": "agreement",
+          "title": "[DSF26] 지원서 관련 동의서 전문",
+          "icon": "📝",
+          "cover": null,
+          "notionId": "32d3ff07-ff5b-8066-9d79-ce13491bc0cb",
+          "file": "dsf26/agreement.md"
+        },
+        {
+          "path": "notice",
+          "title": "[DSF26] 행사 안내",
+          "icon": "📢",
+          "cover": null,
+          "notionId": "33c3ff07-ff5b-806d-8dd1-f58721f4e44b",
+          "file": "dsf26/notice.md"
+        }
+      ]
+    },
+    {
+      "slug": "ssi26",
+      "code": "ssi26",
+      "name": "STDev 스타트업 아이디어톤 2026",
+      "category": "ideathon",
+      "startDate": "2026-02-23",
+      "endDate": "2026-02-24",
+      "startTime": "14:00",
+      "endTime": "19:00",
+      "location": "KAIST 본원",
+      "roles": {
+        "host": [
+          "KAIST"
+        ],
+        "organizer": [
+          "사단법인 STDev"
+        ],
+        "sponsor": [
+          "카카오벤처스",
+          "프라이머사제파트너스",
+          "카이스트청년창업투자지주"
+        ]
+      },
+      "icon": "🍀",
+      "cover": null,
+      "notionId": "3053ff07-ff5b-80d2-8f20-e1ef63727091",
+      "summary": null,
+      "file": "ssi26/index.md",
+      "pages": [
+        {
+          "path": "apply",
+          "title": "저 이제 지원하고 싶어요‼️",
+          "icon": "🔗",
+          "cover": null,
+          "notionId": "3053ff07-ff5b-81bd-8cff-c7b08d02f978",
+          "file": "ssi26/apply.md"
+        },
+        {
+          "path": "agreement",
+          "title": "[SSI26] 지원서 관련 동의서 전문",
+          "icon": "📝",
+          "cover": null,
+          "notionId": "3053ff07-ff5b-8065-b678-e0c67a47c806",
+          "file": "ssi26/agreement.md"
+        },
+        {
+          "path": "notice",
+          "title": "[SSI26] 행사 상세 안내",
+          "icon": "📢",
+          "cover": null,
+          "notionId": "30d3ff07-ff5b-80ba-a58b-f480a57bc254",
+          "file": "ssi26/notice.md"
+        }
+      ]
+    },
+    {
+      "slug": "dsf25",
+      "code": "dsf25",
+      "name": "STDev Science Hackathon 2025",
+      "category": "hackathon",
+      "startDate": "2025-04-19",
+      "endDate": "2025-04-20",
+      "startTime": null,
+      "endTime": null,
+      "location": "대전컨벤션센터(DCC) 제1전시장 204, 205호",
+      "roles": {},
+      "icon": "🚀",
+      "cover": "a0017",
+      "notionId": "1b83ff07-ff5b-804e-9f14-f05f372fad50",
+      "summary": null,
+      "file": "dsf25/index.md",
+      "pages": [
+        {
+          "path": "faq",
+          "title": "FAQ",
+          "icon": "❓",
+          "cover": null,
+          "notionId": "1b83ff07-ff5b-80f5-bc2e-d8d663f6bf0f",
+          "file": "dsf25/faq.md"
+        },
+        {
+          "path": "applynow",
+          "title": "저 이제 지원하고 싶어요!!",
+          "icon": "🔗",
+          "cover": null,
+          "notionId": "1b83ff07-ff5b-8057-9241-e96d9d80a51b",
+          "file": "dsf25/applynow.md"
+        },
+        {
+          "path": "agreement",
+          "title": "[DSF25] 지원서 관련 동의서 전문",
+          "icon": "📝",
+          "cover": null,
+          "notionId": "1b83ff07-ff5b-8083-a03c-d18acd4dabfb",
+          "file": "dsf25/agreement.md"
+        },
+        {
+          "path": "notice",
+          "title": "STDev 과학 해커톤 2025 본행사 안내",
+          "icon": null,
+          "cover": null,
+          "notionId": "1d73ff07-ff5b-8047-83e5-d9ff3a47afe6",
+          "file": "dsf25/notice.md"
+        }
+      ]
+    },
+    {
+      "slug": "m24w",
+      "code": "m24w",
+      "name": "Middleware Program",
+      "category": "program",
+      "startDate": "2024-12-23",
+      "endDate": "2025-03-22",
+      "startTime": null,
+      "endTime": null,
+      "location": "비대면",
+      "roles": {
+        "organizer": [
+          "SPARCS"
+        ],
+        "sponsor": [
+          "카카오벤처스",
+          "프라이머사제파트너스"
+        ]
+      },
+      "icon": "🖥️",
+      "cover": null,
+      "notionId": "17e3ff07-ff5b-811f-8751-fbd20675736e",
+      "summary": null,
+      "file": "m24w/index.md",
+      "pages": [
+        {
+          "path": "companies",
+          "title": "참여 기업",
+          "icon": "🔗",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8164-aa61-d89f77c0d2d7",
+          "file": "m24w/companies.md"
+        },
+        {
+          "path": "agreement",
+          "title": "[M24W] 지원서 관련 동의서 전문",
+          "icon": "📝",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8127-b2e0-ea6809d2b522",
+          "file": "m24w/agreement.md"
+        }
+      ]
+    },
+    {
+      "slug": null,
+      "code": "hellothon24",
+      "name": "AI Hellothon 2024",
+      "category": "hackathon",
+      "startDate": "2024-11-10",
+      "endDate": "2024-11-24",
+      "startTime": null,
+      "endTime": null,
+      "location": "엘리스 랩 성수",
+      "roles": {},
+      "icon": null,
+      "cover": null,
+      "notionId": null,
+      "summary": "![AI Hellothon 2024 행사 사진](notion-asset:local-hellothon24-recap-jpg)\n\n2024년 11월 10일 (일) ~ 11월 24일 (일), 대면 일정 엘리스 랩 성수에서 진행, 2주간 팀별 비대면 개발 진행\n\n**공모전 형식의 장기 행사로 양질의 산출물 유도**\n\n- 11.10. (일) Meet up Day로 팀 별 아이데이션 및 아이스브레이킹 진행\n- 이후 2주간 팀 별 비대면 개발, 해당 기간 동안 운영진 모니터링\n- 11.23. (토) ~ 11.24. (일) 무박 2일 대면 해커톤 이후 산출물 제출\n- Elice cloud, ML API 제공\n\n**현직자부터 고등학생까지 넓은 참가자 풀**\n\n- 재직/재학 여부 무관하게 전국 개발자, 기획자, 디자이너 48인 선발\n- 다양한 배경과 경력을 가진 참가자 간의 네트워킹\n\n**“AI에 마음을 담다\"라는 주제로, 유의미한 AI 서비스에 대한 인사이트 제시**\n\n- 사회복지사의 인지 교육을 보조하기 위한 AI 서비스, 자기소개서 작성을 보조하는 서비스, 인스타그램 댓글 관리 서비스 등",
+      "file": null,
+      "pages": []
+    },
+    {
+      "slug": "dsf24",
+      "code": "dsf24",
+      "name": "SPARCS 과학 해커톤 2024",
+      "category": "hackathon",
+      "startDate": "2024-10-19",
+      "endDate": "2024-10-20",
+      "startTime": "13:00",
+      "endTime": "17:30",
+      "location": "대전컨벤션센터 제1전시장 204호, 205호",
+      "roles": {
+        "host": [
+          "대전광역시",
+          "대전관광공사"
+        ],
+        "organizer": [
+          "SPARCS"
+        ],
+        "sponsor": [
+          "쎄트렉아이",
+          "래블업",
+          "호랑에듀",
+          "알고릭스",
+          "대전정보문화산업진흥원"
+        ]
+      },
+      "icon": "🔭",
+      "cover": null,
+      "notionId": "17e3ff07-ff5b-81d6-875e-ecf3ef4c6bfe",
+      "summary": "![SPARCS 과학 해커톤 2024 행사 사진](notion-asset:local-dsf24-recap-jpg)\n\n2024년 10월 19일 (토) ~ 10월 20일 (일), 대전 컨벤션 센터 제 1, 2 전시장에서 진행\n\n**과학 관련 서비스 개발 해커톤**\n\n- “SW로 풀어내는 과학”이라는 주제 제시\n- 창의적인 과학 관련 서비스 아이디어 발굴 프로토타입 개발 기회 제공\n- 일상생활의 물리 현상을 시각화하는 과학 교육 서비스, 치매 환자와 보호자를 위한 AI 기억 관리 플랫폼, 실생활 과학 문제 해결을 위한 AI 시뮬레이션 학습 게임 등의 산출물\n\n**대전 사이언스 페스티벌 부대 행사로 진행**\n\n- 주최 대전광역시, 대전관광공사 / 주관 SPARCS\n- 사이언스 페스티벌에 참여한 대중들에게 부스를 시연할 수 있는 기회 제공\n\n**전국의 고등학생, 대학생 72명을 대상으로 한 대회**",
+      "file": "dsf24/index.md",
+      "pages": [
+        {
+          "path": "apply",
+          "title": "저 이제 지원하고 싶어요!!",
+          "icon": "🔗",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-817d-9336-f108253a8a31",
+          "file": "dsf24/apply.md"
+        },
+        {
+          "path": "faq",
+          "title": "질문과 답변",
+          "icon": "❓",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81a1-937b-d3af4aac1907",
+          "file": "dsf24/faq.md"
+        },
+        {
+          "path": "agreement",
+          "title": "[DSF24] 지원서 관련 동의서 전문",
+          "icon": "📝",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8106-a52b-dc95c890b422",
+          "file": "dsf24/agreement.md"
+        },
+        {
+          "path": "guide",
+          "title": "[DSF24] 참가자 안내문",
+          "icon": "🚀",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-817b-8862-dad3b05b60d7",
+          "file": "dsf24/guide.md"
+        },
+        {
+          "path": "guide/team-building",
+          "title": "팀빌딩 공지",
+          "icon": "👭",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8110-9771-e2ae3742537d",
+          "file": "dsf24/guide/team-building.md"
+        },
+        {
+          "path": "guide/schedule",
+          "title": "현장 일정표",
+          "icon": "📅",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81e9-8970-de7c0ae35c5f",
+          "file": "dsf24/guide/schedule.md"
+        },
+        {
+          "path": "guide/venue",
+          "title": "숙소, 행사장 안내",
+          "icon": "🛏️",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8107-96bc-e604278798f4",
+          "file": "dsf24/guide/venue.md"
+        },
+        {
+          "path": "guide/meals",
+          "title": "[DSF24] 식사 안내",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81a9-a60b-df676cdc608b",
+          "file": "dsf24/guide/meals.md"
+        },
+        {
+          "path": "guide/judging",
+          "title": "심사 관련 안내",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8166-9dda-c3d714223867",
+          "file": "dsf24/guide/judging.md"
+        },
+        {
+          "path": "reviews",
+          "title": "[DSF24] 참가자 블로그 후기",
+          "icon": "📝",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81c0-98ab-dd8f11675b79",
+          "file": "dsf24/reviews.md"
+        }
+      ]
+    },
+    {
+      "slug": "sash24",
+      "code": "sash24",
+      "name": "SPARCS AI 스타트업 해커톤 2024",
+      "category": "hackathon",
+      "startDate": "2024-07-29",
+      "endDate": "2024-08-01",
+      "startTime": "13:00",
+      "endTime": "18:30",
+      "location": "KAIST 본원",
+      "roles": {
+        "host": [
+          "KAIST",
+          "대전광역시"
+        ],
+        "organizer": [
+          "SPARCS",
+          "KAIST SW 교육센터"
+        ],
+        "sponsor": [
+          "NAVER Cloud",
+          "프라이머사제파트너스",
+          "매쉬업벤처스",
+          "카카오벤처스",
+          "Krew Capital"
+        ],
+        "partner": [
+          "대전정보문화산업진흥원"
+        ]
+      },
+      "icon": "🌱",
+      "cover": null,
+      "notionId": "17e3ff07-ff5b-81f6-9563-e735eb14247b",
+      "summary": "![SPARCS AI 스타트업 해커톤 2024 행사 사진](notion-asset:local-ash24-recap-jpg)\n\n2024년 7월 29일 (월) ~ 8월 1일 (목), 카이스트 본원에서 진행\n\n**NAVER Cloud와 함께한 AI 창업 아이디어 해커톤**\n\n- 전국 대학생 기획자, 디자이너, 개발자 참여\n- 광범위한 주제 제시\n- VC 심사역&대표님의 멘토링\n- NAVER Cloud 크레딧 지원\n\n**전국 대학생 총 120명을 대상으로 한 대회**\n\n- 총 166개의 지원서 접수\n- 서울대, 연세대, 고려대, 서강대, 성균관대, 한양대, KAIST, POSTECH, GIST, UNIST, DGIST 등 40여개 대학\n- 120명의 참가자 선발\n- 3박 4일 간 개발, 멘토링, 강연 등의 일정",
+      "file": "sash24/index.md",
+      "pages": [
+        {
+          "path": "notice-1",
+          "title": "전체 공지 1",
+          "icon": "🎉",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8151-a993-cafbe4267edb",
+          "file": "sash24/notice-1.md"
+        },
+        {
+          "path": "team-building",
+          "title": "자유 팀빌딩 공지사항",
+          "icon": "🌳",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-814e-af02-c8547526f07f",
+          "file": "sash24/team-building.md"
+        },
+        {
+          "path": "notice-2",
+          "title": "전체 공지 2",
+          "icon": "📢",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-815c-a07e-defc8288cb00",
+          "file": "sash24/notice-2.md"
+        },
+        {
+          "path": "naver-cloud",
+          "title": "네이버 클라우드 플랫폼 사용 방법",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81e4-acb1-ee0fc007ebeb",
+          "file": "sash24/naver-cloud.md"
+        },
+        {
+          "path": "naver-cloud/credit",
+          "title": "네이버 클라우드 플랫폼 크레딧 발급 방법",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81f7-bd57-d840e449e705",
+          "file": "sash24/naver-cloud/credit.md"
+        },
+        {
+          "path": "naver-cloud/clova-studio",
+          "title": "CLOVA Studio 소개",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8166-9f51-e0b74988cbf0",
+          "file": "sash24/naver-cloud/clova-studio.md"
+        },
+        {
+          "path": "naver-cloud/tuning",
+          "title": "커스텀 데이터 학습하기(튜닝)",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-814f-877f-e8e01c111371",
+          "file": "sash24/naver-cloud/tuning.md"
+        },
+        {
+          "path": "naver-cloud/skills",
+          "title": "스킬 활용하기",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-815b-a1a2-d53726993a71",
+          "file": "sash24/naver-cloud/skills.md"
+        },
+        {
+          "path": "naver-cloud/api",
+          "title": "API 활용하기",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8170-af87-e298796e3f3a",
+          "file": "sash24/naver-cloud/api.md"
+        },
+        {
+          "path": "naver-cloud/explorer",
+          "title": "익스플로러 활용하기",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8103-a386-c16bf1ea448e",
+          "file": "sash24/naver-cloud/explorer.md"
+        },
+        {
+          "path": "naver-cloud/ai-filter",
+          "title": "AI Filter 활용하기",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8116-8d8d-ff944e8c96ce",
+          "file": "sash24/naver-cloud/ai-filter.md"
+        },
+        {
+          "path": "venue",
+          "title": "숙소, 행사장 안내",
+          "icon": "🏢",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8126-9434-d12203683224",
+          "file": "sash24/venue.md"
+        },
+        {
+          "path": "meals",
+          "title": "식사 안내",
+          "icon": "🍔",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81d4-ab23-e94460219292",
+          "file": "sash24/meals.md"
+        },
+        {
+          "path": "amenities",
+          "title": "해커톤 참가자 안내: N1 주변 편의시설",
+          "icon": "🏢",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8153-a6c1-dfa6ac5b5ce9",
+          "file": "sash24/amenities.md"
+        },
+        {
+          "path": "attendance-pass",
+          "title": "출석 패스 발급 안내",
+          "icon": "📱",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81d7-a204-c4fc1f0acb26",
+          "file": "sash24/attendance-pass.md"
+        },
+        {
+          "path": "day-4",
+          "title": "4일차 안내",
+          "icon": "⭐",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81df-8643-c353f0453992",
+          "file": "sash24/day-4.md"
+        },
+        {
+          "path": "apply",
+          "title": "저 이제 지원하고 싶어요‼️",
+          "icon": "🔗",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8120-91b0-e428cec0006c",
+          "file": "sash24/apply.md"
+        },
+        {
+          "path": "interview",
+          "title": "SPARCS Service Hackathon 2024 우수 참가자 INTERVIEW",
+          "icon": "🎤",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-816f-9a3b-c9efd8bcad71",
+          "file": "sash24/interview.md"
+        },
+        {
+          "path": "faq",
+          "title": "질문과 답변",
+          "icon": "❓",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-817e-a814-c362d6cda307",
+          "file": "sash24/faq.md"
+        },
+        {
+          "path": "agreement",
+          "title": "지원서 관련 동의서 전문",
+          "icon": "📝",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8154-98ae-f655dcf1018e",
+          "file": "sash24/agreement.md"
+        },
+        {
+          "path": "agreement-2",
+          "title": "지원서 관련 동의서 전문 (1)",
+          "icon": "📝",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8156-b969-cdef28a40835",
+          "file": "sash24/agreement-2.md"
+        }
+      ]
+    },
+    {
+      "slug": "ssh24",
+      "code": "ssh24",
+      "name": "SPARCS 서비스 해커톤 2024",
+      "category": "hackathon",
+      "startDate": "2024-02-14",
+      "endDate": "2024-02-16",
+      "startTime": "13:00",
+      "endTime": "19:00",
+      "location": "KAIST 본원 N1, 대전드림아레나, 롯데시티호텔 대전",
+      "roles": {
+        "host": [
+          "대전광역시",
+          "KAIST"
+        ],
+        "organizer": [
+          "SPARCS"
+        ],
+        "sponsor": [
+          "엘리스",
+          "루센트블록",
+          "코아텍",
+          "위메이드",
+          "카이스트청년창업투자지주",
+          "프라이머사제파트너스",
+          "매쉬업벤처스"
+        ]
+      },
+      "icon": "🚩",
+      "cover": null,
+      "notionId": "17e3ff07-ff5b-81bf-bb7c-d525e0f3771e",
+      "summary": "![SPARCS 서비스 해커톤 2024 행사 사진](notion-asset:local-ssh24-recap-jpg)\n\n2024년 2월 14일 (수) ~ 16일 (금), KAIST 본원 N1 빌딩 117호, 대전 이스포츠 경기장, 롯데시티호텔 대전에서 진행\n\n대전광역시, KAIST 공동주최 / SPARCS 주관\n\n엘리스, 루센트블록, 코아텍, 위메이드, KAIST 청년창업투자지주, 프라이머사제파트너스, 매쉬업벤처스 후원\n\n**전국 대학생에게 SPARCS 소개 및 네트워킹 활성화를 위한 대회**\n\n- SPARCS 의 활동 과정인 교육, 기획, 개발을 행사에 그대로 압축 및 재현\n- 전국의 대학생들에게 대전시 및 KAIST 방문 기회 제공\n\n**전국 대학생 80명을 대상으로 한 대회**\n\n- 전국 20여개 대학에서 200명의 지원서 접수",
+      "file": "ssh24/index.md",
+      "pages": [
+        {
+          "path": "press",
+          "title": "SPARCS 서비스 해커톤 2024 보도자료",
+          "icon": "🎤",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8160-94a2-c0e11fde2f3d",
+          "file": "ssh24/press.md"
+        },
+        {
+          "path": "reviews",
+          "title": "SPARCS 서비스 해커톤 2024 참가자 후기",
+          "icon": "🎙️",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8141-83df-c6deac0c7ebb",
+          "file": "ssh24/reviews.md"
+        },
+        {
+          "path": "apply",
+          "title": "저 이제 지원하고 싶어요!",
+          "icon": "🔗",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8166-9fe0-f1d3b90365ee",
+          "file": "ssh24/apply.md"
+        },
+        {
+          "path": "interview",
+          "title": "SPARCS StartUp Hackathon 2023 우수팀 INTERVIEW",
+          "icon": "🎤",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8192-b37c-f14ffd06fffa",
+          "file": "ssh24/interview.md"
+        },
+        {
+          "path": "faq",
+          "title": "질문과 답변",
+          "icon": "❓",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81eb-94ed-d76028032a23",
+          "file": "ssh24/faq.md"
+        },
+        {
+          "path": "agreement",
+          "title": "지원서 관련 동의서 전문",
+          "icon": "📝",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81a7-b781-f2969064499d",
+          "file": "ssh24/agreement.md"
+        },
+        {
+          "path": "guide",
+          "title": "참가자 대상 안내",
+          "icon": "📣",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8111-a97c-d957a9a759ed",
+          "file": "ssh24/guide.md"
+        },
+        {
+          "path": "guide/hotel-activities",
+          "title": "호텔 주변 활동 가이드",
+          "icon": "🍽️",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8114-9177-f267970634fc",
+          "file": "ssh24/guide/hotel-activities.md"
+        },
+        {
+          "path": "guide/rooms",
+          "title": "숙소 방 배정",
+          "icon": "🛌",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81fc-8502-fb0ae4ac2cd8",
+          "file": "ssh24/guide/rooms.md"
+        },
+        {
+          "path": "guide/hotel-activities/1",
+          "title": "청담에일",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8115-b490-fb18965ab152",
+          "file": "ssh24/guide/hotel-activities/1.md"
+        },
+        {
+          "path": "guide/hotel-activities/2",
+          "title": "조림",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8124-b777-e19c03fa90f2",
+          "file": "ssh24/guide/hotel-activities/2.md"
+        },
+        {
+          "path": "guide/hotel-activities/3",
+          "title": "장호덕손만두 엑스포점",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8146-8bc4-d3ebd65f9cda",
+          "file": "ssh24/guide/hotel-activities/3.md"
+        },
+        {
+          "path": "guide/hotel-activities/4",
+          "title": "성심당 DCC점",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8155-bf92-c3689bc2f31a",
+          "file": "ssh24/guide/hotel-activities/4.md"
+        },
+        {
+          "path": "guide/hotel-activities/5",
+          "title": "브롱스 대전도룡점",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8159-9091-c35322cb9ea6",
+          "file": "ssh24/guide/hotel-activities/5.md"
+        },
+        {
+          "path": "guide/hotel-activities/6",
+          "title": "만리장성",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-815c-9598-d6f66550a433",
+          "file": "ssh24/guide/hotel-activities/6.md"
+        },
+        {
+          "path": "guide/hotel-activities/7",
+          "title": "LANGOLO",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-817a-89e5-c0a72e999d47",
+          "file": "ssh24/guide/hotel-activities/7.md"
+        },
+        {
+          "path": "guide/hotel-activities/8",
+          "title": "오씨 칼국수",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81ae-a3fd-e532899a084e",
+          "file": "ssh24/guide/hotel-activities/8.md"
+        },
+        {
+          "path": "guide/hotel-activities/9",
+          "title": "한밭수목원",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81be-93f5-e41869209c03",
+          "file": "ssh24/guide/hotel-activities/9.md"
+        },
+        {
+          "path": "guide/hotel-activities/10",
+          "title": "유성옥 도룡점",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81c4-88c1-db1d9472afd3",
+          "file": "ssh24/guide/hotel-activities/10.md"
+        },
+        {
+          "path": "guide/hotel-activities/11",
+          "title": "노이",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81c9-9033-f44a20c3d304",
+          "file": "ssh24/guide/hotel-activities/11.md"
+        },
+        {
+          "path": "guide/hotel-activities/12",
+          "title": "엑스포 과학공원",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81ca-877e-de56f3c6ef40",
+          "file": "ssh24/guide/hotel-activities/12.md"
+        },
+        {
+          "path": "guide/hotel-activities/13",
+          "title": "국립중앙과학관",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81df-bdb6-eba3a9db3119",
+          "file": "ssh24/guide/hotel-activities/13.md"
+        },
+        {
+          "path": "guide/hotel-activities/14",
+          "title": "참이맛감자탕&순대국",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81e4-9d16-edd087603a64",
+          "file": "ssh24/guide/hotel-activities/14.md"
+        },
+        {
+          "path": "guide/hotel-activities/15",
+          "title": "더 위스키",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8181-a6c1-fc7336e47c59",
+          "file": "ssh24/guide/hotel-activities/15.md"
+        },
+        {
+          "path": "guide/hotel-activities/16",
+          "title": "신세계 백화점",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81a9-8089-cef69eb27e6d",
+          "file": "ssh24/guide/hotel-activities/16.md"
+        },
+        {
+          "path": "guide/hotel-activities/17",
+          "title": "엑스포 수상공원",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81bc-bd58-c4dabddaa7a7",
+          "file": "ssh24/guide/hotel-activities/17.md"
+        },
+        {
+          "path": "guide/hotel-activities/18",
+          "title": "편백연가 도룡점",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81f2-bce9-fe42f0fb3851",
+          "file": "ssh24/guide/hotel-activities/18.md"
+        }
+      ]
+    },
+    {
+      "slug": "skyst23",
+      "code": "skyst23",
+      "name": "SKYST Conference 2023",
+      "category": "conference",
+      "startDate": "2023-11-12",
+      "endDate": "2023-11-12",
+      "startTime": "11:00",
+      "endTime": "18:00",
+      "location": "KAIST 서울캠퍼스 대강당 & 김동명 강의실 (회기동)",
+      "roles": {
+        "organizer": [
+          "SKYST"
+        ]
+      },
+      "icon": null,
+      "cover": null,
+      "notionId": "17e3ff07-ff5b-814e-b55a-fa894435a4a3",
+      "summary": "![SKYST Conference 2023 행사 사진](notion-asset:local-skyst23-recap-jpg)\n\n2023년 11월 12일 (일), KAIST 서울캠퍼스 1호관 대강당, 김동명 강의실에서 진행\n\n**서울대, 연세대, 고려대, KAIST 연합 Tech&Career 컨퍼런스**\n\n- 총 28개의 테크, 커리어, 단체 소개 세션 그리고 채용설명회\n- 4개 주최 단체, 7개 파트너 단체, 6개 후원사\n\n**4개 학교 재학/휴학/졸업생 220명 대상**\n\n**SPARCS 주요 서비스 PM 발표 세션 진행**\n\n- 조유민 OTL PM: KAIST 대표 서비스 OTL의 PM은 디자인을 한다\n- 오승빈 OTL TL: 수강신청 기간을 버텨라: AWS 아키텍처 개선 스토리\n- 정동진 선배님: 블록체인 MEV 서쳐가 되기까지",
+      "file": "skyst23/index.md",
+      "pages": [
+        {
+          "path": "skyst",
+          "title": "SKYST",
+          "icon": "🤝",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8147-b8c0-fc5aa6bc537a",
+          "file": "skyst23/skyst.md"
+        }
+      ]
+    },
+    {
+      "slug": "ssh23",
+      "code": "ssh23",
+      "name": "SPARCS 스타트업 해커톤 2023",
+      "category": "hackathon",
+      "startDate": "2023-01-27",
+      "endDate": "2023-01-29",
+      "startTime": "17:00",
+      "endTime": "19:00",
+      "location": "서울 영등포구 문래로 55 2층 올댓마인드",
+      "roles": {
+        "sponsor": [
+          "AWS Korea",
+          "채널코퍼레이션",
+          "보이저엑스",
+          "쿼드마이너",
+          "카펜스트리트",
+          "코르카",
+          "프라이머",
+          "클라썸",
+          "NAVER D2",
+          "프라이머사제파트너스",
+          "카이스트청년창업투자지주",
+          "에이티넘인베스트먼트",
+          "두나무앤파트너스"
+        ]
+      },
+      "icon": "🚀",
+      "cover": "a0134",
+      "notionId": "17e3ff07-ff5b-81de-aaa1-dee533ba7306",
+      "summary": "![SPARCS 스타트업 해커톤 2023 행사 사진](notion-asset:local-sh23-recap-jpg)\n\n2023년 1월 27일 (금) ~ 1월 29일 (일), 서울 영등포구 문래동 올댓마인드에서 진행\n\n**투자&멘토링과 함께한 창업 중심 해커톤**\n\n- 전국 대학생 기획자, 디자이너, 개발자 참여\n- 광범위한 주제 제시\n- VC 심사역&대표님의 멘토링\n- AWS 자원 지원\n- 해커톤 4주 후 최종 Demo Day 진행\n\n**전국 대학생 96명을 대상으로 한 대회**\n\n- 총 266개의 지원서 접수\n- 서울대, 연세대, 고려대, 서강대, 성균관대, 한양대, 중앙대, 경희대, 한국외대, 서울시립대, KAIST, POSTECH, GIST, UNIST, DGIST 등 70여개 대학\n- 96명의 참가자 선발",
+      "file": "ssh23/index.md",
+      "pages": [
+        {
+          "path": "reviews",
+          "title": "SPARCS 스타트업 해커톤 2023 참가자 후기",
+          "icon": "🎙️",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81eb-89e3-f8910c7fe5fd",
+          "file": "ssh23/reviews.md"
+        },
+        {
+          "path": "schedule",
+          "title": "상세 일정이 어떻게 되나요?",
+          "icon": "📅",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-819b-892d-f4f04d097218",
+          "file": "ssh23/schedule.md"
+        },
+        {
+          "path": "apply",
+          "title": "저 이제 지원하고 싶어요!",
+          "icon": "🔗",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8177-8100-eefd5683f42a",
+          "file": "ssh23/apply.md"
+        },
+        {
+          "path": "sponsors",
+          "title": "후원사",
+          "icon": "🔥",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81a6-aca2-debddd81bd10",
+          "file": "ssh23/sponsors.md"
+        },
+        {
+          "path": "faq",
+          "title": "아직 궁금한 점이 있어요!",
+          "icon": "❓",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81e1-8568-d63bda98511c",
+          "file": "ssh23/faq.md"
+        },
+        {
+          "path": "agreement",
+          "title": "지원서 관련 동의서 전문",
+          "icon": "📝",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-812b-b0ea-e9d5b505389a",
+          "file": "ssh23/agreement.md"
+        },
+        {
+          "path": "primer-guide",
+          "title": "프라이머 해커톤 사이트 가이드라인",
+          "icon": "🏁",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-818d-abf0-e3287f6a4cdd",
+          "file": "ssh23/primer-guide.md"
+        },
+        {
+          "path": "announcement",
+          "title": "참가자 발표",
+          "icon": "🎉",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-812d-a1b6-c0982f96d8bf",
+          "file": "ssh23/announcement.md"
+        },
+        {
+          "path": "channeltalk",
+          "title": "채널톡 사용법",
+          "icon": "notion-asset:a0185",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-8183-85a4-db1026537bd2",
+          "file": "ssh23/channeltalk.md"
+        },
+        {
+          "path": "channeltalk-profile",
+          "title": "채널톡 프로필 이름 변경 안내",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81e9-a9bc-e349e2ceabac",
+          "file": "ssh23/channeltalk-profile.md"
+        },
+        {
+          "path": "team-building",
+          "title": "팀빌딩 관련 공지 (Zoom 세션, 웹사이트)",
+          "icon": null,
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81e1-a5b5-d92d2978b4d0",
+          "file": "ssh23/team-building.md"
+        },
+        {
+          "path": "theme",
+          "title": "주제 공지",
+          "icon": "🚩",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81be-82de-d6099386cb66",
+          "file": "ssh23/theme.md"
+        },
+        {
+          "path": "cloud",
+          "title": "클라우드 자원 이용 방법",
+          "icon": "💻",
+          "cover": "a0194",
+          "notionId": "17e3ff07-ff5b-8145-b527-e73424fb6dd5",
+          "file": "ssh23/cloud.md"
+        },
+        {
+          "path": "github",
+          "title": "GitHub 사용 공지",
+          "icon": "notion-asset:a0202",
+          "cover": null,
+          "notionId": "17e3ff07-ff5b-81e3-b88b-e1e301c6569f",
+          "file": "ssh23/github.md"
+        },
+        {
+          "path": "submission",
+          "title": "기획 / 개발 / 디자인 결과물 제출",
+          "icon": "🗞️",
+          "cover": "a0207",
+          "notionId": "17e3ff07-ff5b-8199-bb63-ed17810f574f",
+          "file": "ssh23/submission.md"
+        }
+      ]
+    }
+  ]
+}

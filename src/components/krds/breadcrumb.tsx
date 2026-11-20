@@ -2,11 +2,16 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { resolveBreadcrumb } from '@/utils/breadcrumb'
+import { resolveBreadcrumb, type Crumb } from '@/utils/breadcrumb'
 
-export default function Breadcrumb() {
+type Props = {
+  /** 메뉴에 없는 하위 페이지(행사 페이지 등)의 경로. 마지막이 현재 페이지. */
+  trail?: Crumb[]
+}
+
+export default function Breadcrumb({ trail }: Props = {}) {
   const pathname = usePathname()
-  const crumbs = resolveBreadcrumb(pathname ?? '/')
+  const crumbs = resolveBreadcrumb(pathname ?? '/', trail)
 
   return (
     <nav
@@ -16,7 +21,10 @@ export default function Breadcrumb() {
     >
       <ol className="breadcrumb">
         {crumbs.map((crumb, index) => (
-          <li key={crumb.label} className={index === 0 ? 'home' : undefined}>
+          <li
+            key={`${index}-${crumb.label}`}
+            className={index === 0 ? 'home' : undefined}
+          >
             {crumb.href ? (
               <Link href={crumb.href} className="txt">
                 {crumb.label}
