@@ -37,4 +37,27 @@ test.describe('admin CRUD smoke', () => {
       ).toHaveAttribute('href', href)
     }
   })
+
+  test('long edit drawers scroll down to their save button', async ({
+    context,
+    page,
+  }) => {
+    await seedAdminSession(context)
+    // 행사 폼(기관 선택, 본문 편집기)은 화면보다 길다. 서랍 본문이 스크롤되어야 아래쪽
+    // 입력란과 저장 버튼에 닿는다.
+    await page.setViewportSize({ width: 1280, height: 720 })
+
+    for (const path of ['/admin/businesses', '/admin/business-pages']) {
+      await page.goto(path)
+      await page.getByRole('button', { name: '수정' }).first().click()
+      const dialog = page.getByRole('dialog')
+      const save = dialog.getByRole('button', { name: '저장' })
+
+      await expect(save).toBeVisible()
+      await save.scrollIntoViewIfNeeded()
+      await expect(save).toBeInViewport()
+      await dialog.getByRole('button', { name: '취소' }).click()
+      await expect(dialog).toHaveCount(0)
+    }
+  })
 })

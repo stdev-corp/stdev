@@ -74,7 +74,14 @@ export function FormDrawer({
                 event.preventDefault()
                 submit(new FormData(event.currentTarget))
               }}
-              style={{ display: 'flex', flexDirection: 'column', flex: 1 }}
+              // minHeight 0: 폼이 내용 높이만큼 늘어나지 않고 서랍 높이에 맞춰야
+              // Drawer.Body가 스크롤된다. 없으면 긴 폼의 아래쪽과 저장 버튼에 닿을 수 없다.
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                flex: 1,
+                minHeight: 0,
+              }}
             >
               <Drawer.Body>
                 <Stack gap={4}>{children}</Stack>
