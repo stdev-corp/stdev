@@ -12,7 +12,8 @@ type HeadingProps = ComponentPropsWithoutRef<'h1'> & { node?: unknown }
 function demote(level: 2 | 3 | 4 | 5 | 6, className?: string) {
   const Tag = `h${level}` as const
   function Heading({ node: _node, ...props }: HeadingProps) {
-    return <Tag {...props} className={className} />
+    // 각주 제목(sr-only)처럼 문법이 붙인 클래스는 덮어쓰지 않는다.
+    return <Tag {...props} className={className ?? props.className} />
   }
   Heading.displayName = `MarkdownHeading${level}`
   return Heading

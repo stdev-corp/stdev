@@ -77,6 +77,13 @@ describe('<MarkdownView>', () => {
     expect(container.querySelector('h3')).not.toHaveClass('g-tit-line')
   })
 
+  it('각주 제목(sr-only)의 클래스를 그대로 둔다', async () => {
+    const { container } = await renderAsyncServerComponent(() =>
+      MarkdownView({ content: '본문[^1]\n\n[^1]: 각주' }),
+    )
+    expect(container.querySelector('#footnote-label')).toHaveClass('sr-only')
+  })
+
   it('titleLine이 없으면 제목에 클래스를 붙이지 않는다', async () => {
     const { container } = await renderAsyncServerComponent(() =>
       MarkdownView({ content: '# 정관' }),

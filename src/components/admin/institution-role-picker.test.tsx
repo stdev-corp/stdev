@@ -53,19 +53,19 @@ describe('InstitutionRolePicker', () => {
         .getAllByRole('combobox')
         .map((select) => select.getAttribute('aria-label')),
     ).toEqual([
-      '주최 기관 추가',
-      '주관 기관 추가',
-      '후원 기관 추가',
-      '협력 기관 추가',
+      '주최 기관 선택',
+      '주관 기관 선택',
+      '후원 기관 선택',
+      '협력 기관 선택',
     ])
     expect(screen.getAllByText('선택한 기관이 없습니다.')).toHaveLength(4)
     for (const role of ['host', 'organizer', 'sponsor', 'partner'] as const) {
       expect(hidden(container, role)).toBe('')
     }
     expect(
-      optionNames(screen.getByRole('combobox', { name: '주최 기관 추가' })),
+      optionNames(screen.getByRole('combobox', { name: '주최 기관 선택' })),
     ).toEqual([
-      '주최 기관 추가…',
+      '주최 기관 선택…',
       '과학기술정보통신부',
       '한국과학창의재단',
       '에스티데브',
@@ -87,17 +87,20 @@ describe('InstitutionRolePicker', () => {
   it('adds an institution via the select and removes it from that role options', async () => {
     const { container, user } = renderPicker({ host: [1] })
 
-    const hostSelect = screen.getByRole('combobox', { name: '주최 기관 추가' })
+    const hostSelect = screen.getByRole('combobox', { name: '주최 기관 선택' })
     expect(optionNames(hostSelect)).not.toContain('과학기술정보통신부')
 
     await user.selectOptions(hostSelect, '2')
+    // 고르기만 해서는 추가되지 않는다(키보드로 훑는 동안 잘못 추가되지 않도록).
+    expect(hidden(container, 'host')).toBe('1')
+    await user.click(screen.getByRole('button', { name: '주최 기관 추가' }))
 
     expect(hidden(container, 'host')).toBe('1,2')
     expect(hostSelect).toHaveValue('')
-    expect(optionNames(hostSelect)).toEqual(['주최 기관 추가…', '에스티데브'])
+    expect(optionNames(hostSelect)).toEqual(['주최 기관 선택…', '에스티데브'])
     // 다른 역할에는 여전히 고를 수 있다.
     expect(
-      optionNames(screen.getByRole('combobox', { name: '후원 기관 추가' })),
+      optionNames(screen.getByRole('combobox', { name: '후원 기관 선택' })),
     ).toContain('한국과학창의재단')
     expect(hidden(container, 'sponsor')).toBe('')
   })
@@ -105,11 +108,27 @@ describe('InstitutionRolePicker', () => {
   it('ignores picking the placeholder option', () => {
     const { container } = renderPicker({ sponsor: [3] })
 
-    fireEvent.change(screen.getByRole('combobox', { name: '후원 기관 추가' }), {
+    fireEvent.change(screen.getByRole('combobox', { name: '후원 기관 선택' }), {
       target: { value: '' },
     })
 
+    expect(
+      screen.getByRole('button', { name: '후원 기관 추가' }),
+    ).toBeDisabled()
     expect(hidden(container, 'sponsor')).toBe('3')
+  })
+
+  it('does not add institutions while browsing the select with the keyboard', () => {
+    const { container } = renderPicker()
+    const select = screen.getByRole('combobox', { name: '주관 기관 선택' })
+
+    // 화살표 키로 옵션을 훑으면 change가 여러 번 일어난다.
+    for (const value of ['1', '2', '3']) {
+      fireEvent.change(select, { target: { value } })
+    }
+
+    expect(hidden(container, 'organizer')).toBe('')
+    expect(select).toHaveValue('3')
   })
 
   it('reorders institutions with the up and down buttons', async () => {
@@ -155,7 +174,7 @@ describe('InstitutionRolePicker', () => {
 
     expect(hidden(container, 'host')).toBe('2')
     expect(
-      optionNames(screen.getByRole('combobox', { name: '주최 기관 추가' })),
+      optionNames(screen.getByRole('combobox', { name: '주최 기관 선택' })),
     ).toContain('과학기술정보통신부')
 
     await user.click(

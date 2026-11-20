@@ -244,7 +244,15 @@ async function main() {
       const ref = `${ASSET_SCHEME}${key}`
       out = out
         .split('\n')
-        .filter((line) => !(line.trim().startsWith('::') && line.includes(ref)))
+        // 컨테이너(:::callout 등)는 아이콘 속성만 떼고, 한 줄 블록(::image, ::video)은
+        // 줄을 통째로 뺀다. 컨테이너 여는 줄을 지우면 닫는 :::가 글자로 남는다.
+        .flatMap((line) => {
+          if (!line.includes(ref)) return [line]
+          if (/^\s*:{3,}/.test(line)) {
+            return [line.replace(new RegExp(`\\s*[a-z-]+="${ref}"`, 'g'), '')]
+          }
+          return line.trim().startsWith('::') ? [] : [line]
+        })
         .join('\n')
         .replace(
           new RegExp(`!\\[[^\\]]*\\]\\(${ref}\\)(\\\\\\n\\s*)?`, 'g'),
@@ -363,7 +371,10 @@ async function main() {
       })),
     )
 
-    let businessId: number
+    let businessId: number | null
+    // 이미 채워진 행사는 하위 페이지도 건드리지 않는다(관리자가 지우거나 옮긴 페이지를
+    // 되살리지 않도록).
+    let touchPages = true
     if (existing) {
       matched.add(existing.id)
       // 슬러그·노션 ID·본문·요약 중 하나라도 있으면 이미 옮겼거나 관리자가 채운 행사다.
@@ -375,6 +386,7 @@ async function main() {
       if (!untouched && !force) {
         log(`행사 건너뜀(이미 채워짐): ${existing.name} #${existing.id}`)
         businessId = existing.id
+        touchPages = false
       } else {
         log(`행사 채움: ${existing.name} #${existing.id} ← ${event.name}`)
         if (!dryRun) {
@@ -387,24 +399,39 @@ async function main() {
       }
     } else {
       log(`행사 추가: ${event.name}`)
-      if (dryRun) continue
-      const created = await prisma.business.create({
-        data: {
-          ...data,
-          name: event.name,
-          code: event.code,
-          institutions: { create: links },
-        },
-      })
-      businessId = created.id
+      businessId = null
+      if (!dryRun) {
+        const created = await prisma.business.create({
+          data: {
+            ...data,
+            name: event.name,
+            code: event.code,
+            institutions: { create: links },
+          },
+        })
+        businessId = created.id
+      }
     }
 
+    if (!touchPages) continue
     for (const page of event.pages) {
-      const current = dryRun
-        ? null
-        : await prisma.businessPage.findUnique({
-            where: { businessId_path: { businessId, path: page.path } },
-          })
+      // 노션 ID로 먼저 찾는다. 관리자가 경로를 바꿔도 같은 페이지로 알아본다.
+      const current =
+        (await prisma.businessPage.findUnique({
+          where: { notionId: page.notionId },
+        })) ??
+        (businessId
+          ? await prisma.businessPage.findUnique({
+              where: { businessId_path: { businessId, path: page.path } },
+            })
+          : null)
+      if (current && !force) continue
+      if (dryRun || !businessId) {
+        log(
+          `  하위 페이지 ${current ? '갱신' : '추가'}: ${event.slug}/${page.path}`,
+        )
+        continue
+      }
       const pageData = {
         title: page.title,
         icon: iconOf(page.icon),

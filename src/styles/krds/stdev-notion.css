@@ -730,6 +730,8 @@ img.notion-page-icon {
 
 /* ------------------------------------------------------------------ *
  * 행사 목록(KRDS). /hackathon, /conference
+ * 목록은 .g-conts-area 안에 놓이므로 그 p 규칙(.g-conts-area p)보다 구체적이도록
+ * .event-list를 앞에 붙인다.
  * ------------------------------------------------------------------ */
 .event-list {
   margin: 0;
@@ -745,7 +747,7 @@ img.notion-page-icon {
     var(--krds-light-color-divider-gray);
 }
 
-.event-item-head {
+.event-list .event-item-head {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -753,7 +755,7 @@ img.notion-page-icon {
   gap: var(--krds-number-3) var(--krds-number-8);
 }
 
-.event-item-tit {
+.event-list .event-item-tit {
   margin: 0;
   font-size: var(--krds-pc-font-size-heading-small);
   font-weight: var(--krds-font-weight-bold);
@@ -761,53 +763,53 @@ img.notion-page-icon {
   word-break: keep-all;
 }
 
-.event-item-tit a {
+.event-list .event-item-tit a {
   color: inherit;
 }
 
-.event-item-tit a:hover,
-.event-item-tit a:focus-visible {
+.event-list .event-item-tit a:hover,
+.event-list .event-item-tit a:focus-visible {
   text-decoration: underline;
 }
 
-.event-item-period {
+.event-list .event-item-period {
   margin: 0;
   color: var(--krds-light-color-text-subtle);
   font-size: var(--krds-pc-font-size-body-large);
 }
 
-.event-item-meta {
+.event-list .event-item-meta {
   display: grid;
   gap: var(--krds-number-3);
   margin: var(--krds-number-8) 0 0;
   font-size: var(--krds-pc-font-size-body-small);
 }
 
-.event-item-meta > div {
+.event-list .event-item-meta > div {
   display: flex;
   gap: var(--krds-number-5);
 }
 
-.event-item-meta dt {
+.event-list .event-item-meta dt {
   flex: none;
   min-width: var(--krds-number-16);
   color: var(--krds-light-color-text-subtle);
   font-weight: var(--krds-font-weight-bold);
 }
 
-.event-item-meta dd {
+.event-list .event-item-meta dd {
   margin: 0;
 }
 
-.event-item-meta dd a {
+.event-list .event-item-meta dd a {
   color: inherit;
   text-decoration: underline;
 }
 
-.event-item-summary {
+.event-list .event-item-summary {
   margin-top: var(--krds-number-8);
 }
 
-.event-item-more {
+.event-list .event-item-more {
   margin: var(--krds-number-8) 0 0;
 }

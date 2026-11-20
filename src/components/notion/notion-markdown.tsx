@@ -85,13 +85,31 @@ type Props = {
   content: string
   /** ::page 지시어를 실제 주소로 바꾸는 표. 없으면 링크 대신 제목만 보인다. */
   pageLinks?: NotionPageLinks
+  /**
+   * 모든 링크를 새 창으로 연다. 관리자 미리보기에서 링크를 눌러 편집 중인 내용을
+   * 잃지 않도록 쓴다.
+   */
+  openLinksInNewTab?: boolean
 }
+
+/** 새 창으로 여는 링크의 속성. 사이트의 다른 새 창 링크처럼 알림 제목을 단다. */
+const NEW_WINDOW = {
+  target: '_blank',
+  rel: 'noopener noreferrer',
+  title: '새 창 열림',
+} as const
 
 /**
  * 노션 확장 마크다운(@/utils/notion-markdown 참고)을 노션 블록 모양으로 그린다.
  * 서버 페이지와 관리자 미리보기에서 같이 쓰므로 서버 전용 코드를 두지 않는다.
  */
-export default function NotionMarkdown({ content, pageLinks = {} }: Props) {
+export default function NotionMarkdown({
+  content,
+  pageLinks = {},
+  openLinksInNewTab = false,
+}: Props) {
+  const sameWindow = (url: string) =>
+    !openLinksInNewTab && (isInternal(url) || url.startsWith('mailto:'))
   const components = {
     h1: heading(1),
     h2: heading(2),
@@ -108,15 +126,16 @@ export default function NotionMarkdown({ content, pageLinks = {} }: Props) {
       if (!url) {
         return <span {...props} />
       }
-      return isInternal(url) || url.startsWith('mailto:') ? (
+      return sameWindow(url) ? (
         <a href={url} {...props} className="notion-link" />
       ) : (
         <a
           href={url}
           {...props}
           className="notion-link"
-          target="_blank"
-          rel="noopener noreferrer"
+          {...NEW_WINDOW}
+          // 마크다운 링크 제목이 있으면 새 창 알림을 덧붙인다.
+          title={props.title ? `${props.title} - 새 창 열림` : NEW_WINDOW.title}
         />
       )
     },
@@ -183,7 +202,7 @@ export default function NotionMarkdown({ content, pageLinks = {} }: Props) {
       }
       return (
         <p className="notion-page-link">
-          <a href={link.href}>
+          <a href={link.href} {...(openLinksInNewTab ? NEW_WINDOW : {})}>
             <NotionIcon
               icon={link.icon ?? '📄'}
               className="notion-page-link-icon"
@@ -222,8 +241,7 @@ export default function NotionMarkdown({ content, pageLinks = {} }: Props) {
         <a
           className="notion-bookmark"
           href={url}
-          target={isInternal(url) ? undefined : '_blank'}
-          rel={isInternal(url) ? undefined : 'noopener noreferrer'}
+          {...(sameWindow(url) ? {} : NEW_WINDOW)}
         >
           <span className="notion-bookmark-text">
             <span className="notion-bookmark-title">

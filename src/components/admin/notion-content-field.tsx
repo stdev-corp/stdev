@@ -142,7 +142,7 @@ export function NotionContentField({
           data-testid={`${name}-preview`}
         >
           <div className="notion-page" style={previewStyle}>
-            <NotionMarkdown content={value} />
+            <NotionMarkdown content={value} openLinksInNewTab />
           </div>
         </Box>
       )}

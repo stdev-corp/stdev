@@ -26,6 +26,13 @@ type Props = {
  */
 export function InstitutionRolePicker({ institutions, defaultValue }: Props) {
   const [selected, setSelected] = useState(defaultValue)
+  // 역할별로 드롭다운에서 고른(아직 추가하지 않은) 기관 ID
+  const [pending, setPending] = useState<Record<BusinessRole, string>>({
+    host: '',
+    organizer: '',
+    sponsor: '',
+    partner: '',
+  })
 
   function update(role: BusinessRole, ids: number[]) {
     setSelected((current) => ({ ...current, [role]: ids }))
@@ -112,26 +119,47 @@ export function InstitutionRolePicker({ institutions, defaultValue }: Props) {
                 </Flex>
               ))}
             </Stack>
-            <NativeSelect.Root size="sm">
-              <NativeSelect.Field
+            {/*
+              선택만으로는 추가하지 않는다. 키보드 화살표로 고르는 동안 change가
+              계속 일어나 원치 않는 기관이 추가되기 때문이다(WCAG 3.2.2).
+            */}
+            <Flex gap={2}>
+              <NativeSelect.Root size="sm" flex="1">
+                <NativeSelect.Field
+                  aria-label={`${ROLE_LABELS[role]} 기관 선택`}
+                  value={pending[role]}
+                  onChange={(event) =>
+                    setPending((current) => ({
+                      ...current,
+                      [role]: event.target.value,
+                    }))
+                  }
+                >
+                  <option value="">{ROLE_LABELS[role]} 기관 선택…</option>
+                  {available.map((institution) => (
+                    <option key={institution.id} value={institution.id}>
+                      {institution.nameKo}
+                    </option>
+                  ))}
+                </NativeSelect.Field>
+                <NativeSelect.Indicator />
+              </NativeSelect.Root>
+              <Button
+                size="sm"
+                variant="outline"
                 aria-label={`${ROLE_LABELS[role]} 기관 추가`}
-                value=""
-                onChange={(event) => {
-                  const id = Number(event.target.value)
-                  if (id) {
+                disabled={!pending[role]}
+                onClick={() => {
+                  const id = Number(pending[role])
+                  if (id && !ids.includes(id)) {
                     update(role, [...ids, id])
                   }
+                  setPending((current) => ({ ...current, [role]: '' }))
                 }}
               >
-                <option value="">{ROLE_LABELS[role]} 기관 추가…</option>
-                {available.map((institution) => (
-                  <option key={institution.id} value={institution.id}>
-                    {institution.nameKo}
-                  </option>
-                ))}
-              </NativeSelect.Field>
-              <NativeSelect.Indicator />
-            </NativeSelect.Root>
+                추가
+              </Button>
+            </Flex>
           </Box>
         )
       })}

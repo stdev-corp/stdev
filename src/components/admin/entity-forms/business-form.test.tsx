@@ -196,13 +196,15 @@ describe('BusinessFormDrawer', () => {
     await user.selectOptions(screen.getByLabelText('분류'), 'program')
     await user.type(screen.getByLabelText('시작 시각'), '09:30')
     await user.selectOptions(
-      screen.getByRole('combobox', { name: '주최 기관 추가' }),
+      screen.getByRole('combobox', { name: '주최 기관 선택' }),
       '3',
     )
+    await user.click(screen.getByRole('button', { name: '주최 기관 추가' }))
     await user.selectOptions(
-      screen.getByRole('combobox', { name: '후원 기관 추가' }),
+      screen.getByRole('combobox', { name: '후원 기관 선택' }),
       '2',
     )
+    await user.click(screen.getByRole('button', { name: '후원 기관 추가' }))
     await user.click(screen.getByRole('button', { name: '저장' }))
 
     await waitFor(() => expect(action).toHaveBeenCalledTimes(1))

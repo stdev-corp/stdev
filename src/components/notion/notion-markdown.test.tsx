@@ -169,8 +169,49 @@ describe('<NotionMarkdown>', () => {
       expect(link).toHaveAttribute('href', 'https://example.com/path')
       expect(link).toHaveAttribute('target', '_blank')
       expect(link).toHaveAttribute('rel', 'noopener noreferrer')
-      expect(link).toHaveAttribute('title', '설명')
+      // 사이트의 다른 새 창 링크처럼 새 창 알림을 단다.
+      expect(link).toHaveAttribute('title', '설명 - 새 창 열림')
       expect(link).toHaveClass('notion-link')
+    })
+
+    it('제목 없는 외부 링크와 북마크에도 새 창 알림을 단다', () => {
+      const { root } = renderMarkdown(
+        '[외부](https://example.com)\n\n::bookmark{url="https://example.com/b" title="북마크"}',
+      )
+      expect(screen.getByRole('link', { name: '외부' })).toHaveAttribute(
+        'title',
+        '새 창 열림',
+      )
+      expect(root.querySelector('a.notion-bookmark')).toHaveAttribute(
+        'title',
+        '새 창 열림',
+      )
+    })
+
+    it('openLinksInNewTab이면 내부 링크·북마크·하위 페이지 링크도 새 창으로 연다', () => {
+      const { container: root } = render(
+        <NotionMarkdown
+          openLinksInNewTab
+          content={
+            '[소개](/intro/about)\n\n::bookmark{url="/intro/history" title="연혁"}\n\n::page{path="faq"}'
+          }
+          pageLinks={{
+            ':faq': { href: '/hackathon/dsf26/faq', title: 'FAQ', icon: null },
+          }}
+        />,
+      )
+      expect(screen.getByRole('link', { name: '소개' })).toHaveAttribute(
+        'target',
+        '_blank',
+      )
+      expect(root.querySelector('a.notion-bookmark')).toHaveAttribute(
+        'target',
+        '_blank',
+      )
+      expect(screen.getByRole('link', { name: /FAQ/ })).toHaveAttribute(
+        'target',
+        '_blank',
+      )
     })
 
     it('mailto 링크는 허용하되 새 창으로 열지 않는다', () => {

@@ -25,6 +25,7 @@ import type {
 import { safeUrl } from '@/utils/notion-markdown'
 import {
   CATEGORY_LABELS,
+  isImageIcon,
   isValidPagePath,
   isValidSlug,
   normalizeNotionId,
@@ -154,7 +155,8 @@ async function maybeDeleteUnreferencedFile(
     },
   })
 
-  if (count === 0) {
+  // 본문(::video 등)이 주소를 직접 쓰고 있으면 S3 객체는 남겨 둔다.
+  if (count === 0 && (await countContentReferences(url)) === 0) {
     await bestEffortDeleteManagedAsset(url)
   }
 }
@@ -232,9 +234,10 @@ function optionalIcon(formData: FormData) {
   if (!icon) {
     return null
   }
-  if (/^https:/.test(icon) || icon.startsWith('/')) {
-    // 공개 페이지 렌더러와 같은 규칙으로 검사해야 저장 뒤 아이콘이 사라지지 않는다.
-    if (!safeUrl(icon)) {
+  if (/^(https?:|\/)/.test(icon)) {
+    // 공개 페이지 렌더러(isImageIcon + safeUrl)와 같은 규칙으로 검사해야 저장 뒤
+    // 아이콘이 사라지거나 글자로 보이지 않는다.
+    if (!isImageIcon(icon) || !safeUrl(icon)) {
       throw new Error('아이콘 주소가 올바르지 않습니다.')
     }
     return icon
@@ -494,6 +497,8 @@ export async function updateFileAsset(formData: FormData) {
   })
   const { file, url } = requiredUrlOrUpload(formData, 'file', 'url')
   const uploaded = file ? await uploadAsset(file, 'files') : null
+  // 노션에서 옮긴 동영상처럼 PDF가 아닌 파일도 주소를 바꾸지 않으면 그대로 둔다.
+  const keepsUrl = !uploaded && Boolean(existing?.url) && url === existing?.url
 
   try {
     await withMutationMessage(
@@ -502,10 +507,13 @@ export async function updateFileAsset(formData: FormData) {
           where: { id: recordId(formData) },
           data: {
             filename: uploaded?.filename ?? text(formData, 'filename'),
-            url: uploaded?.url ?? requireSafePdfUrl(url, '파일 URL'),
+            url:
+              uploaded?.url ??
+              (keepsUrl ? url : requireSafePdfUrl(url, '파일 URL')),
             mimeType:
               uploaded?.mimeType ??
               optionalText(formData, 'mimeType') ??
+              (keepsUrl ? existing?.mimeType : null) ??
               'application/pdf',
             prefix: uploaded?.prefix ?? 'files',
           },
@@ -776,6 +784,11 @@ export async function deleteFileAsset(formData: FormData) {
   const existing = await prisma.fileAsset.findUnique({
     where: { id: recordId(formData) },
   })
+  if (existing?.url && (await countContentReferences(existing.url)) > 0) {
+    throw new Error(
+      '파일 항목이 행사 본문이나 소개 글에서 사용 중이어서 삭제할 수 없습니다. 본문에서 파일 주소를 먼저 지워주세요.',
+    )
+  }
   await withDeleteMessage(
     () => prisma.fileAsset.delete({ where: { id: recordId(formData) } }),
     '파일',

@@ -265,15 +265,15 @@ describe('business actions', () => {
       expect(createdData()).toMatchObject({ icon })
     })
 
-    it.each([
-      ['three characters', 'abc'],
-      ['http URL', 'http://example.com/icon.png'],
-    ])('rejects a non-emoji, non-URL icon (%s)', async (_label, icon) => {
-      await expect(createBusiness(businessForm({ icon }))).rejects.toThrow(
-        '아이콘은 이모지 한 글자 또는 이미지 주소여야 합니다.',
-      )
-      expect(prismaMock.business.create).not.toHaveBeenCalled()
-    })
+    it.each([['three characters', 'abc']])(
+      'rejects a non-emoji, non-URL icon (%s)',
+      async (_label, icon) => {
+        await expect(createBusiness(businessForm({ icon }))).rejects.toThrow(
+          '아이콘은 이모지 한 글자 또는 이미지 주소여야 합니다.',
+        )
+        expect(prismaMock.business.create).not.toHaveBeenCalled()
+      },
+    )
 
     it.each([
       ['protocol-relative path', '//evil.example.com/icon.png'],
@@ -281,6 +281,10 @@ describe('business actions', () => {
       ['https URL with a space in the host', 'https://exa mple.com/x.png'],
       // 브라우저가 https://evil.example.com 으로 읽는 경로
       ['backslash path', '/\\evil.example.com/x.png'],
+      ['http URL', 'http://example.com/icon.png'],
+      // new URL()은 받아들이지만 렌더러(isImageIcon)는 글자로 보여 주는 값
+      ['https without slashes', 'https:example.com/icon.png'],
+      ['https with one slash', 'https:/example.com/icon.png'],
       ['path with a space', '/images/a b.png'],
     ])('rejects an unsafe icon address (%s)', async (_label, icon) => {
       await expect(createBusiness(businessForm({ icon }))).rejects.toThrow(
