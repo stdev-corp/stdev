@@ -31,6 +31,8 @@ import {
   pageTitleText,
   renderBlocks,
   rowProperties,
+  registerArchivedFiles,
+  type ArchivedFile,
   type AssetRef,
   type ConvertContext,
   type PageTarget,
@@ -113,6 +115,7 @@ function snapshotFor(snapshots: Map<string, PageSnapshot>, id: string) {
 async function main() {
   const snapshots = await loadSnapshots()
   const assets = new Map<string, AssetRef>()
+  const archived: ArchivedFile[] = []
   const warnings: string[] = []
 
   // 노션 ID → 새 주소 표
@@ -237,6 +240,7 @@ async function main() {
       redactions: REDACTED_BLOCKS,
       rowPages,
       assets,
+      archived,
       warnings,
       pageTitle: title,
     }
@@ -505,6 +509,7 @@ async function main() {
     nameKo,
     url: INSTITUTION_URLS[nameKo] ?? null,
   }))
+  registerArchivedFiles(assets, archived)
   bundle.assets = [...assets.values()]
   files.set('bundle.json', `${JSON.stringify(bundle, null, 2)}\n`)
 
