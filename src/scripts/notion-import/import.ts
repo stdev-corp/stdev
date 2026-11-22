@@ -151,6 +151,13 @@ async function main() {
     return 'bin'
   }
 
+  /** 보관 파일의 형식. 대부분 PDF이고 보도자료 원문은 한글(HWP) 파일이다. */
+  const FILE_TYPES: Record<string, string> = {
+    pdf: 'application/pdf',
+    hwp: 'application/x-hwp',
+    hwpx: 'application/hwp+zip',
+  }
+
   const assetUrls = new Map<string, string>()
   const assetIds = new Map<string, number>()
 
@@ -192,7 +199,7 @@ async function main() {
       asset.kind === 'video'
         ? 'video/mp4'
         : asset.kind === 'file'
-          ? 'application/pdf'
+          ? (FILE_TYPES[extension] ?? 'application/octet-stream')
           : type && type.startsWith('image/')
             ? type
             : `image/${extension === 'jpg' ? 'jpeg' : extension === 'svg' ? 'svg+xml' : extension}`

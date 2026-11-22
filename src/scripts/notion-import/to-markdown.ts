@@ -44,8 +44,20 @@ export type ConvertContext = {
   /** 데이터베이스 행 페이지 ID → 하위 페이지 경로 */
   rowPages: Map<string, PageTarget>
   assets: Map<string, AssetRef>
+  /**
+   * 본문에 링크하지 않고 S3에 보관만 하는 첨부(데이터베이스 행 본문의 파일 등).
+   * 모든 페이지를 바꾼 뒤 registerArchivedFiles로 자산 목록 끝에 붙인다.
+   */
+  archived: ArchivedFile[]
   warnings: string[]
   pageTitle: string
+}
+
+export type ArchivedFile = {
+  source: string
+  blockId: string
+  filename: string
+  alt: string
 }
 
 export const ASSET_SCHEME = 'notion-asset:'
@@ -477,6 +489,27 @@ function imageSource(
 }
 
 /** 같은 원본은 한 번만 올리도록 원본 주소로 키를 만든다. */
+function addAsset(
+  assets: Map<string, AssetRef>,
+  kind: AssetKind,
+  source: string,
+  blockId: string,
+  filename: string,
+  alt: string,
+) {
+  const identity = assetIdentity(source)
+  let key = [...assets.values()].find(
+    (asset) => assetIdentity(asset.source) === identity,
+  )?.key
+  if (!key) {
+    key = `a${(assets.size + 1).toString().padStart(4, '0')}`
+    assets.set(key, { key, kind, source, blockId, filename, alt })
+  } else if (alt && !assets.get(key)!.alt) {
+    assets.get(key)!.alt = alt
+  }
+  return key
+}
+
 export function assetPlaceholder(
   ctx: ConvertContext,
   kind: AssetKind,
@@ -485,17 +518,20 @@ export function assetPlaceholder(
   filename: string,
   alt: string,
 ) {
-  const identity = assetIdentity(source)
-  let key = [...ctx.assets.values()].find(
-    (asset) => assetIdentity(asset.source) === identity,
-  )?.key
-  if (!key) {
-    key = `a${(ctx.assets.size + 1).toString().padStart(4, '0')}`
-    ctx.assets.set(key, { key, kind, source, blockId, filename, alt })
-  } else if (alt && !ctx.assets.get(key)!.alt) {
-    ctx.assets.get(key)!.alt = alt
+  return `${ASSET_SCHEME}${addAsset(ctx.assets, kind, source, blockId, filename, alt)}`
+}
+
+/**
+ * 보관만 하는 첨부를 자산 목록 끝에 붙인다. 본문이 참조하는 자산 번호(a0001…)가
+ * 앞에서 바뀌지 않도록 모든 페이지를 바꾼 뒤에 부른다.
+ */
+export function registerArchivedFiles(
+  assets: Map<string, AssetRef>,
+  archived: ArchivedFile[],
+) {
+  for (const file of archived) {
+    addAsset(assets, 'file', file.source, file.blockId, file.filename, file.alt)
   }
-  return `${ASSET_SCHEME}${key}`
 }
 
 type Rendered = string | null
@@ -621,6 +657,27 @@ function propertyText(
   }
 }
 
+/** 블록들(하위 페이지 제외)에서 파일·PDF 첨부를 찾아 링크 없는 보관 자산으로 등록한다. */
+function archiveAttachments(blockIds: string[], ctx: ConvertContext) {
+  const stack = [...blockIds]
+  while (stack.length > 0) {
+    const block = ctx.snapshot.blocks[stack.shift()!]
+    if (!block || block.type === 'page') continue
+    if (block.type === 'file' || block.type === 'pdf') {
+      const source = plainText(block.properties?.source)
+      if (source && !ctx.archived.some((file) => file.blockId === block.id)) {
+        ctx.archived.push({
+          source,
+          blockId: block.id,
+          filename: filenameOf(source),
+          alt: plainText(block.properties?.title),
+        })
+      }
+    }
+    stack.push(...(block.content ?? []))
+  }
+}
+
 function firstImage(
   rowId: string,
   ctx: ConvertContext,
@@ -709,6 +766,11 @@ function collectionBlock(
   const rows = rowIds
     .map((id) => ctx.snapshot.blocks[id])
     .filter((row): row is NotionBlock => Boolean(row) && row!.alive !== false)
+  // 행 페이지로 옮기지 않는 행은 속성만 표에 남는다. 그 본문에 붙은 첨부(보도자료
+  // 기사 PDF 등)는 블로그 후기 PDF처럼 내려받기 링크 없이 S3에만 보관한다.
+  for (const row of rows) {
+    if (!ctx.rowPages.get(row.id)) archiveAttachments(row.content ?? [], ctx)
+  }
   const title = plainText(collection.name)
   // 데이터베이스가 곧 페이지면 제목은 페이지 제목이 가진다.
   const hideTitle = asPage || Boolean(view.format?.hide_linked_collection_name)
