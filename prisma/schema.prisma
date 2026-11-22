@@ -66,15 +66,63 @@ model Verification {
 }
 
 model Business {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  code      String    @unique
-  startDate DateTime
-  endDate   DateTime
-  location  String?
-  webpages  Webpage[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id           Int                   @id @default(autoincrement())
+  name         String                @unique
+  code         String                @unique
+  /// 공개 주소의 슬러그. 비어 있으면 행사 페이지를 만들지 않는다.
+  slug         String?               @unique
+  category     BusinessCategory      @default(hackathon)
+  startDate    DateTime
+  endDate      DateTime
+  /// true면 시작/종료 시각까지 표시한다. false면 날짜만 쓴다.
+  hasTime      Boolean               @default(false)
+  location     String?
+  /// 노션 페이지 아이콘. 이모지 또는 이미지 URL.
+  icon         String?
+  coverImageId Int?
+  coverImage   ImageAsset?           @relation("BusinessCover", fields: [coverImageId], references: [id], onDelete: Restrict)
+  /// 행사 목록에 보이는 요약(마크다운).
+  summary      String?
+  /// 행사 페이지 본문(노션 확장 마크다운).
+  content      String                @default("")
+  /// 이전 노션 페이지 ID. 옛 주소를 새 주소로 넘기는 데 쓴다.
+  notionId     String?               @unique
+  webpages     Webpage[]
+  pages        BusinessPage[]
+  institutions BusinessInstitution[]
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+}
+
+/// 행사 아래의 하위 페이지(FAQ, 동의서, 참가자 안내 등).
+model BusinessPage {
+  id           Int         @id @default(autoincrement())
+  businessId   Int
+  business     Business    @relation(fields: [businessId], references: [id], onDelete: Restrict)
+  /// 행사 주소 아래의 경로. 예: "faq", "notice/team-building"
+  path         String
+  title        String
+  icon         String?
+  coverImageId Int?
+  coverImage   ImageAsset? @relation("BusinessPageCover", fields: [coverImageId], references: [id], onDelete: Restrict)
+  content      String      @default("")
+  notionId     String?     @unique
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@unique([businessId, path])
+}
+
+/// 행사와 주최·주관·후원·협력 기관의 연결.
+model BusinessInstitution {
+  businessId    Int
+  business      Business     @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  institutionId Int
+  institution   Institution  @relation(fields: [institutionId], references: [id], onDelete: Restrict)
+  role          BusinessRole
+  sortOrder     Int          @default(0)
+
+  @@id([businessId, institutionId, role])
 }
 
 model FileAsset {
@@ -95,22 +143,24 @@ model FileAsset {
 }
 
 model ImageAsset {
-  id           Int           @id @default(autoincrement())
-  alt          String?
-  filename     String?
-  url          String?
-  mimeType     String?
-  filesize     Int?
-  prefix       String?       @default("images")
-  thumbnailURL String?
-  width        Int?
-  height       Int?
-  focalX       Int?
-  focalY       Int?
-  histories    History[]
-  institutions Institution[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id            Int            @id @default(autoincrement())
+  alt           String?
+  filename      String?
+  url           String?
+  mimeType      String?
+  filesize      Int?
+  prefix        String?        @default("images")
+  thumbnailURL  String?
+  width         Int?
+  height        Int?
+  focalX        Int?
+  focalY        Int?
+  histories     History[]
+  institutions  Institution[]
+  businesses    Business[]     @relation("BusinessCover")
+  businessPages BusinessPage[] @relation("BusinessPageCover")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
 model History {
@@ -125,14 +175,17 @@ model History {
 }
 
 model Institution {
-  id        Int        @id @default(autoincrement())
-  nameKo    String     @unique
-  nameEn    String     @unique
-  url       String     @unique
-  logoId    Int        @unique
-  logo      ImageAsset @relation(fields: [logoId], references: [id], onDelete: Restrict)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id         Int                   @id @default(autoincrement())
+  nameKo     String                @unique
+  nameEn     String?               @unique
+  url        String?               @unique
+  logoId     Int?                  @unique
+  logo       ImageAsset?           @relation(fields: [logoId], references: [id], onDelete: Restrict)
+  /// 홈 '함께하는 기관' 로고 흐름에 보일지 여부. 로고가 있어야 보인다.
+  showOnHome Boolean               @default(true)
+  businesses BusinessInstitution[]
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime              @updatedAt
 }
 
 model Markdown {
@@ -157,16 +210,16 @@ model Report {
 }
 
 model Webpage {
-  id            Int          @id @default(autoincrement())
-  url           String       @unique
+  id            Int         @id @default(autoincrement())
+  url           String      @unique
   title         String
   author        String
   publishedDate DateTime
   businessId    Int?
-  business      Business?    @relation(fields: [businessId], references: [id], onDelete: SetNull)
+  business      Business?   @relation(fields: [businessId], references: [id], onDelete: SetNull)
   type          WebpageType
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
 
 model AdminSettings {
@@ -181,6 +234,24 @@ enum MarkdownType {
   articles
   privacy
   terms
+  /// 해커톤&아이디어톤 구역 소개
+  hackathon
+  /// 컨퍼런스&프로그램 구역 소개
+  conference
+}
+
+enum BusinessCategory {
+  hackathon
+  ideathon
+  conference
+  program
+}
+
+enum BusinessRole {
+  host
+  organizer
+  sponsor
+  partner
 }
 
 enum ReportType {

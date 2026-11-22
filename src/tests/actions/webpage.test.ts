@@ -47,7 +47,7 @@ describe('webpage actions', () => {
       )
     })
 
-    it('creates webpage with null businessId when omitted', async () => {
+    it('creates a blog post linked to its business and revalidates', async () => {
       prismaMock.webpage.create.mockResolvedValue(makeWebpage())
       const fd = createFormData({
         url: validUrl,
@@ -55,6 +55,7 @@ describe('webpage actions', () => {
         author: '홍길동',
         publishedDate: '2026-05-01',
         type: 'blog_post',
+        businessId: '3',
       })
       await createWebpage(fd)
       expect(prismaMock.webpage.create).toHaveBeenCalledWith({
@@ -63,11 +64,61 @@ describe('webpage actions', () => {
           title: '블로그 글',
           author: '홍길동',
           publishedDate: new Date('2026-05-01'),
-          businessId: null,
+          businessId: 3,
           type: 'blog_post',
         },
       })
       expect(revalidatePathMock).toHaveBeenCalledWith('/admin')
+    })
+
+    it.each(['blog_post', 'news_article'])(
+      'requires a business for %s',
+      async (type) => {
+        const fd = createFormData({
+          url: validUrl,
+          title: 't',
+          author: 'a',
+          publishedDate: '2026-05-01',
+          type,
+        })
+        await expect(createWebpage(fd)).rejects.toThrow(
+          '뉴스 기사와 블로그 포스트는 관련 행사(사업)를 선택해야 합니다.',
+        )
+        expect(prismaMock.webpage.create).not.toHaveBeenCalled()
+        expect(revalidatePathMock).not.toHaveBeenCalled()
+      },
+    )
+
+    it('treats an empty business selection as missing for news articles', async () => {
+      const fd = createFormData({
+        url: validUrl,
+        title: 't',
+        author: 'a',
+        publishedDate: '2026-05-01',
+        type: 'news_article',
+        businessId: '',
+      })
+      await expect(createWebpage(fd)).rejects.toThrow(
+        /관련 행사\(사업\)를 선택/,
+      )
+    })
+
+    it.each([
+      ['unknown type', 'podcast'],
+      ['missing type', ''],
+    ])('rejects an invalid webpage type (%s)', async (_label, type) => {
+      const fd = createFormData({
+        url: validUrl,
+        title: 't',
+        author: 'a',
+        publishedDate: '2026-05-01',
+        type,
+        businessId: '1',
+      })
+      await expect(createWebpage(fd)).rejects.toThrow(
+        '웹페이지 유형이 올바르지 않습니다.',
+      )
+      expect(prismaMock.webpage.create).not.toHaveBeenCalled()
     })
 
     it('creates webpage with numeric businessId', async () => {
@@ -91,7 +142,7 @@ describe('webpage actions', () => {
       })
     })
 
-    it('accepts press_release type', async () => {
+    it('accepts press_release without a business', async () => {
       prismaMock.webpage.create.mockResolvedValue(makeWebpage())
       const fd = createFormData({
         url: validUrl,
@@ -102,7 +153,29 @@ describe('webpage actions', () => {
       })
       await createWebpage(fd)
       expect(prismaMock.webpage.create).toHaveBeenCalledWith({
-        data: expect.objectContaining({ type: 'press_release' }),
+        data: expect.objectContaining({
+          type: 'press_release',
+          businessId: null,
+        }),
+      })
+    })
+
+    it('keeps an optional business on a press release', async () => {
+      prismaMock.webpage.create.mockResolvedValue(makeWebpage())
+      const fd = createFormData({
+        url: validUrl,
+        title: 't',
+        author: 'a',
+        publishedDate: '2026-05-01',
+        type: 'press_release',
+        businessId: '2',
+      })
+      await createWebpage(fd)
+      expect(prismaMock.webpage.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          type: 'press_release',
+          businessId: 2,
+        }),
       })
     })
 
@@ -156,6 +229,7 @@ describe('webpage actions', () => {
         author: 'a',
         publishedDate: '2026-05-01',
         type: 'blog_post',
+        businessId: '1',
       })
       await expect(createWebpage(fd)).rejects.toThrow(/중복/)
     })
@@ -214,6 +288,37 @@ describe('webpage actions', () => {
       await expect(updateWebpage(fd)).rejects.toThrow('id is required')
     })
 
+    it('requires a business when updating a blog post', async () => {
+      const fd = createFormData({
+        id: '11',
+        url: validUrl,
+        title: 't',
+        author: 'a',
+        publishedDate: '2026-05-01',
+        type: 'blog_post',
+      })
+      await expect(updateWebpage(fd)).rejects.toThrow(
+        /관련 행사\(사업\)를 선택해야 합니다/,
+      )
+      expect(prismaMock.webpage.update).not.toHaveBeenCalled()
+    })
+
+    it('rejects an invalid type on update', async () => {
+      const fd = createFormData({
+        id: '11',
+        url: validUrl,
+        title: 't',
+        author: 'a',
+        publishedDate: '2026-05-01',
+        type: 'video',
+        businessId: '1',
+      })
+      await expect(updateWebpage(fd)).rejects.toThrow(
+        '웹페이지 유형이 올바르지 않습니다.',
+      )
+      expect(prismaMock.webpage.update).not.toHaveBeenCalled()
+    })
+
     it('translates P2025 not found', async () => {
       prismaMock.webpage.update.mockRejectedValue(
         Object.assign(new Error('nf'), { code: 'P2025' }),
@@ -225,6 +330,7 @@ describe('webpage actions', () => {
         author: 'a',
         publishedDate: '2026-05-01',
         type: 'blog_post',
+        businessId: '1',
       })
       await expect(updateWebpage(fd)).rejects.toThrow(
         /연결된 데이터가 올바르지 않습니다/,

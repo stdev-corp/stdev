@@ -54,6 +54,10 @@ describe('file-asset actions', () => {
     resetCacheMocks()
     resetS3ModuleMock()
     mockAdminAuthAllowed()
+    // 행사 본문·소개 글이 파일 주소를 쓰지 않는 것이 기본이다.
+    prismaMock.business.count.mockResolvedValue(0)
+    prismaMock.businessPage.count.mockResolvedValue(0)
+    prismaMock.markdown.count.mockResolvedValue(0)
   })
 
   describe('createFileAsset', () => {
@@ -187,6 +191,54 @@ describe('file-asset actions', () => {
       expect(mockedDeleteManagedAsset).toHaveBeenCalledWith(otherPdfUrl)
     })
 
+    it('주소를 바꾸지 않으면 PDF가 아닌 파일(동영상)도 그대로 저장한다', async () => {
+      const videoUrl =
+        'https://stdev-kr.s3.ap-northeast-2.amazonaws.com/files/notion-abc-video.mp4'
+      prismaMock.fileAsset.findUnique.mockResolvedValue(
+        makeFileAsset({ id: 9, url: videoUrl, mimeType: 'video/mp4' }),
+      )
+      prismaMock.fileAsset.update.mockResolvedValue(makeFileAsset({ id: 9 }))
+      await updateFileAsset(
+        createFormData({ id: '9', url: videoUrl, filename: '출석 패스.mp4' }),
+      )
+      expect(prismaMock.fileAsset.update).toHaveBeenCalledWith({
+        where: { id: 9 },
+        data: expect.objectContaining({
+          filename: '출석 패스.mp4',
+          url: videoUrl,
+          mimeType: 'video/mp4',
+        }),
+      })
+    })
+
+    it('주소를 다른 PDF가 아닌 주소로 바꾸면 거부한다', async () => {
+      prismaMock.fileAsset.findUnique.mockResolvedValue(
+        makeFileAsset({ id: 9, url: otherPdfUrl }),
+      )
+      await expect(
+        updateFileAsset(
+          createFormData({
+            id: '9',
+            url: 'https://stdev-kr.s3.ap-northeast-2.amazonaws.com/files/x.mp4',
+          }),
+        ),
+      ).rejects.toThrow('파일 URL은(는) 올바른 HTTPS PDF URL이어야 합니다.')
+    })
+
+    it('본문이 옛 주소를 쓰면 새 파일을 올려도 옛 S3 객체를 남긴다', async () => {
+      prismaMock.fileAsset.findUnique.mockResolvedValue(
+        makeFileAsset({ id: 9, url: otherPdfUrl }),
+      )
+      prismaMock.fileAsset.count.mockResolvedValue(0)
+      prismaMock.markdown.count.mockResolvedValue(1)
+      mockedUploadAsset.mockResolvedValue(uploadedPayload())
+      prismaMock.fileAsset.update.mockResolvedValue(makeFileAsset({ id: 9 }))
+      await updateFileAsset(
+        createFormData({ id: '9', file: createPdfFile('new.pdf') }),
+      )
+      expect(mockedDeleteManagedAsset).not.toHaveBeenCalled()
+    })
+
     it('keeps the old S3 asset when still referenced', async () => {
       prismaMock.fileAsset.findUnique.mockResolvedValue(
         makeFileAsset({ id: 9, url: otherPdfUrl }),
@@ -261,6 +313,27 @@ describe('file-asset actions', () => {
       })
       expect(mockedDeleteManagedAsset).toHaveBeenCalledWith(validPdfUrl)
       expect(revalidatePathMock).toHaveBeenCalledWith('/admin')
+    })
+
+    it('행사 본문이 주소를 쓰는 파일(옮겨 온 동영상 등)은 지우지 않는다', async () => {
+      const videoUrl =
+        'https://stdev-kr.s3.ap-northeast-2.amazonaws.com/files/notion-abc-video.mp4'
+      prismaMock.fileAsset.findUnique.mockResolvedValue(
+        makeFileAsset({ id: 1, url: videoUrl, mimeType: 'video/mp4' }),
+      )
+      prismaMock.businessPage.count.mockResolvedValue(1)
+      await expect(
+        deleteFileAsset(createFormData({ id: '1' })),
+      ).rejects.toThrow(
+        '파일 항목이 행사 본문이나 소개 글에서 사용 중이어서 삭제할 수 없습니다.',
+      )
+      expect(prismaMock.businessPage.count).toHaveBeenCalledWith({
+        where: {
+          OR: [{ content: { contains: videoUrl } }, { icon: videoUrl }],
+        },
+      })
+      expect(prismaMock.fileAsset.delete).not.toHaveBeenCalled()
+      expect(mockedDeleteManagedAsset).not.toHaveBeenCalled()
     })
 
     it('skips S3 delete when referenced elsewhere', async () => {

@@ -43,6 +43,7 @@ function StatCard({ label, value, href }: StatCardProps) {
 export default async function AdminDashboardPage() {
   const [
     businesses,
+    businessPages,
     images,
     files,
     institutions,
@@ -53,6 +54,7 @@ export default async function AdminDashboardPage() {
     settings,
   ] = await Promise.all([
     prisma.business.count(),
+    prisma.businessPage.count(),
     prisma.imageAsset.count(),
     prisma.fileAsset.count(),
     prisma.institution.count(),
@@ -72,7 +74,16 @@ export default async function AdminDashboardPage() {
         </Text>
       </Box>
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 4 }} gap={4}>
-        <StatCard label="사업" value={businesses} href="/admin/businesses" />
+        <StatCard
+          label="사업(행사)"
+          value={businesses}
+          href="/admin/businesses"
+        />
+        <StatCard
+          label="행사 하위 페이지"
+          value={businessPages}
+          href="/admin/business-pages"
+        />
         <StatCard label="이미지" value={images} href="/admin/images" />
         <StatCard label="파일" value={files} href="/admin/files" />
         <StatCard

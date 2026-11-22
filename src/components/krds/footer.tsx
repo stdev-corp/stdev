@@ -12,7 +12,9 @@ import Wordmark from '@/components/krds/wordmark'
 import { Links } from '@/utils/links'
 
 // 법정 표기 항목. 항목마다 한 줄을 쓰고 그 줄 안에서 라벨과 값을 나란히 둔다.
-const CorpInfo = [
+// 이메일은 옮겨 온 행사 본문의 '아래 이메일 또는 연락처로 문의' 안내가 가리킨다
+// (노션 페이지 아래의 연락처 블록은 이 푸터와 겹쳐 옮기지 않았다).
+const CorpInfo: { term: string; description: string; href?: string }[] = [
   {
     term: '상호명',
     description: '사단법인 에스티데브 (STDev Nonprofit Corporation)',
@@ -21,6 +23,11 @@ const CorpInfo = [
   { term: '사업자등록번호', description: '169-82-00606' },
   { term: '통신판매업신고번호', description: '2025-대전서구-0117' },
   { term: '대표전화', description: '0507-1441-9392' },
+  {
+    term: '이메일',
+    description: 'contact@stdev.kr',
+    href: 'mailto:contact@stdev.kr',
+  },
 ]
 
 // width/height는 실제 원본 크기여야 로드 전후로 레이아웃이 흔들리지 않는다.
@@ -68,7 +75,13 @@ export default function Footer() {
               {CorpInfo.map((info) => (
                 <div key={info.term} className="info-row">
                   <dt>{info.term}</dt>
-                  <dd>{info.description}</dd>
+                  <dd>
+                    {info.href ? (
+                      <a href={info.href}>{info.description}</a>
+                    ) : (
+                      info.description
+                    )}
+                  </dd>
                 </div>
               ))}
             </dl>

@@ -4,11 +4,13 @@ import { renderWithChakra, screen } from '@/tests/utils/render'
 import * as ChannelService from '@channel.io/channel-web-sdk-loader'
 import RootLayout from '@/app/(stdev)/layout'
 import IntroLayout from '@/app/(stdev)/intro/layout'
-import BusinessLayout from '@/app/(stdev)/business/layout'
+import HackathonLayout from '@/app/(stdev)/hackathon/layout'
+import ConferenceLayout from '@/app/(stdev)/conference/layout'
 import NoticesLayout from '@/app/(stdev)/notices/layout'
 import InfoLayout from '@/app/(stdev)/info/layout'
 import {
-  BusinessMenu,
+  ConferenceMenu,
+  HackathonMenu,
   InfoMenu,
   IntroMenu,
   NoticesMenu,
@@ -33,10 +35,24 @@ vi.mock('@channel.io/channel-web-sdk-loader', () => ({
 }))
 
 // KRDS 공통 셸(SkipLink/Header/LNB/Breadcrumb/Footer)은 SiteLayout이 담당한다.
-// 구역 레이아웃 테스트에서는 셸을 대체하고 넘겨받은 menu만 노출시킨다.
+// 구역 레이아웃 테스트에서는 셸을 대체하고 넘겨받은 menu와 breadcrumb만 노출시킨다.
 vi.mock('@/components/krds/site-layout', () => ({
-  default: ({ menu, children }: { menu?: Menu; children: ReactNode }) => (
-    <div data-testid="site-layout" data-menu={menu?.label}>
+  default: ({
+    menu,
+    breadcrumb,
+    children,
+  }: {
+    menu?: Menu
+    breadcrumb?: boolean
+    children: ReactNode
+  }) => (
+    <div
+      data-testid="site-layout"
+      data-menu={menu?.label}
+      data-breadcrumb={
+        breadcrumb === undefined ? 'default' : String(breadcrumb)
+      }
+    >
       {children}
     </div>
   ),
@@ -174,29 +190,54 @@ describe('IntroLayout', () => {
     expect(wrapper.getAttribute('data-menu')).toBe(IntroMenu.label)
     expect(wrapper).toContainElement(screen.getByTestId('intro-child'))
   })
+
+  it('keeps the shared breadcrumb from SiteLayout', () => {
+    renderWithChakra(
+      <IntroLayout>
+        <p>X</p>
+      </IntroLayout>,
+    )
+    expect(
+      screen.getByTestId('site-layout').getAttribute('data-breadcrumb'),
+    ).toBe('default')
+  })
 })
 
-describe('BusinessLayout', () => {
+describe.each([
+  { name: 'HackathonLayout', Layout: HackathonLayout, menu: HackathonMenu },
+  { name: 'ConferenceLayout', Layout: ConferenceLayout, menu: ConferenceMenu },
+])('$name', ({ Layout, menu }) => {
   it('renders the KRDS site chrome around children', () => {
     renderWithChakra(
-      <BusinessLayout>
-        <p data-testid="business-child">X</p>
-      </BusinessLayout>,
+      <Layout>
+        <p data-testid="event-child">X</p>
+      </Layout>,
     )
     const shell = screen.getByTestId('site-layout')
     expect(shell).toBeInTheDocument()
-    expect(shell).toContainElement(screen.getByTestId('business-child'))
+    expect(shell).toContainElement(screen.getByTestId('event-child'))
   })
 
-  it('wraps children in SiteLayout with BusinessMenu', () => {
+  it(`wraps children in SiteLayout with ${menu.label}`, () => {
     renderWithChakra(
-      <BusinessLayout>
-        <p data-testid="business-child">X</p>
-      </BusinessLayout>,
+      <Layout>
+        <p data-testid="event-child">X</p>
+      </Layout>,
     )
     const wrapper = screen.getByTestId('site-layout')
-    expect(wrapper.getAttribute('data-menu')).toBe(BusinessMenu.label)
-    expect(wrapper).toContainElement(screen.getByTestId('business-child'))
+    expect(wrapper.getAttribute('data-menu')).toBe(menu.label)
+    expect(wrapper).toContainElement(screen.getByTestId('event-child'))
+  })
+
+  it('turns off the shared breadcrumb because event pages draw their own', () => {
+    renderWithChakra(
+      <Layout>
+        <p>X</p>
+      </Layout>,
+    )
+    expect(
+      screen.getByTestId('site-layout').getAttribute('data-breadcrumb'),
+    ).toBe('false')
   })
 })
 

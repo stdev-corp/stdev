@@ -41,14 +41,17 @@ const donationFileUrl = `${assetOrigin}/files/e2e-donation.pdf`
 
 async function resetDatabase() {
   await prisma.$transaction([
+    // 행사와 하위 페이지가 이미지(커버)와 기관을 가리키므로 그쪽을 먼저 지운다.
     prisma.webpage.deleteMany(),
+    prisma.businessInstitution.deleteMany(),
+    prisma.businessPage.deleteMany(),
+    prisma.business.deleteMany(),
     prisma.report.deleteMany(),
     prisma.history.deleteMany(),
     prisma.institution.deleteMany(),
     prisma.imageAsset.deleteMany(),
     prisma.fileAsset.deleteMany(),
     prisma.markdown.deleteMany(),
-    prisma.business.deleteMany(),
     prisma.session.deleteMany(),
     prisma.account.deleteMany(),
     prisma.user.deleteMany(),
@@ -57,14 +60,69 @@ async function resetDatabase() {
 }
 
 async function seedDatabase() {
+  // 노션에서 옮긴 행사 페이지와 같은 모양의 행사. 본문은 노션 확장 마크다운이다.
   const business = await prisma.business.create({
     data: {
       name: 'E2E 해커톤',
       code: 'e2e-hackathon',
+      slug: 'e2e-hackathon',
+      category: 'hackathon',
       startDate: now,
       endDate: new Date('2026-01-02T00:00:00.000Z'),
       location: '서울',
+      icon: '🚀',
+      summary: 'E2E 해커톤 **요약**',
+      notionId: '32d3ff07-ff5b-8001-ae54-c458f8571ea3',
+      content: [
+        ':::callout{icon="💡" color="gray_background"}',
+        '**E2E 콜아웃**',
+        ':::',
+        '',
+        '## E2E 일정',
+        '',
+        ':::toggle[E2E 토글 질문]',
+        'E2E 토글 답변',
+        ':::',
+        '',
+        '::page{path="faq"}',
+      ].join('\n'),
     },
+  })
+
+  await prisma.businessPage.create({
+    data: {
+      businessId: business.id,
+      path: 'faq',
+      title: 'E2E 자주 묻는 질문',
+      icon: '❓',
+      content: 'E2E 하위 페이지 본문',
+      notionId: '32d3ff07-ff5b-802e-9590-d11a59608612',
+    },
+  })
+
+  // 목록 정렬(개최일 내림차순) 확인용 지난 행사와 컨퍼런스
+  await prisma.business.createMany({
+    data: [
+      {
+        name: 'E2E 지난 해커톤',
+        code: 'e2e-old-hackathon',
+        category: 'hackathon',
+        startDate: new Date('2024-05-01T00:00:00.000Z'),
+        endDate: new Date('2024-05-02T00:00:00.000Z'),
+        location: '대전',
+      },
+      {
+        name: 'E2E 컨퍼런스',
+        code: 'e2e-conference',
+        slug: 'e2e-conference',
+        category: 'conference',
+        startDate: new Date('2025-03-01T05:00:00.000Z'),
+        endDate: new Date('2025-03-01T09:00:00.000Z'),
+        hasTime: true,
+        location: '서울',
+        content: 'E2E 컨퍼런스 본문',
+      },
+    ],
   })
 
   const logoAsset = await prisma.imageAsset.create({
@@ -109,13 +167,25 @@ async function seedDatabase() {
     },
   })
 
-  await prisma.institution.create({
+  const partner = await prisma.institution.create({
     data: {
       nameKo: 'E2E 협력 기관',
       nameEn: 'E2E Partner',
       url: 'https://example.com/e2e-partner',
       logoId: logoAsset.id,
     },
+  })
+
+  // 홈 로고 흐름에는 나오지 않는, 행사 후원으로만 등록한 기관
+  const sponsor = await prisma.institution.create({
+    data: { nameKo: 'E2E 후원사', showOnHome: false },
+  })
+
+  await prisma.businessInstitution.createMany({
+    data: [
+      { businessId: business.id, institutionId: partner.id, role: 'host' },
+      { businessId: business.id, institutionId: sponsor.id, role: 'sponsor' },
+    ],
   })
 
   await prisma.history.create({
@@ -146,6 +216,12 @@ async function seedDatabase() {
         revisionDate: now,
         effectiveDate: now,
         content: '# E2E 이용약관\n\n테스트용 이용약관입니다.',
+      },
+      {
+        type: 'hackathon',
+        revisionDate: now,
+        effectiveDate: now,
+        content: 'E2E 해커톤 구역 소개',
       },
     ],
   })

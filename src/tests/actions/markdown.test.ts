@@ -96,6 +96,49 @@ describe('markdown actions', () => {
       })
     })
 
+    it.each([
+      ['hackathon', '해커톤&아이디어톤 구역 소개'],
+      ['conference', '컨퍼런스&프로그램 구역 소개'],
+    ])('accepts the %s section intro type', async (type, content) => {
+      prismaMock.markdown.create.mockResolvedValue(
+        makeMarkdown({ type: type as 'hackathon' | 'conference' }),
+      )
+      const fd = createFormData({
+        type,
+        revisionDate: '2026-11-01',
+        effectiveDate: '2026-11-01',
+        content,
+      })
+      await createMarkdown(fd)
+      expect(prismaMock.markdown.create).toHaveBeenCalledWith({
+        data: {
+          type,
+          revisionDate: new Date('2026-11-01'),
+          effectiveDate: new Date('2026-11-01'),
+          content,
+        },
+      })
+      expect(revalidatePathMock).toHaveBeenCalledWith('/admin')
+    })
+
+    it.each([
+      ['unknown type', 'notice'],
+      ['missing type', ''],
+      ['differently cased type', 'Hackathon'],
+    ])('rejects an invalid markdown type (%s)', async (_label, type) => {
+      const fd = createFormData({
+        type,
+        revisionDate: '2026-01-01',
+        effectiveDate: '2026-01-10',
+        content: 'body',
+      })
+      await expect(createMarkdown(fd)).rejects.toThrow(
+        '마크다운 유형이 올바르지 않습니다.',
+      )
+      expect(prismaMock.markdown.create).not.toHaveBeenCalled()
+      expect(revalidatePathMock).not.toHaveBeenCalled()
+    })
+
     it('throws when revisionDate is missing', async () => {
       const fd = createFormData({
         type: 'articles',
@@ -178,6 +221,36 @@ describe('markdown actions', () => {
         },
       })
       expect(revalidatePathMock).toHaveBeenCalledWith('/admin')
+    })
+
+    it('updates a section intro to the conference type', async () => {
+      prismaMock.markdown.update.mockResolvedValue(makeMarkdown())
+      const fd = createFormData({
+        id: '6',
+        type: 'conference',
+        revisionDate: '2026-11-01',
+        effectiveDate: '2026-11-02',
+        content: '소개',
+      })
+      await updateMarkdown(fd)
+      expect(prismaMock.markdown.update).toHaveBeenCalledWith({
+        where: { id: 6 },
+        data: expect.objectContaining({ type: 'conference' }),
+      })
+    })
+
+    it('rejects an invalid type on update', async () => {
+      const fd = createFormData({
+        id: '6',
+        type: 'blog',
+        revisionDate: '2026-11-01',
+        effectiveDate: '2026-11-02',
+        content: '소개',
+      })
+      await expect(updateMarkdown(fd)).rejects.toThrow(
+        '마크다운 유형이 올바르지 않습니다.',
+      )
+      expect(prismaMock.markdown.update).not.toHaveBeenCalled()
     })
 
     it('throws when id is missing', async () => {
