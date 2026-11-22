@@ -7,7 +7,8 @@
  * - 이미지·파일은 노션(또는 assets/)에서 내려받아 S3의 images/notion-…, files/notion-…
  *   에 올리고 ImageAsset/FileAsset 행을 만든다. 키가 원본 주소로 정해지므로 다시
  *   실행해도 같은 객체를 덮어쓸 뿐 늘어나지 않는다.
- * - 기관은 국문명이 같으면 그대로 쓰고, 없으면 홈 노출을 끈 채로 만든다.
+ * - 기관은 국문명이 같거나 mapping.ts의 INSTITUTION_ALIASES로 짝지은 기존 기관을 그대로
+ *   쓰고, 없으면 홈 노출을 끈 채로 만든다.
  * - 행사는 슬러그 → 노션 ID → 코드 → 이름 순으로 기존 사업을 찾는다. 기존 사업이
  *   아직 행사 내용이 없으면(슬러그·노션 ID·본문·요약이 모두 비어 있으면) 노션 내용으로
  *   채우되 이름과 코드는 바꾸지 않는다. 이미 채워진 행사와 하위 페이지는 --force가 없으면 건드리지
@@ -48,6 +49,7 @@ async function main() {
   const { toEventInstant } = await import('@/utils/events')
   const { imageDownloadUrl, signedFileUrl } = await import('./notion-api')
   const { ASSET_SCHEME, assetIdentity } = await import('./to-markdown')
+  const { INSTITUTION_ALIASES } = await import('./mapping')
   type Bundle = import('./convert').Bundle
   type AssetRef = import('./to-markdown').AssetRef
 
@@ -321,11 +323,20 @@ async function main() {
    * ---------------------------------------------------------------- */
   const institutionIds = new Map<string, number>()
   for (const institution of bundle.institutions) {
-    const existing = await prisma.institution.findUnique({
-      where: { nameKo: institution.nameKo },
-    })
+    // 노션 이름이 없으면 운영 DB에서 쓰는 이름(INSTITUTION_ALIASES)으로 찾는다.
+    const alias = INSTITUTION_ALIASES[institution.nameKo]
+    const existing =
+      (await prisma.institution.findUnique({
+        where: { nameKo: institution.nameKo },
+      })) ??
+      (alias
+        ? await prisma.institution.findUnique({ where: { nameKo: alias } })
+        : null)
     if (existing) {
       institutionIds.set(institution.nameKo, existing.id)
+      if (existing.nameKo !== institution.nameKo) {
+        log(`기관 연결: ${institution.nameKo} → 기존 ${existing.nameKo}`)
+      }
       continue
     }
     if (dryRun) {

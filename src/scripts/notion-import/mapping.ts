@@ -521,7 +521,22 @@ export const EVENTS: EventMapping[] = [
   },
 ]
 
-/** 기관 이름이 페이지마다 다르게 적힌 것을 하나로 모은다. */
+/**
+ * 노션에 적힌 기관 이름 → 운영 DB에 이미 있는 같은 기관의 국문명. 가져오기는 먼저
+ * 노션 이름으로, 없으면 이 이름으로 기존 기관을 찾고, 둘 다 없을 때만 새로 만든다.
+ * (운영 DB는 영문명이나 띄어쓰기만 다르게 같은 기관을 이미 갖고 있다.)
+ */
+export const INSTITUTION_ALIASES: Record<string, string> = {
+  KAIST: '카이스트',
+  'KAIST SW 교육센터': 'KAIST SW교육센터',
+  'Krew Capital': '크루캐피탈',
+  'NAVER Cloud': '네이버 클라우드',
+  'NAVER D2': '네이버 D2',
+  'AWS Korea': 'AWS',
+  프라이머사제파트너스: '사제파트너스',
+}
+
+/** 새로 만드는 기관의 홈페이지 주소(노션 본문에 적혀 있던 것) */
 export const INSTITUTION_URLS: Record<string, string> = {
   KAIST: 'https://www.kaist.ac.kr',
   대전광역시: 'https://www.daejeon.go.kr',
