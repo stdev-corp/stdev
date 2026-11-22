@@ -6,6 +6,7 @@
  * content/bundle.json   행사·하위 페이지·기관·자산 목록
  * content/<슬러그>/*.md  본문 마크다운(검토용으로 저장소에 남긴다)
  */
+import './network'
 import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import type { BusinessRole } from '@/utils/cms-types'
@@ -20,6 +21,7 @@ import {
   type EventMapping,
   type PageMapping,
 } from './mapping'
+import { isLinkAlive } from './link-check'
 import type { NotionBlock, PageSnapshot } from './notion-api'
 import {
   ASSET_SCHEME,
@@ -350,14 +352,11 @@ async function main() {
    * 옮겨 오지 않는다). 이미 사라진 주소는 깨진 그림이 되므로 지금 확인해 뺀다.
    */
   const linkStatus = new Map<string, Promise<boolean>>()
+  // 원본이 사라졌다는 확실한 응답일 때만 false. 일시 오류가 이어지면 예외로 멈춘다
+  // (link-check.ts). 파일은 모든 확인이 끝난 뒤에 쓰므로 멈춰도 content/는 그대로다.
   function alive(url: string) {
     if (!linkStatus.has(url)) {
-      linkStatus.set(
-        url,
-        fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(15000) })
-          .then((response) => response.ok)
-          .catch(() => false),
-      )
+      linkStatus.set(url, isLinkAlive(url))
     }
     return linkStatus.get(url)!
   }
@@ -402,7 +401,8 @@ async function main() {
     return lines.join('\n')
   }
 
-  await rm(OUT_DIR, { recursive: true, force: true })
+  // 모든 페이지를 만들고 외부 주소 확인까지 마친 뒤에 한꺼번에 쓴다.
+  const files = new Map<string, string>()
   const bundle: Bundle = {
     institutions: [],
     intros: SECTION_INTROS,
@@ -412,7 +412,6 @@ async function main() {
 
   for (const event of EVENTS) {
     const dir = event.slug ?? event.code
-    await mkdir(path.join(OUT_DIR, dir), { recursive: true })
     let name = event.name ?? ''
     let icon: string | null = null
     let cover: string | null = null
@@ -424,10 +423,7 @@ async function main() {
       icon = page.icon
       cover = page.cover
       file = `${dir}/index.md`
-      await writeFile(
-        path.join(OUT_DIR, file),
-        `${await dropDeadBookmarkImages(page.content)}\n`,
-      )
+      files.set(file, `${await dropDeadBookmarkImages(page.content)}\n`)
     }
 
     const pages: BundlePage[] = []
@@ -435,13 +431,7 @@ async function main() {
       const target = targets.get(mapping.notionId)!
       const page = renderPage(mapping.notionId, event.slug!, target.title)
       const pageFile = `${dir}/${mapping.path}.md`
-      await mkdir(path.dirname(path.join(OUT_DIR, pageFile)), {
-        recursive: true,
-      })
-      await writeFile(
-        path.join(OUT_DIR, pageFile),
-        `${await dropDeadBookmarkImages(page.content)}\n`,
-      )
+      files.set(pageFile, `${await dropDeadBookmarkImages(page.content)}\n`)
       pages.push({
         path: mapping.path,
         title: target.title,
@@ -458,13 +448,7 @@ async function main() {
       const target = targets.get(rowPage.rowId)!
       const page = renderRowPage(rowPage, target.title)
       const pageFile = `${dir}/${rowPage.path}.md`
-      await mkdir(path.dirname(path.join(OUT_DIR, pageFile)), {
-        recursive: true,
-      })
-      await writeFile(
-        path.join(OUT_DIR, pageFile),
-        `${await dropDeadBookmarkImages(page.content)}\n`,
-      )
+      files.set(pageFile, `${await dropDeadBookmarkImages(page.content)}\n`)
       pages.push({
         path: rowPage.path,
         title: target.title,
@@ -522,10 +506,13 @@ async function main() {
     url: INSTITUTION_URLS[nameKo] ?? null,
   }))
   bundle.assets = [...assets.values()]
-  await writeFile(
-    path.join(OUT_DIR, 'bundle.json'),
-    `${JSON.stringify(bundle, null, 2)}\n`,
-  )
+  files.set('bundle.json', `${JSON.stringify(bundle, null, 2)}\n`)
+
+  await rm(OUT_DIR, { recursive: true, force: true })
+  for (const [file, content] of files) {
+    await mkdir(path.dirname(path.join(OUT_DIR, file)), { recursive: true })
+    await writeFile(path.join(OUT_DIR, file), content)
+  }
 
   console.log(
     `행사 ${bundle.events.length}개, 하위 페이지 ${bundle.events.reduce((sum, event) => sum + event.pages.length, 0)}개, 기관 ${bundle.institutions.length}개, 자산 ${bundle.assets.length}개`,

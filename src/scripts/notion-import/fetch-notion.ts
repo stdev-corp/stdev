@@ -6,6 +6,7 @@
  * 두 루트('사단법인 STDev', '사단법인 STDev (이전)') 아래 페이지를 모두 따라간다.
  * 결과는 convert.ts가 마크다운 묶음으로 바꾼다.
  */
+import './network'
 import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fetchPage, type NotionBlock } from './notion-api'

@@ -317,6 +317,34 @@ describe('asset and content entity form drawers', () => {
     expect(screen.getByLabelText('관련 행사(사업)')).toBeRequired()
   })
 
+  it('takes the type from the new record when the same drawer is reused', () => {
+    const props = {
+      open: true,
+      onOpenChange,
+      businesses: [makeBusiness()],
+      action,
+    }
+    const { rerender } = renderWithChakra(<WebpageFormDrawer {...props} />)
+    expect(screen.getByLabelText('유형')).toHaveValue('blog_post')
+
+    rerender(
+      <WebpageFormDrawer
+        {...props}
+        webpage={makeWebpage({ id: 2, type: 'news_article', businessId: 1 })}
+      />,
+    )
+    expect(screen.getByLabelText('유형')).toHaveValue('news_article')
+
+    rerender(
+      <WebpageFormDrawer
+        {...props}
+        webpage={makeWebpage({ id: 3, type: 'press_release' })}
+      />,
+    )
+    expect(screen.getByLabelText('유형')).toHaveValue('press_release')
+    expect(screen.getByLabelText('관련 행사(사업)')).not.toBeRequired()
+  })
+
   it('requires a related event except for press releases', async () => {
     const { user } = renderWithChakra(
       <WebpageFormDrawer

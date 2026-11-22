@@ -374,4 +374,47 @@ describe('asset and content list clients', () => {
       ).not.toBeInTheDocument(),
     )
   })
+
+  it('opens each webpage with its own type even though the edit drawer is reused', async () => {
+    const { user } = renderWithChakra(
+      <WebpageListClient
+        webpages={[
+          makeWebpage({ id: 2, type: 'news_article', businessId: 1 }),
+          makeWebpage({ id: 3, type: 'press_release', businessId: null }),
+          makeWebpage({ id: 1, type: 'blog_post', businessId: 1 }),
+        ]}
+        businesses={[makeBusiness()]}
+        actions={{
+          createWebpage: noop,
+          updateWebpage: noop,
+          deleteWebpage: noop,
+        }}
+      />,
+    )
+
+    // EntityList는 수정 서랍을 처음부터 (레코드 없이) 그려 둔다. 그 뒤에 고른
+    // 레코드의 유형이 서랍에 남아 있던 기본값(블로그 포스트)으로 바뀌면 안 된다.
+    for (const [index, id, type, required] of [
+      [0, 2, 'news_article', true],
+      [1, 3, 'press_release', false],
+      [2, 1, 'blog_post', true],
+    ] as const) {
+      await user.click(screen.getAllByRole('button', { name: '수정' })[index])
+      expect(
+        screen.getByRole('heading', { name: `웹페이지 수정 #${id}` }),
+      ).toBeInTheDocument()
+      expect(screen.getByLabelText('유형')).toHaveValue(type)
+      if (required) {
+        expect(screen.getByLabelText('관련 행사(사업)')).toBeRequired()
+      } else {
+        expect(screen.getByLabelText('관련 행사(사업)')).not.toBeRequired()
+      }
+      await user.click(screen.getByRole('button', { name: '취소' }))
+      await waitFor(() =>
+        expect(
+          screen.queryByRole('heading', { name: `웹페이지 수정 #${id}` }),
+        ).not.toBeInTheDocument(),
+      )
+    }
+  })
 })

@@ -16,6 +16,7 @@
  * - 자산을 먼저 옮긴다. 원본이 사라진 것(403/404/410)만 경고하고 본문에서 빼며, 그 밖의
  *   실패는 기관·행사를 저장하기 전에 멈춘다. 행사와 하위 페이지는 한 트랜잭션으로 저장한다.
  */
+import './network'
 import { createHash } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
