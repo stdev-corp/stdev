@@ -14,6 +14,8 @@
  *   채우되 이름과 코드는 바꾸지 않는다. 이미 채워진 행사와 하위 페이지는 --force가 없으면 건드리지
  *   않으므로, 관리자 화면에서 고친 내용을 덮어쓰지 않는다.
  * - 구역 소개 마크다운은 해당 유형이 하나도 없을 때만 만든다.
+ * - webpages.ts의 뉴스 기사·참여후기는 행사에 연결해 넣는다. 같은 주소가 이미 있으면
+ *   --force가 없는 한 건너뛴다.
  * - 자산을 먼저 옮긴다. 원본이 사라진 것(403/404/410)만 경고하고 본문에서 빼며, 그 밖의
  *   실패는 기관·행사를 저장하기 전에 멈춘다. 행사와 하위 페이지는 한 트랜잭션으로 저장한다.
  */
@@ -50,6 +52,7 @@ async function main() {
   const { imageDownloadUrl, signedFileUrl } = await import('./notion-api')
   const { ASSET_SCHEME, assetIdentity } = await import('./to-markdown')
   const { INSTITUTION_ALIASES } = await import('./mapping')
+  const { WEBPAGES, WEBPAGE_LABELS } = await import('./webpages')
   type Bundle = import('./convert').Bundle
   type AssetRef = import('./to-markdown').AssetRef
 
@@ -390,6 +393,11 @@ async function main() {
    * ---------------------------------------------------------------- */
   const existingAll = await prisma.business.findMany()
   const matched = new Set<number>()
+  /**
+   * 묶음의 행사 슬러그 → 찾았거나 만든 사업 ID. 관리자가 슬러그를 바꿔도 노션 ID 등으로
+   * 찾은 같은 행사를 가리킨다. --dry-run에서 새로 만들 행사는 null이다.
+   */
+  const eventIds = new Map<string, number | null>()
   for (const event of bundle.events) {
     const existing =
       existingAll.find(
@@ -424,6 +432,7 @@ async function main() {
       })),
     )
 
+    if (event.slug) eventIds.set(event.slug, existing?.id ?? null)
     if (existing) {
       matched.add(existing.id)
       // 슬러그·노션 ID·본문·요약 중 하나라도 있으면 이미 옮겼거나 관리자가 채운 행사다.
@@ -488,7 +497,7 @@ async function main() {
 
     // 행사와 하위 페이지를 한 번에 저장한다. 중간에 멈춰 행사만 저장되면 다음 실행이
     // 그 행사를 '이미 채워짐'으로 보고 남은 하위 페이지를 건너뛰기 때문이다.
-    await prisma.$transaction(
+    const savedId = await prisma.$transaction(
       async (tx) => {
         const { id: businessId } = existing
           ? await tx.business.update({
@@ -518,9 +527,52 @@ async function main() {
             })
           }
         }
+        return businessId
       },
       { timeout: 60_000 },
     )
+    if (event.slug) eventIds.set(event.slug, savedId)
+  }
+
+  /* ---------------------------------------------------------------- *
+   * 뉴스 기사·참여후기
+   * ---------------------------------------------------------------- */
+  // 행사 하위 페이지에 있던 기사·후기 링크를 구역 목록(/hackathon/news 등)에도 올린다.
+  // 같은 주소가 이미 있으면 --force가 없는 한 건너뛰어, 관리자가 고친 내용을 덮어쓰지 않는다.
+  // 행사는 위에서 찾은 ID로 잇는다. 지금 DB 슬러그로 찾으면 관리자가 슬러그를 바꾼
+  // 행사를 놓친다.
+  for (const webpage of WEBPAGES) {
+    if (!eventIds.has(webpage.event)) {
+      throw new Error(
+        `${webpage.url}을 연결할 행사(${webpage.event})가 가져오기 묶음에 없습니다.`,
+      )
+    }
+    const current = await prisma.webpage.findUnique({
+      where: { url: webpage.url },
+    })
+    if (current && !force) continue
+    log(
+      `${WEBPAGE_LABELS[webpage.type]} ${current ? '갱신' : '추가'}: ${webpage.event} ${webpage.title}`,
+    )
+    if (dryRun) continue
+    // 실제 실행에서는 행사를 모두 찾거나 만들었으므로 null이 남지 않는다.
+    const businessId = eventIds.get(webpage.event)
+    if (!businessId) {
+      throw new Error(`행사(${webpage.event})의 ID를 알 수 없습니다.`)
+    }
+    const data = {
+      title: webpage.title,
+      author: webpage.author,
+      // 관리자 화면처럼 날짜만 받은 값을 UTC 자정으로 둔다(한국 시간으로 같은 날).
+      publishedDate: new Date(webpage.publishedDate),
+      type: webpage.type,
+      businessId,
+    }
+    if (current) {
+      await prisma.webpage.update({ where: { id: current.id }, data })
+    } else {
+      await prisma.webpage.create({ data: { ...data, url: webpage.url } })
+    }
   }
 
   const unmatched = existingAll.filter((business) => !matched.has(business.id))
