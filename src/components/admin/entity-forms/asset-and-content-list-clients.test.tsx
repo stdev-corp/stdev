@@ -9,6 +9,7 @@ import {
   makeMarkdown,
   makeReport,
   makeWebpage,
+  makeWebpageWithArchive,
 } from '@/tests/utils/fixtures'
 import { FileListClient } from './file-list-client'
 import { HistoryListClient } from './history-list-client'
@@ -88,11 +89,14 @@ describe('asset and content list clients', () => {
       />,
     )
 
-    expect(
-      screen.getByText(
-        'mime 없음 · https://stdev-kr.s3.ap-northeast-2.amazonaws.com/files/report.pdf',
-      ),
-    ).toBeInTheDocument()
+    // 파일 주소는 새 창에서 바로 열 수 있는 링크다.
+    const url =
+      'https://stdev-kr.s3.ap-northeast-2.amazonaws.com/files/report.pdf'
+    const link = screen.getByRole('link', { name: url })
+    expect(link).toHaveAttribute('href', url)
+    expect(link).toHaveAttribute('target', '_blank')
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+    expect(link.parentElement).toHaveTextContent(`mime 없음 · ${url}`)
     expect(screen.getByText('application/pdf · URL 없음')).toBeInTheDocument()
   })
 
@@ -341,11 +345,12 @@ describe('asset and content list clients', () => {
     const { user } = renderWithChakra(
       <WebpageListClient
         webpages={[
-          makeWebpage({ id: 1, type: 'blog_post' }),
-          makeWebpage({ id: 2, type: 'news_article' }),
-          makeWebpage({ id: 3, type: 'press_release' }),
+          makeWebpageWithArchive({ id: 1, type: 'blog_post' }),
+          makeWebpageWithArchive({ id: 2, type: 'news_article' }),
+          makeWebpageWithArchive({ id: 3, type: 'press_release' }),
         ]}
         businesses={[makeBusiness()]}
+        files={[makeFileAsset()]}
         actions={{
           createWebpage: noop,
           updateWebpage: noop,
@@ -379,11 +384,20 @@ describe('asset and content list clients', () => {
     const { user } = renderWithChakra(
       <WebpageListClient
         webpages={[
-          makeWebpage({ id: 2, type: 'news_article', businessId: 1 }),
-          makeWebpage({ id: 3, type: 'press_release', businessId: null }),
-          makeWebpage({ id: 1, type: 'blog_post', businessId: 1 }),
+          makeWebpageWithArchive({
+            id: 2,
+            type: 'news_article',
+            businessId: 1,
+          }),
+          makeWebpageWithArchive({
+            id: 3,
+            type: 'press_release',
+            businessId: null,
+          }),
+          makeWebpageWithArchive({ id: 1, type: 'blog_post', businessId: 1 }),
         ]}
         businesses={[makeBusiness()]}
+        files={[makeFileAsset()]}
         actions={{
           createWebpage: noop,
           updateWebpage: noop,
@@ -416,5 +430,41 @@ describe('asset and content list clients', () => {
         ).not.toBeInTheDocument(),
       )
     }
+  })
+
+  it('links each webpage to its original archive or says it has none', () => {
+    const archive = makeFileAsset({
+      id: 7,
+      filename: '뉴스1-기사.pdf',
+      url: 'https://stdev-kr.s3.ap-northeast-2.amazonaws.com/files/news1.pdf',
+    })
+    renderWithChakra(
+      <WebpageListClient
+        webpages={[
+          makeWebpageWithArchive({ id: 1, archiveId: 7, archive }),
+          makeWebpageWithArchive({ id: 2, title: '저장본 없는 글' }),
+          makeWebpageWithArchive({
+            id: 3,
+            title: '주소 없는 저장본',
+            archiveId: 8,
+            archive: makeFileAsset({ id: 8, url: null }),
+          }),
+        ]}
+        businesses={[makeBusiness()]}
+        files={[archive]}
+        actions={{
+          createWebpage: noop,
+          updateWebpage: noop,
+          deleteWebpage: noop,
+        }}
+      />,
+    )
+
+    const link = screen.getByRole('link', { name: '뉴스1-기사.pdf' })
+    expect(link).toHaveAttribute('href', archive.url)
+    expect(link).toHaveAttribute('target', '_blank')
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+    expect(link.parentElement).toHaveTextContent('원문 저장본: 뉴스1-기사.pdf')
+    expect(screen.getAllByText('원문 저장본: 없음')).toHaveLength(2)
   })
 })

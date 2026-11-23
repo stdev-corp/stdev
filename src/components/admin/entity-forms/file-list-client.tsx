@@ -1,6 +1,6 @@
 'use client'
 
-import { Text } from '@chakra-ui/react'
+import { Link, Text } from '@chakra-ui/react'
 import type { FileAsset } from '@prisma/client'
 import { EntityList } from '../entity-list'
 import { FileFormDrawer } from './file-form'
@@ -31,7 +31,20 @@ export function FileListClient({
             #{file.id} · {file.filename}
           </Text>
           <Text fontSize="sm" color="gray.600">
-            {file.mimeType ?? 'mime 없음'} · {file.url ?? 'URL 없음'}
+            {file.mimeType ?? 'mime 없음'} ·{' '}
+            {file.url ? (
+              <Link
+                href={file.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                color="teal.600"
+                wordBreak="break-all"
+              >
+                {file.url}
+              </Link>
+            ) : (
+              'URL 없음'
+            )}
           </Text>
         </>
       )}

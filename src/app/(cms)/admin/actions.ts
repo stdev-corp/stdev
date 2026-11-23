@@ -670,6 +670,7 @@ export async function createWebpage(formData: FormData) {
           author: text(formData, 'author'),
           publishedDate: date(formData, 'publishedDate'),
           ...webpageTypeAndBusiness(formData),
+          archiveId: optionalNumber(formData, 'archiveId'),
         },
       }),
     '웹페이지',
@@ -689,6 +690,7 @@ export async function updateWebpage(formData: FormData) {
           author: text(formData, 'author'),
           publishedDate: date(formData, 'publishedDate'),
           ...webpageTypeAndBusiness(formData),
+          archiveId: optionalNumber(formData, 'archiveId'),
         },
       }),
     '웹페이지',
@@ -801,6 +803,15 @@ export async function deleteFileAsset(formData: FormData) {
   if (existing?.url && (await countContentReferences(existing.url)) > 0) {
     throw new Error(
       '파일 항목이 행사 본문이나 소개 글에서 사용 중이어서 삭제할 수 없습니다. 본문에서 파일 주소를 먼저 지워주세요.',
+    )
+  }
+  // 원문 저장본은 원문이 사라진 뒤 남는 유일한 사본일 수 있다.
+  if (
+    existing &&
+    (await prisma.webpage.count({ where: { archiveId: existing.id } })) > 0
+  ) {
+    throw new Error(
+      '파일 항목이 웹페이지의 원문 저장본으로 연결되어 있어서 삭제할 수 없습니다. 웹페이지에서 저장본 연결을 먼저 풀어주세요.',
     )
   }
   await withDeleteMessage(

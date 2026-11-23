@@ -1,7 +1,7 @@
 'use client'
 
 import { Field, Input, NativeSelect, Stack } from '@chakra-ui/react'
-import type { Business, Webpage } from '@prisma/client'
+import type { Business, FileAsset, Webpage } from '@prisma/client'
 import { useState } from 'react'
 import { dateValue } from '@/utils/admin-format'
 import { FormDrawer } from '../form-drawer'
@@ -11,6 +11,7 @@ type Props = {
   onOpenChange: (open: boolean) => void
   webpage?: Webpage
   businesses: Business[]
+  files: FileAsset[]
   action: (formData: FormData) => Promise<void>
 }
 
@@ -19,6 +20,7 @@ export function WebpageFormDrawer({
   onOpenChange,
   webpage,
   businesses,
+  files,
   action,
 }: Props) {
   const editing = Boolean(webpage)
@@ -40,6 +42,7 @@ export function WebpageFormDrawer({
         key={webpage?.id ?? 'create'}
         webpage={webpage}
         businesses={businesses}
+        files={files}
       />
     </FormDrawer>
   )
@@ -48,7 +51,8 @@ export function WebpageFormDrawer({
 function WebpageFields({
   webpage,
   businesses,
-}: Pick<Props, 'webpage' | 'businesses'>) {
+  files,
+}: Pick<Props, 'webpage' | 'businesses' | 'files'>) {
   // 뉴스 기사·블로그 포스트는 행사에 연결해야 공개 메뉴에 보인다. 서버도 막지만,
   // 저장 전에 브라우저가 먼저 알려 주도록 유형에 따라 필수로 바꾼다.
   const [type, setType] = useState(webpage?.type ?? 'blog_post')
@@ -112,6 +116,28 @@ function WebpageFields({
         <Field.HelperText>
           뉴스 기사·블로그 포스트는 행사를 골라야 하며, 행사 분류에 따라
           해커톤&아이디어톤 또는 컨퍼런스&프로그램 메뉴에 보입니다.
+        </Field.HelperText>
+      </Field.Root>
+      <Field.Root>
+        <Field.Label>원문 저장본</Field.Label>
+        <NativeSelect.Root>
+          <NativeSelect.Field
+            name="archiveId"
+            defaultValue={webpage?.archiveId ?? ''}
+          >
+            <option value="">저장본 없음</option>
+            {files.map((file) => (
+              <option key={file.id} value={file.id}>
+                #{file.id} {file.filename}
+              </option>
+            ))}
+          </NativeSelect.Field>
+          <NativeSelect.Indicator />
+        </NativeSelect.Root>
+        <Field.HelperText>
+          원문 사이트가 사라질 때를 대비해 &apos;파일&apos;에 올려 둔 PDF 사본을
+          고릅니다. 관리자 화면에만 보이며, 저장본으로 고른 파일은 연결을 풀기
+          전에는 지울 수 없습니다.
         </Field.HelperText>
       </Field.Root>
     </Stack>

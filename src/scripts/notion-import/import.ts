@@ -14,8 +14,8 @@
  *   채우되 이름과 코드는 바꾸지 않는다. 이미 채워진 행사와 하위 페이지는 --force가 없으면 건드리지
  *   않으므로, 관리자 화면에서 고친 내용을 덮어쓰지 않는다.
  * - 구역 소개 마크다운은 해당 유형이 하나도 없을 때만 만든다.
- * - webpages.ts의 뉴스 기사·참여후기는 행사에 연결해 넣는다. 같은 주소가 이미 있으면
- *   --force가 없는 한 건너뛴다.
+ * - webpages.ts의 뉴스 기사·참여후기는 행사와 원문 저장본(PDF)에 연결해 넣는다. 같은
+ *   주소가 이미 있으면 --force가 없는 한 비어 있는 저장본 연결만 채운다.
  * - 자산을 먼저 옮긴다. 원본이 사라진 것(403/404/410)만 경고하고 본문에서 빼며, 그 밖의
  *   실패는 기관·행사를 저장하기 전에 멈춘다. 행사와 하위 페이지는 한 트랜잭션으로 저장한다.
  */
@@ -538,7 +538,8 @@ async function main() {
    * 뉴스 기사·참여후기
    * ---------------------------------------------------------------- */
   // 행사 하위 페이지에 있던 기사·후기 링크를 구역 목록(/hackathon/news 등)에도 올린다.
-  // 같은 주소가 이미 있으면 --force가 없는 한 건너뛰어, 관리자가 고친 내용을 덮어쓰지 않는다.
+  // 같은 주소가 이미 있으면 --force가 없는 한 내용은 건너뛰어, 관리자가 고친 내용을 덮어쓰지
+  // 않는다.
   // 행사는 위에서 찾은 ID로 잇는다. 지금 DB 슬러그로 찾으면 관리자가 슬러그를 바꾼
   // 행사를 놓친다.
   for (const webpage of WEBPAGES) {
@@ -550,7 +551,28 @@ async function main() {
     const current = await prisma.webpage.findUnique({
       where: { url: webpage.url },
     })
-    if (current && !force) continue
+    // 원문 저장본(노션에 붙어 있던 PDF). 위 자산 단계가 찾았거나 올린 파일 행이다.
+    // --dry-run에서 아직 올리지 않은 파일과 원본이 사라져 빠진 파일은 ID가 없다.
+    const archiveId = assetIds.get(webpage.archive) ?? null
+    if (!archiveId && !dryRun) {
+      console.warn(
+        `경고: 저장본 자산(${webpage.archive})이 없어 ${webpage.url}에 연결하지 않습니다.`,
+      )
+    }
+    if (current && !force) {
+      // 이미 있는 행은 비어 있는 저장본 연결만 채운다. 관리자가 고른 저장본은 두고,
+      // 저장본 연결이 생기기 전에 넣은 행도 다시 실행하면 연결된다.
+      if (current.archiveId === null && archiveId) {
+        log(`  저장본 연결: ${webpage.event} ${webpage.title}`)
+        if (!dryRun) {
+          await prisma.webpage.update({
+            where: { id: current.id },
+            data: { archiveId },
+          })
+        }
+      }
+      continue
+    }
     log(
       `${WEBPAGE_LABELS[webpage.type]} ${current ? '갱신' : '추가'}: ${webpage.event} ${webpage.title}`,
     )
@@ -567,6 +589,7 @@ async function main() {
       publishedDate: new Date(webpage.publishedDate),
       type: webpage.type,
       businessId,
+      archiveId,
     }
     if (current) {
       await prisma.webpage.update({ where: { id: current.id }, data })

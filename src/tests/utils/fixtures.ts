@@ -152,9 +152,17 @@ export function makeWebpage(overrides: Partial<Webpage> = {}): Webpage {
     publishedDate: new Date('2026-05-01T00:00:00Z'),
     businessId: null,
     type: 'blog_post',
+    archiveId: null,
     ...baseTimestamps,
     ...overrides,
   } as Webpage
+}
+
+export function makeWebpageWithArchive(
+  overrides: Partial<Webpage & { archive: FileAsset | null }> = {},
+) {
+  const { archive = null, ...rest } = overrides
+  return { ...makeWebpage(rest), archive }
 }
 
 export function makeWebpageWithBusiness(

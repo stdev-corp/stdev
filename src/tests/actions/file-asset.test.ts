@@ -336,6 +336,23 @@ describe('file-asset actions', () => {
       expect(mockedDeleteManagedAsset).not.toHaveBeenCalled()
     })
 
+    it('웹페이지의 원문 저장본으로 연결된 파일은 지우지 않는다', async () => {
+      prismaMock.fileAsset.findUnique.mockResolvedValue(
+        makeFileAsset({ id: 4, url: validPdfUrl }),
+      )
+      prismaMock.webpage.count.mockResolvedValue(1)
+      await expect(
+        deleteFileAsset(createFormData({ id: '4' })),
+      ).rejects.toThrow(
+        '파일 항목이 웹페이지의 원문 저장본으로 연결되어 있어서 삭제할 수 없습니다.',
+      )
+      expect(prismaMock.webpage.count).toHaveBeenCalledWith({
+        where: { archiveId: 4 },
+      })
+      expect(prismaMock.fileAsset.delete).not.toHaveBeenCalled()
+      expect(mockedDeleteManagedAsset).not.toHaveBeenCalled()
+    })
+
     it('skips S3 delete when referenced elsewhere', async () => {
       prismaMock.fileAsset.findUnique.mockResolvedValue(
         makeFileAsset({ id: 1, url: validPdfUrl }),

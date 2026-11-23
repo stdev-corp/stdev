@@ -2,6 +2,13 @@ import { test, expect } from '@playwright/test'
 import { isDatabaseAvailable } from './fixtures/db'
 import { seedAdminSession } from './fixtures/auth'
 
+// 시드: 'E2E 뉴스 기사'만 원문 저장본(e2e-news-archive.pdf)에 연결돼 있다.
+const archiveUrl =
+  'https://stdev-kr.s3.ap-northeast-2.amazonaws.com/files/e2e-news-archive.pdf'
+
+/** EntityList의 한 줄(본문과 수정·삭제 버튼을 감싼 상자) */
+const ROW = 'xpath=ancestor::div[.//button[normalize-space(.)="수정"]][1]'
+
 test.describe('admin CRUD smoke', () => {
   test.beforeEach(async () => {
     test.skip(
@@ -59,5 +66,49 @@ test.describe('admin CRUD smoke', () => {
       await dialog.getByRole('button', { name: '취소' }).click()
       await expect(dialog).toHaveCount(0)
     }
+  })
+
+  // seedAdminSession은 같은 관리자를 지우고 다시 만든다. 관리자 세션을 쓰는 테스트는
+  // 이 파일에 두어 한 워커에서 차례로 돌게 한다.
+  test('webpage list links each article to its saved PDF', async ({
+    context,
+    page,
+  }) => {
+    await seedAdminSession(context)
+    await page.goto('/admin/webpages')
+
+    const news = page.getByText('E2E 뉴스 기사').locator(ROW)
+    const link = news.getByRole('link', { name: 'e2e-news-archive.pdf' })
+    await expect(link).toHaveAttribute('href', archiveUrl)
+    await expect(link).toHaveAttribute('target', '_blank')
+    await expect(page.getByText('원문 저장본: 없음')).toHaveCount(2)
+
+    // 수정 서랍은 연결된 저장본을 골라 둔 채로 열린다.
+    await news.getByRole('button', { name: '수정' }).click()
+    const dialog = page.getByRole('dialog')
+    await expect(
+      dialog.getByLabel('원문 저장본').locator('option:checked'),
+    ).toHaveText(/e2e-news-archive\.pdf$/)
+    await dialog.getByRole('button', { name: '취소' }).click()
+    await expect(dialog).toHaveCount(0)
+  })
+
+  test('a file used as an original archive cannot be deleted', async ({
+    context,
+    page,
+  }) => {
+    await seedAdminSession(context)
+    await page.goto('/admin/files')
+
+    const row = page.getByText(/· e2e-news-archive\.pdf$/)
+    await row.locator(ROW).getByRole('button', { name: '삭제' }).click()
+    await page
+      .getByRole('alertdialog')
+      .getByRole('button', { name: '삭제' })
+      .click()
+
+    await expect(page.getByText('삭제 실패')).toBeVisible()
+    await page.reload()
+    await expect(page.getByText(/· e2e-news-archive\.pdf$/)).toBeVisible()
   })
 })

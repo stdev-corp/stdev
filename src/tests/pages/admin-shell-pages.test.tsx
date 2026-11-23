@@ -203,6 +203,14 @@ describe('admin shell pages', () => {
     expect(
       screen.getByRole('heading', { name: '웹페이지' }),
     ).toBeInTheDocument()
+    // 목록에 원문 저장본을 함께 보여 주고, 저장본 고르기는 최근 파일부터 보인다.
+    expect(prismaMock.webpage.findMany).toHaveBeenCalledWith({
+      include: { archive: true },
+      orderBy: { publishedDate: 'desc' },
+    })
+    expect(prismaMock.fileAsset.findMany).toHaveBeenLastCalledWith({
+      orderBy: { id: 'desc' },
+    })
   })
 
   it('renders markdowns ordered by effective date', async () => {
