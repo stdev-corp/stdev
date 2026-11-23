@@ -66,6 +66,7 @@ describe('webpage actions', () => {
           publishedDate: new Date('2026-05-01'),
           businessId: 3,
           type: 'blog_post',
+          archiveId: null,
         },
       })
       expect(revalidatePathMock).toHaveBeenCalledWith('/admin')
@@ -119,6 +120,24 @@ describe('webpage actions', () => {
         '웹페이지 유형이 올바르지 않습니다.',
       )
       expect(prismaMock.webpage.create).not.toHaveBeenCalled()
+    })
+
+    it('creates a webpage with its original archive file', async () => {
+      prismaMock.webpage.create.mockResolvedValue(makeWebpage())
+      await createWebpage(
+        createFormData({
+          url: validUrl,
+          title: 't',
+          author: 'a',
+          publishedDate: '2026-05-01',
+          type: 'news_article',
+          businessId: '5',
+          archiveId: '12',
+        }),
+      )
+      expect(prismaMock.webpage.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ archiveId: 12 }),
+      })
     })
 
     it('creates webpage with numeric businessId', async () => {
@@ -272,9 +291,53 @@ describe('webpage actions', () => {
           publishedDate: new Date('2026-06-01'),
           businessId: 2,
           type: 'news_article',
+          archiveId: null,
         },
       })
       expect(revalidatePathMock).toHaveBeenCalledWith('/admin')
+    })
+
+    it('links and unlinks the original archive file', async () => {
+      prismaMock.webpage.update.mockResolvedValue(makeWebpage())
+      const fields = {
+        id: '11',
+        url: validUrl,
+        title: 't',
+        author: 'a',
+        publishedDate: '2026-06-01',
+        type: 'news_article',
+        businessId: '2',
+      }
+      await updateWebpage(createFormData({ ...fields, archiveId: '7' }))
+      expect(prismaMock.webpage.update).toHaveBeenLastCalledWith({
+        where: { id: 11 },
+        data: expect.objectContaining({ archiveId: 7 }),
+      })
+
+      // '저장본 없음'을 고르면 연결을 푼다.
+      await updateWebpage(createFormData({ ...fields, archiveId: '' }))
+      expect(prismaMock.webpage.update).toHaveBeenLastCalledWith({
+        where: { id: 11 },
+        data: expect.objectContaining({ archiveId: null }),
+      })
+    })
+
+    it('explains a missing archive file instead of a database error', async () => {
+      prismaMock.webpage.update.mockRejectedValue({ code: 'P2003' })
+      await expect(
+        updateWebpage(
+          createFormData({
+            id: '11',
+            url: validUrl,
+            title: 't',
+            author: 'a',
+            publishedDate: '2026-06-01',
+            type: 'news_article',
+            businessId: '2',
+            archiveId: '999',
+          }),
+        ),
+      ).rejects.toThrow('웹페이지 저장 중 연결된 데이터가 올바르지 않습니다.')
     })
 
     it('throws when id is missing', async () => {

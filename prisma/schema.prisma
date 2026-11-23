@@ -126,20 +126,22 @@ model BusinessInstitution {
 }
 
 model FileAsset {
-  id           Int      @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   filename     String
   url          String?
   mimeType     String?
   filesize     Int?
-  prefix       String?  @default("files")
+  prefix       String?   @default("files")
   thumbnailURL String?
   width        Int?
   height       Int?
   focalX       Int?
   focalY       Int?
   reports      Report[]
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  /// 이 파일을 원문 저장본으로 둔 웹페이지
+  webpages     Webpage[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
 model ImageAsset {
@@ -218,6 +220,10 @@ model Webpage {
   businessId    Int?
   business      Business?   @relation(fields: [businessId], references: [id], onDelete: SetNull)
   type          WebpageType
+  /// 원문이 사라질 때를 대비한 PDF 저장본. 관리자 화면에만 보인다. 저장본으로 쓰는 파일은
+  /// 연결을 먼저 풀어야 지울 수 있다.
+  archiveId     Int?
+  archive       FileAsset?  @relation(fields: [archiveId], references: [id], onDelete: Restrict)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 }

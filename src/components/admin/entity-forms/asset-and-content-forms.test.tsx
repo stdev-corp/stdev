@@ -288,6 +288,7 @@ describe('asset and content entity form drawers', () => {
         onOpenChange={onOpenChange}
         webpage={makeWebpage({ businessId: 1 })}
         businesses={[makeBusiness()]}
+        files={[makeFileAsset()]}
         action={action}
       />,
     )
@@ -322,6 +323,7 @@ describe('asset and content entity form drawers', () => {
       open: true,
       onOpenChange,
       businesses: [makeBusiness()],
+      files: [makeFileAsset()],
       action,
     }
     const { rerender } = renderWithChakra(<WebpageFormDrawer {...props} />)
@@ -351,6 +353,7 @@ describe('asset and content entity form drawers', () => {
         open
         onOpenChange={onOpenChange}
         businesses={[makeBusiness()]}
+        files={[makeFileAsset()]}
         action={action}
       />,
     )
@@ -368,5 +371,44 @@ describe('asset and content entity form drawers', () => {
 
     await user.selectOptions(type, 'news_article')
     expect(business).toBeRequired()
+  })
+
+  it('offers every uploaded file as the optional original archive', async () => {
+    const files = [
+      makeFileAsset({ id: 9, filename: '뉴스1-기사.pdf' }),
+      makeFileAsset({ id: 4, filename: '블로그-후기.pdf' }),
+    ]
+    const { rerender } = renderWithChakra(
+      <WebpageFormDrawer
+        open
+        onOpenChange={onOpenChange}
+        businesses={[makeBusiness()]}
+        files={files}
+        action={action}
+      />,
+    )
+
+    const archive = screen.getByLabelText('원문 저장본')
+    expect(archive).toHaveValue('')
+    expect(archive).not.toBeRequired()
+    expect(
+      screen.getByRole('option', { name: '저장본 없음' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('option', { name: '#9 뉴스1-기사.pdf' }),
+    ).toBeInTheDocument()
+    expect(screen.getByText(/관리자 화면에만 보이며/)).toBeInTheDocument()
+
+    rerender(
+      <WebpageFormDrawer
+        open
+        onOpenChange={onOpenChange}
+        webpage={makeWebpage({ id: 2, businessId: 1, archiveId: 4 })}
+        businesses={[makeBusiness()]}
+        files={files}
+        action={action}
+      />,
+    )
+    expect(screen.getByLabelText('원문 저장본')).toHaveValue('4')
   })
 })

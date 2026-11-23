@@ -38,6 +38,7 @@ const historyImage = {
 }
 const meetingFileUrl = `${assetOrigin}/files/e2e-meeting.pdf`
 const donationFileUrl = `${assetOrigin}/files/e2e-donation.pdf`
+const newsArchiveUrl = `${assetOrigin}/files/e2e-news-archive.pdf`
 
 async function resetDatabase() {
   await prisma.$transaction([
@@ -167,6 +168,16 @@ async function seedDatabase() {
     },
   })
 
+  // 뉴스 기사의 원문 저장본(관리자 화면에서만 보이는 PDF 사본)
+  const newsArchive = await prisma.fileAsset.create({
+    data: {
+      filename: 'e2e-news-archive.pdf',
+      url: newsArchiveUrl,
+      mimeType: 'application/pdf',
+      filesize: 4096,
+    },
+  })
+
   const partner = await prisma.institution.create({
     data: {
       nameKo: 'E2E 협력 기관',
@@ -243,6 +254,7 @@ async function seedDatabase() {
         publishedDate: now,
         businessId: business.id,
         type: 'news_article',
+        archiveId: newsArchive.id,
       },
       {
         url: 'https://example.com/e2e-press',
@@ -328,6 +340,7 @@ async function seedSidecarObjects() {
     },
     { url: meetingFileUrl, body: pdf, contentType: 'application/pdf' },
     { url: donationFileUrl, body: pdf, contentType: 'application/pdf' },
+    { url: newsArchiveUrl, body: pdf, contentType: 'application/pdf' },
   ]) {
     await client.send(
       new PutObjectCommand({

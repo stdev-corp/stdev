@@ -1,7 +1,7 @@
 'use client'
 
-import { Text } from '@chakra-ui/react'
-import type { Business, Webpage } from '@prisma/client'
+import { Link, Text } from '@chakra-ui/react'
+import type { Business, FileAsset, Webpage } from '@prisma/client'
 import { toDateString } from '@/utils/datetime'
 import { EntityList } from '../entity-list'
 import { WebpageFormDrawer } from './webpage-form'
@@ -20,13 +20,17 @@ function webpageTypeLabel(type: Webpage['type']) {
       : '보도 자료'
 }
 
+export type WebpageWithArchive = Webpage & { archive: FileAsset | null }
+
 export function WebpageListClient({
   webpages,
   businesses,
+  files,
   actions,
 }: {
-  webpages: Webpage[]
+  webpages: WebpageWithArchive[]
   businesses: Business[]
+  files: FileAsset[]
   actions: Actions
 }) {
   return (
@@ -45,6 +49,21 @@ export function WebpageListClient({
             {webpageTypeLabel(webpage.type)} ·{' '}
             {toDateString(webpage.publishedDate)} · {webpage.author}
           </Text>
+          <Text fontSize="sm" color="gray.600">
+            원문 저장본:{' '}
+            {webpage.archive?.url ? (
+              <Link
+                href={webpage.archive.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                color="teal.600"
+              >
+                {webpage.archive.filename}
+              </Link>
+            ) : (
+              '없음'
+            )}
+          </Text>
         </>
       )}
       renderCreate={(open, setOpen) => (
@@ -52,6 +71,7 @@ export function WebpageListClient({
           open={open}
           onOpenChange={setOpen}
           businesses={businesses}
+          files={files}
           action={actions.createWebpage}
         />
       )}
@@ -63,6 +83,7 @@ export function WebpageListClient({
           }}
           webpage={webpage ?? undefined}
           businesses={businesses}
+          files={files}
           action={actions.updateWebpage}
         />
       )}
